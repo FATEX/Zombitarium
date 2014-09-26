@@ -10,4 +10,5 @@ package
 			super(640, 480, MenuState, 1, 20, 20);
 		}
 	}
+	//a comment
 }
