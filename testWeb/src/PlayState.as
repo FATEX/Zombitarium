@@ -2,7 +2,15 @@ package
 {
 	import flash.display.BlendMode;
 	
-	import org.flixel.*;
+	import org.flixel.FlxButton;
+	import org.flixel.FlxG;
+	import org.flixel.FlxObject;
+	import org.flixel.FlxPath;
+	import org.flixel.FlxPoint;
+	import org.flixel.FlxSprite;
+	import org.flixel.FlxState;
+	import org.flixel.FlxText;
+	import org.flixel.FlxTilemap;
 
 	public class PlayState extends FlxState
 	{
@@ -21,6 +29,9 @@ package
 		[Embed(source = 'default_empty.txt', mimeType = 'application/octet-stream')]private static var default_empty:Class;
 
 		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
+		[Embed(source="key.png")] private static var ImgKey:Class;
+		[Embed(source="door.png")] private static var ImgDoor:Class;
+		[Embed(source="doorOpen.png")] private static var ImgDoorOpen:Class;
 		
 		
 		// Some static constants for the size of the tilemap tiles
@@ -44,6 +55,13 @@ package
 		private var quitBtn:FlxButton;
 		private var helperTxt:FlxText;
 		private var destination:FlxPoint;
+		// Key and Door
+		private var keyCollected:Boolean = false;
+		private var doorOpen:Boolean = false;
+		private var doorKey:FlxSprite;
+		private var door:FlxSprite;
+		private var doorOpenImg:FlxSprite;
+		
 		override public function create():void
 		{
 			FlxG.framerate = 50;
@@ -74,6 +92,7 @@ package
 			// Initializes the map using the generated string, the tile images, and the tile size
 			collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			add(collisionMap);
+			
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
 			destination = new FlxPoint(0,0);
 			setupPlayer();
@@ -112,6 +131,7 @@ package
 				{
 					case FlxTilemap.AUTO:
 						collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+						
 						player.x = 64;
 						player.y = 220;
 						break;
@@ -232,12 +252,25 @@ package
 			player.addAnimation("jump", [4]);
 			
 			add(player);
+			
+			doorKey = new FlxSprite(114, 220); 
+			doorKey.loadGraphic(ImgKey, false, false, 16); 
+			add(doorKey);
+			
+			door = new FlxSprite(144, 211); 
+			door.loadGraphic(ImgDoor, false, false, 30); 
+			door.maxVelocity.x = 0;
+			door.maxVelocity.y = 0;
+			add(door);
+			
+			doorOpenImg = new FlxSprite(144, 211); 
+			doorOpenImg.loadGraphic(ImgDoorOpen, false, false, 30); 
 		}
 		
 		private function updatePlayer():void
 		{
 			wrap(player);
-			
+
 			//MOVEMENT
 			player.acceleration.x = 0;
 			player.acceleration.y = 0;
@@ -279,6 +312,7 @@ package
 					zombie.facing=FlxObject.RIGHT;
 				}
 			}
+			key();
 			if(isFollowing){
 			var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(xPos*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
 			
@@ -295,6 +329,31 @@ package
 			else
 			{
 				player.play("run");
+			}
+		}
+		
+		private function key():void 
+		{
+			
+			if(keyCollected == false){ // if we still haven't collected the key
+				if(FlxG.collide(player, doorKey)){ // and if the player collides with the key
+					doorKey.visible = false; // hide the key from view
+					keyCollected = true; // set our Boolean to true
+				}
+			}
+			if(doorOpen == false){ // if the door hasn't been opened yet
+
+				if(keyCollected == true){ // and if the player has already collected the key
+					if(FlxG.collide(player, door)){ // check if the door and the player are touching
+						// if all of these conditions are met...
+						door.visible = false;
+						remove(player);
+						add(doorOpenImg);
+						add(player);
+						doorOpen = true; // ...set the variable to true
+						// collisionMap.setTile(1, 1, collisionMap.getTile(1, 1), false);
+					}
+				}
 			}
 		}
 		
