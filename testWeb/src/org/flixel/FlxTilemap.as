@@ -24,6 +24,7 @@ package org.flixel
 		[Embed(source="data/autotiles.png")] static public var ImgAuto:Class;
 		[Embed(source="data/autotiles_alt.png")] static public var ImgAutoAlt:Class;
 		
+		public var pathLength: int = 0;
 		/**
 		 * No auto-tiling.
 		 */
@@ -473,6 +474,7 @@ package org.flixel
 		 */
 		public function findPath(Start:FlxPoint,End:FlxPoint,Simplify:Boolean=true,RaySimplify:Boolean=false):FlxPath
 		{
+			pathLength = 0;
 			//figure out what tile we are starting and ending on.
 			var startIndex:uint = int((Start.y-y)/_tileHeight) * widthInTiles + int((Start.x-x)/_tileWidth);
 			var endIndex:uint = int((End.y-y)/_tileHeight) * widthInTiles + int((End.x-x)/_tileWidth);
@@ -512,12 +514,17 @@ package org.flixel
 			while(i >= 0)
 			{
 				node = points[i--] as FlxPoint;
-				if(node != null)
+				if(node != null){
 					path.addPoint(node,true);
+					pathLength++;
+				}	
 			}
 			return path;
 		}
 		
+		public function getPathLength(){
+			return pathLength;
+		}
 		/**
 		 * Pathfinding helper function, strips out extra points on the same line.
 		 *
