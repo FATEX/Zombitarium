@@ -341,9 +341,7 @@ package
 					keyCollected = true; // set our Boolean to true
 				}
 			}
-			if(FlxG.collide(player, door)){
-			collisionMap.setTile(0, 0, (collisionMap.getTile(0,0)==1)?0:1);
-			}
+		
 			if(doorOpen == false){ // if the door hasn't been opened yet
 
 				if(keyCollected == true){ // and if the player has already collected the key
@@ -354,7 +352,7 @@ package
 						add(doorOpenImg);
 						add(player);
 						doorOpen = true; // ...set the variable to true
-						
+						collisionMap.setTile(0, 0, 0);
 					}
 				}
 			}
