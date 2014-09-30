@@ -522,7 +522,7 @@ package org.flixel
 			return path;
 		}
 		
-		public function getPathLength(){
+		public function getPathLength():int{
 			return pathLength;
 		}
 		/**
