@@ -1,5 +1,7 @@
 package objects
 {
+	import org.flixel.FlxPath;
+	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	
 	public class Human extends FlxSprite
@@ -13,7 +15,11 @@ package objects
 		//update()
 		//	boolean have detected someone , follow path or follow something else
 		
-		public var routes:Vector.<FlxSprite>;
+		//public var routes:Vector.<FlxPoint> = new Vector.<FlxPoint>();
+		public var route:FlxPath = new FlxPath();
+		
+		public var isFollowing:Boolean;
+		public var nextPath:FlxPath;
 		
 		public function Human()
 		{
@@ -38,12 +44,18 @@ package objects
 			this.addAnimation("run", [1, 2, 3, 0], 12);
 			this.addAnimation("jump", [4]);
 			this.color=0x066000;
-			routes
 		}
-	}
-	
-	public function update()
-	{
-		routes
+		
+		public function update()
+		{
+			if(isFollowing){
+				this.followPath(nextPath);
+			}
+			this.followPath(route);
+		}
+		
+		public function setRoute(x:Number, y:Number){
+			route.add(x,y);
+		}
 	}
 }
