@@ -3,6 +3,7 @@ package objects
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
+	import org.flixel.FlxTilemap;
 	
 	public class Human extends FlxSprite
 	{
@@ -11,51 +12,89 @@ package objects
 		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
 		
 		//path array of flxpoints
-		//detect() zombie type
+		//detect() super type
 		//update()
 		//	boolean have detected someone , follow path or follow something else
 		
 		//public var routes:Vector.<FlxPoint> = new Vector.<FlxPoint>();
-		public var route:FlxPath = new FlxPath();
+		public var myroute:FlxPath = new FlxPath();
 		
-		public var isFollowing:Boolean;
+		public var isFollowing:Boolean = false;
+		public var isPathSet:Boolean = false;
 		public var nextPath:FlxPath;
 		
-		public function Human()
+		public var originX:Number;
+		public var originY:Number;
+		
+		public function Human(originX:Number, originY:Number)
 		{
-			super(7*TILE_WIDTH, 11*TILE_HEIGHT);
-			this.loadGraphic(ImgSpaceman, true, true, 16);
+			super(originX, originY);
+			this.originX=originX;
+			this.originY=originY;
+			super.loadGraphic(ImgSpaceman, true, true, 16);
 			
 			//bounding box tweaks
-			this.width = 14;
-			this.height = 14;
-			this.offset.x = 1;
-			this.offset.y = 1;
+			super.width = 14;
+			super.height = 14;
+			super.offset.x = 1;
+			super.offset.y = 1;
 			
 			//basic player physics
-			this.drag.x = 640;
-			this.drag.y = 640;
+			super.drag.x = 640;
+			super.drag.y = 640;
 			//player.acceleration.y = 420;
-			this.maxVelocity.x = 80;
-			this.maxVelocity.y = 80;
+			super.maxVelocity.x = 80;
+			super.maxVelocity.y = 80;
 			
 			//animations
-			this.addAnimation("idle", [0]);
-			this.addAnimation("run", [1, 2, 3, 0], 12);
-			this.addAnimation("jump", [4]);
-			this.color=0x066000;
+			super.addAnimation("idle", [0]);
+			super.addAnimation("run", [1, 2, 3, 0], 12);
+			super.addAnimation("jump", [4]);
 		}
 		
-		public function update()
+		private function follow():void
 		{
 			if(isFollowing){
-				this.followPath(nextPath);
+				super.followPath(nextPath,50,PATH_FORWARD,true);
+			}else{
+				super.followPath(myroute,50,PATH_LOOP_FORWARD,true);
+				
 			}
-			this.followPath(route);
 		}
 		
-		public function setRoute(x:Number, y:Number){
-			route.add(x,y);
+		public function setPath(p:FlxPoint, collisionMap:FlxTilemap):void{
+				  this.isFollowing=true;
+				  var pp:FlxPath =  collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2),p);
+				  this.nextPath=pp;
+				  follow();
 		}
+		
+		private function setRoute(p:FlxPath):void{
+			this.isFollowing=false;
+			this.myroute=p;
+			follow();
+		}
+		
+		public function goBack(collisionMap:FlxTilemap):void{
+			
+			var pp:FlxPath = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2),new FlxPoint(this.originX,this.originY));
+			super.followPath(pp,50,PATH_FORWARD,true);
+			isFollowing=false;
+			isPathSet=false;
+		}
+		
+		public function humanUpdate(collisionMap:FlxTilemap):void{
+			var ppppp:FlxPath;
+			if(!this.isPathSet && this.pathSpeed==0 && this.isFollowing==false){
+				ppppp = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2), new FlxPoint(100,200));				
+				ppppp.nodes = ppppp.nodes.concat(collisionMap.findPath(new FlxPoint(100,200), new FlxPoint(150,150)).nodes);
+				ppppp.nodes = ppppp.nodes.concat(collisionMap.findPath(new FlxPoint(150,150), new FlxPoint(200,100)).nodes);
+				ppppp.nodes = ppppp.nodes.concat(collisionMap.findPath(new FlxPoint(200,100), new FlxPoint(200,200)).nodes);
+				setRoute(ppppp);
+				this.isPathSet=true;
+			}
+		}
+		
+		
 	}
 }
