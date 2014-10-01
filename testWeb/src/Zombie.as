@@ -5,15 +5,12 @@ package
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxTilemap;
-
-	[SWF(width="400", height="300", backgroundColor="#000000")]
-	[Frame(factoryClass="Przombier")]
 	
 	public class Zombie extends FlxSprite
 	{
 		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
-		private var x:int = 0;
-		private var y:int = 0;
+		private var xPos:int = 0;
+		private var yPos:int = 0;
 		private var width:int = 0;
 		private var height:int = 0;
 		private var xDrag: int = 0;
@@ -21,13 +18,13 @@ package
 		private var xMaxVelocity: int = 0;
 		private var yMaxVelocity: int = 0;
 		//private var color: int = 0;
- 		public function Zombie(x:int, y:int, width:int, height:int, xDrag:int, yDrag:int, xMaxVelocity:int, yMaxVelocity:int)
+ 		public function Zombie(xPos:int, yPos:int, width:int, height:int, xDrag:int, yDrag:int, xMaxVelocity:int, yMaxVelocity:int)
 		{
-			super(x,y);
+			super(xPos,yPos);
 			this.loadGraphic(ImgSpaceman, true, true, 16);
 			//this.loadGraphic();
-			this.x = x;
-			this.y = y;
+			this.xPos = xPos;
+			this.yPos = yPos;
 			this.width = width;
 			this.height = height;
 			this.xDrag = xDrag;
@@ -47,8 +44,9 @@ package
 			return nearestPath;
 		}
 		
-		public function attackNearestHuman(collisionMap:FlxTilemap, zombieP:FlxPoint, humanP:FlxPoint):FlxPath{
-			return collisionMap.findPath(zombieP, humanP);
+		public function attackNearestHuman(collisionMap:FlxTilemap, zombieP:FlxPoint, humanP:FlxPoint):void{
+			//return collisionMap.findPath(zombieP, humanP);
+			this.followPath(collisionMap.findPath(zombieP, humanP),50, PATH_FORWARD, true);
 		}
 		
 		public function setColor(c:int):void{
@@ -61,7 +59,7 @@ package
 		}
 		
 		public function dieAnimation():void{
-			
+			this.destroy();
 		}
 	}
 }

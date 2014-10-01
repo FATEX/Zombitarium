@@ -1,6 +1,8 @@
 package
 {
 	import flash.display.BlendMode;
+	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
 	
 	import org.flixel.FlxButton;
 	import org.flixel.FlxG;
@@ -10,8 +12,8 @@ package
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
-	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
+	import org.flixel.FlxTilemap;
 
 	public class PlayState extends FlxState
 	{
@@ -58,11 +60,15 @@ package
 		private var helperTxt:FlxText;
 		private var destination:FlxPoint;
 		// Key and Door
-		private var keyCollected:Boolean = false;
-		private var doorOpen:Boolean = false;
-		private var doorKey:FlxSprite;
-		private var door:FlxSprite;
-		private var doorOpenImg:FlxSprite;
+//		private var keyCollected:Boolean = false;
+//		private var doorOpen:Boolean = false;
+//		private var doorKey:FlxSprite;
+//		private var door:FlxSprite;
+//		private var doorOpenImg:FlxSprite;
+//		private var pressed:Boolean = true;
+		private var door1:Door = new Door(120, 255);
+		private var key1:Key = new Key(collisionMap, door1, player, 40, 260);
+
 		
 		//constants For detection
 		private var distanceCanSee:int = 100;
@@ -235,7 +241,7 @@ package
 			
 			add(zombie);
 			zombie.color=0x800000;
-			player = new FlxSprite(64, 220);
+			player = new FlxSprite(20, 20);
 			player.loadGraphic(ImgSpaceman, true, true, 16);
 			
 			//bounding box tweaks
@@ -258,24 +264,28 @@ package
 			
 			add(player);
 			
-			doorKey = new FlxSprite(114, 220); 
-			doorKey.loadGraphic(ImgKey, false, false, 16); 
-			add(doorKey);
+			//doorKey = new FlxSprite(40, 260); 
+			//doorKey.loadGraphic(ImgKey, false, false, 16); 
+			add(door1);
+			add(key1);
 			
-			door = new FlxSprite(144, 211); 
-			door.loadGraphic(ImgDoor, false, false, 30); 
-			door.maxVelocity.x = 0;
-			door.maxVelocity.y = 0;
-			add(door);
+			//door = new FlxSprite(120, 255); 
+			//door.loadGraphic(ImgDoor, false, false, 30); 
+			//door.maxVelocity.x = 0;
+			//door.maxVelocity.y = 0;
+			//door.immovable = true;
+			//add(door);
 			
-			doorOpenImg = new FlxSprite(144, 211); 
-			doorOpenImg.loadGraphic(ImgDoorOpen, false, false, 30); 
+			//doorOpenImg = new FlxSprite(120, 255); 
+			//doorOpenImg.loadGraphic(ImgDoorOpen, false, false, 30); 
+			//doorOpenImg.immovable = true;
 		}
 		
 		private function updatePlayer():void
 		{
 			wrap(player);
-
+			key1.checkCollision(collisionMap, door1, player, 8, 17);
+			door1.updateDoor();
 			//MOVEMENT
 			player.acceleration.x = 0;
 			player.acceleration.y = 0;
@@ -327,8 +337,6 @@ package
 					//zombie.facing=FlxObject.RIGHT;
 				}
 			}
-			key();
-			
 			if(isFollowing){
 
 			var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(xPos*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
@@ -377,31 +385,7 @@ package
 			}
 		}
 		
-		private function key():void 
-		{
-			
-			if(keyCollected == false){ // if we still haven't collected the key
-				if(FlxG.collide(player, doorKey)){ // and if the player collides with the key
-					doorKey.visible = false; // hide the key from view
-					keyCollected = true; // set our Boolean to true
-				}
-			}
-		
-			if(doorOpen == false){ // if the door hasn't been opened yet
 
-				if(keyCollected == true){ // and if the player has already collected the key
-					if(FlxG.collide(player, door)){ // check if the door and the player are touching
-						// if all of these conditions are met...
-						door.visible = false;
-						remove(player);
-						add(doorOpenImg);
-						add(player);
-						doorOpen = true; // ...set the variable to true
-						collisionMap.setTile(0, 0, 0);
-					}
-				}
-			}
-		}
 		private function detect(looker:FlxObject,lookee:FlxObject):Boolean
 		{
 			if(collisionMap.ray(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))){
