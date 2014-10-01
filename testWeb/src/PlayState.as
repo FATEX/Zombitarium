@@ -10,6 +10,7 @@ package
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
+	import org.flixel.FlxU;
 	import org.flixel.FlxTilemap;
 
 	public class PlayState extends FlxState
@@ -48,6 +49,7 @@ package
 		private var player:FlxSprite;
 		private var zombie:FlxSprite;
 		private var isFollowing:Boolean;
+		private var isChasing:Boolean=false;
 		private var xPos:int;
 		// Some interface buttons and text
 		private var autoAltBtn:FlxButton;
@@ -60,6 +62,9 @@ package
 		private var key1:Key = new Key(collisionMap, door1, player, 40, 260);
 
 		
+		//constants For detection
+		private var distanceCanSee:int = 100;
+		private var coneWidth:Number = 45;
 		override public function create():void
 		{
 			FlxG.framerate = 50;
@@ -301,25 +306,58 @@ package
 				//_action = ACTION_GO;
 			}
 			if(zombie.pathSpeed==0){
+				zombie.color=0x800000;
 				isFollowing=true;
-				if(xPos==17){
+				if(xPos==24){
 					xPos=7;
-					zombie.facing=FlxObject.LEFT;
+					//zombie.facing=FlxObject.LEFT;
 				}
 				else{
-					xPos=17;
-					zombie.facing=FlxObject.RIGHT;
+					xPos=24;
+					//zombie.facing=FlxObject.RIGHT;
 				}
 			}
-			//key1.openDoors();
 			if(isFollowing){
+
 			var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(xPos*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
-			
 			//Tell unit to follow path
-			zombie.followPath(path,50);
+			zombie.followPath(path,50,FlxObject.PATH_FORWARD,true);
 			isFollowing=false;
 			};
-			
+			if(detect(zombie,player)){
+				this.isChasing=true;
+				var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(player.x + player.width / 2, player.y + player.height / 2));
+				//Tell unit to follow path
+				zombie.followPath(path,70,FlxObject.PATH_FORWARD,true);
+				isFollowing=false;
+				zombie.color=0xFFD700;
+			}
+			else 
+			{
+				if(zombie.pathSpeed==0 && this.isChasing)
+				{
+				isFollowing=true;
+				this.isChasing=false;
+				}
+				else if(this.isChasing)
+				{
+					var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(player.x + player.width / 2, player.y + player.height / 2));
+					//Tell unit to follow path
+					if(path !=null)
+					{
+						zombie.followPath(path,70,FlxObject.PATH_FORWARD,true);
+					}
+					else{
+						if(FlxG.collide(zombie,collisionMap)){
+							isFollowing=true;
+							this.isChasing=false;
+							zombie.stopFollowingPath(true);
+						}
+						
+					}
+				}
+				zombie.color=0x800000;
+			}
 			//ANIMATION
 			 if(player.velocity.x == 0 || player.velocity.y == 0)
 			{
@@ -329,8 +367,22 @@ package
 			{
 				player.play("run");
 			}
-		}
 		
+		}
+
+		private function detect(looker:FlxObject,lookee:FlxObject):Boolean
+		{
+			if(collisionMap.ray(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))){
+				if(FlxU.getDistance(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))<=this.distanceCanSee){
+					var angle:Number = FlxU.getAngle(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2));
+					if(angle>=looker.angle-this.coneWidth && angle<=looker.angle+this.coneWidth){
+						return true;
+					}
+				}
+			}
+			return false;
+			
+		}
 		
 		private function wrap(obj:FlxObject):void
 		{
@@ -338,4 +390,4 @@ package
 			obj.y = (obj.y + obj.height / 2) % FlxG.height - obj.height / 2;
 		}
 	}
-}
+} 
