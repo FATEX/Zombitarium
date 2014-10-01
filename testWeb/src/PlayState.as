@@ -1,8 +1,6 @@
 package
 {
 	import flash.display.BlendMode;
-	import flash.events.KeyboardEvent;
-	import flash.ui.Keyboard;
 	
 	import org.flixel.FlxButton;
 	import org.flixel.FlxG;
@@ -58,12 +56,6 @@ package
 		private var helperTxt:FlxText;
 		private var destination:FlxPoint;
 		// Key and Door
-//		private var keyCollected:Boolean = false;
-//		private var doorOpen:Boolean = false;
-//		private var doorKey:FlxSprite;
-//		private var door:FlxSprite;
-//		private var doorOpenImg:FlxSprite;
-//		private var pressed:Boolean = true;
 		private var door1:Door = new Door(120, 255);
 		private var key1:Key = new Key(collisionMap, door1, player, 40, 260);
 
@@ -258,22 +250,10 @@ package
 			player.addAnimation("jump", [4]);
 			
 			add(player);
-			
-			//doorKey = new FlxSprite(40, 260); 
-			//doorKey.loadGraphic(ImgKey, false, false, 16); 
+
 			add(door1);
 			add(key1);
-			
-			//door = new FlxSprite(120, 255); 
-			//door.loadGraphic(ImgDoor, false, false, 30); 
-			//door.maxVelocity.x = 0;
-			//door.maxVelocity.y = 0;
-			//door.immovable = true;
-			//add(door);
-			
-			//doorOpenImg = new FlxSprite(120, 255); 
-			//doorOpenImg.loadGraphic(ImgDoorOpen, false, false, 30); 
-			//doorOpenImg.immovable = true;
+
 		}
 		
 		private function updatePlayer():void
@@ -351,63 +331,6 @@ package
 			}
 		}
 		
-//		private function key():void 
-//		{
-//			
-//			if(keyCollected == false){ // if we still haven't collected the key
-//				if(FlxG.collide(player, doorKey)){ // and if the player collides with the key
-//					doorKey.visible = false; // hide the key from view
-//					keyCollected = true; // set our Boolean to true
-//				}
-//			}
-//		
-//			if(doorOpen == false){ // if the door hasn't been opened yet
-//
-//				if(keyCollected == true){ // and if the player has already collected the key
-//					openDoors();
-//				}
-//			}
-//			
-//			if (doorOpen == true) {
-//				if (FlxG.keys.E && pressed && FlxG.overlap(player, doorOpenImg)) {
-//					pressed = false;
-//					remove(doorOpenImg);
-//					remove(player);	
-//					add(door);
-//					add(player);
-//					doorOpen = false;
-//					collisionMap.setTile(8, 17, 1);
-//					collisionMap.setTile(8, 16, 1);				
-//				} else if (FlxG.keys.E == false) {
-//					pressed = true;
-//				}
-//			}
-//		}
-//		
-//		private function openDoors():void
-//		{
-//			if(FlxG.overlap(player, door) && FlxG.keys.E && pressed){ // check if the door and the player are touching
-//				pressed = false;
-//				remove(player);
-//				remove(door);
-//				add(doorOpenImg);
-//				add(player);
-//				doorOpen = true;
-//				collisionMap.setTile(8, 17, 0);
-//				collisionMap.setTile(8, 16, 0);
-//				
-//			} else if (FlxG.keys.E == false) {
-//				pressed = true;
-//			}
-//			
-//		}
-		
-		
-		//key1.setcollisionMap();
-//		public function editCollisionMap(tx, ty, visible:int):void 
-//		{
-//			collisionMap.setTile(tx, ty, visible);
-//		}
 		
 		private function wrap(obj:FlxObject):void
 		{
