@@ -16,7 +16,7 @@ package objects
 		//update()
 		//	boolean have detected someone , follow path or follow something else
 		
-		//public var routes:Vector.<FlxPoint> = new Vector.<FlxPoint>();
+		public var routePoints:Vector.<FlxPoint> = new Vector.<FlxPoint>();
 		public var myroute:FlxPath = new FlxPath();
 		
 		public var isFollowing:Boolean = false;
@@ -85,14 +85,22 @@ package objects
 		
 		public function humanUpdate(collisionMap:FlxTilemap):void{
 			var ppppp:FlxPath;
-			if(!this.isPathSet && this.pathSpeed==0 && this.isFollowing==false){
-				ppppp = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2), new FlxPoint(100,200));				
-				ppppp.nodes = ppppp.nodes.concat(collisionMap.findPath(new FlxPoint(100,200), new FlxPoint(150,150)).nodes);
-				ppppp.nodes = ppppp.nodes.concat(collisionMap.findPath(new FlxPoint(150,150), new FlxPoint(200,100)).nodes);
-				ppppp.nodes = ppppp.nodes.concat(collisionMap.findPath(new FlxPoint(200,100), new FlxPoint(200,200)).nodes);
+			if(!this.isPathSet && this.pathSpeed==0 && this.isFollowing==false && routePoints.length>0){
+				ppppp = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2), routePoints[0]);
+				var i:Number;
+				//ppppp.nodes = ppppp.nodes.concat(collisionMap.findPath(routePoints[0], routePoints[1]));
+				//ppppp.nodes = ppppp.nodes.concat(collisionMap.findPath(routePoints[1], routePoints[2]));
+				for(i=1; i<routePoints.length;i++){
+					ppppp.nodes = ppppp.nodes.concat(routePoints[i]);
+				}
+				ppppp.nodes = ppppp.nodes.concat(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2));
 				setRoute(ppppp);
 				this.isPathSet=true;
 			}
+		}
+		
+		public function addRoutePoints(p:FlxPoint):void{
+			routePoints.push(p);
 		}
 		
 		
