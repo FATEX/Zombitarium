@@ -33,20 +33,29 @@ package
 			this.yMaxVelocity = yMaxVelocity;
 		}
 		
-		public function findNearestHuman(collisionMap:FlxTilemap, humanP:Array, zombieP:FlxPoint):int{
+		public function findNearestHuman(collisionMap:FlxTilemap, humanP:Array, zombieP:FlxPoint):FlxPath{
 			var i:int = 0;
-			var nearestPath:int = 10000;
+			var minLength:int = 10000;
+			var path:FlxPath = null;
+			var nearestPath: FlxPath = null;
 			while(i < humanP.length){
-				collisionMap.findPath(zombieP, humanP[i]);
-				if(nearestPath > collisionMap.getPathLength())
-					nearestPath = collisionMap.getPathLength();
+				path = collisionMap.findPath(zombieP, humanP[i], false);
+				if(path != null && minLength > collisionMap.getPathLength()){
+					minLength = collisionMap.getPathLength();
+					nearestPath = path;
+				}
+				i++;
 			}
 			return nearestPath;
 		}
 		
-		public function attackNearestHuman(collisionMap:FlxTilemap, zombieP:FlxPoint, humanP:FlxPoint):void{
+		/*public function attackNearestHuman(collisionMap:FlxTilemap, zombieP:FlxPoint, humanP:FlxPoint):void{
 			//return collisionMap.findPath(zombieP, humanP);
 			this.followPath(collisionMap.findPath(zombieP, humanP),50, PATH_FORWARD, true);
+		}*/
+		
+		public function attackNearestHuman(collisionMap:FlxTilemap, path:FlxPath):void{
+			this.followPath(path,50, PATH_FORWARD, true);
 		}
 		
 		public function setColor(c:int):void{
