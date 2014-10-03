@@ -61,7 +61,13 @@ package
 		// Key and Door
 		private var door1:Door = new Door(120, 255);
 		private var key1:Key = new Key(collisionMap, door1, player, 40, 260);
+		private var door2:Door = new Door(375, 255);
+		private var key2:Key = new Key(collisionMap, door2, player, 375, 180);
 
+		private var door3:UnlockedDoor = new UnlockedDoor(55, 15);
+		private var door4:UnlockedDoor = new UnlockedDoor(55, 270);
+		private var door5:UnlockedDoor = new UnlockedDoor(200, 175);
+		private var door6:UnlockedDoor = new UnlockedDoor(265, 175);
 		
 		//constants For detection
 		private var distanceCanSee:int = 100;
@@ -102,7 +108,7 @@ package
 			setupPlayer();
 			
 			// Then we setup two cameras to follow each of the two players
-			
+			/*
 			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
 			cam.follow(player);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
@@ -268,7 +274,7 @@ package
 			
 			//add(zombie);
 			zombie.color=0x800000;
-			player = new FlxSprite(20, 20);
+			player = new FlxSprite(20, 70);
 			player.loadGraphic(ImgSpaceman, true, true, 16);
 			
 			//bounding box tweaks
@@ -293,6 +299,14 @@ package
 
 			add(door1);
 			add(key1);
+			
+			add(door2);
+			add(key2);
+			
+			add(door3);
+			add(door4);
+			add(door5);
+			add(door6);
 
 			add(player);
 
@@ -304,8 +318,19 @@ package
 		private function updatePlayer():void
 		{
 			wrap(player);
-			key1.checkCollision(collisionMap, door1, player, 8, 17);
+			key1.checkCollision(collisionMap, door1, player, 8, 16);
 			door1.updateDoor();
+			key2.checkCollision(collisionMap, door2, player, 24, 16);
+			door2.updateDoor();
+			
+			door3.checkCollision(collisionMap, player, 4, 1);
+			door3.updateDoor();
+			door4.checkCollision(collisionMap, player, 4, 17);
+			door4.updateDoor();
+			door5.checkCollision(collisionMap, player, 13, 11);
+			door5.updateDoor();
+			door6.checkCollision(collisionMap, player, 17, 11);
+			door6.updateDoor();
 			//MOVEMENT
 			player.acceleration.x = 0;
 			player.acceleration.y = 0;

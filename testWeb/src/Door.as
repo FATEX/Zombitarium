@@ -20,11 +20,11 @@ package
 		public function updateDoor() 
 		{
 			if (doorOpen == false) {
-				this.loadGraphic(ImgDoorClose, false, false, 30); 
+				this.loadGraphic(ImgDoorClose, false, false, 30, 15); 
 				this.immovable = true;
 			} else
 			{
-				this.loadGraphic(ImgDoorOpen, false, false, 30)
+				this.loadGraphic(ImgDoorOpen, false, false, 30, 15)
 				this.immovable = true;
 			}
 		}
