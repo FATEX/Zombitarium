@@ -231,7 +231,7 @@ package
 			zombie.addAnimation("run", [1, 2, 3, 0], 12);
 			zombie.addAnimation("jump", [4]);
 			
-			add(zombie);
+			//add(zombie);
 			zombie.color=0x800000;
 			player = new FlxSprite(20, 20);
 			player.loadGraphic(ImgSpaceman, true, true, 16);
@@ -254,10 +254,11 @@ package
 			player.addAnimation("run", [1, 2, 3, 0], 12);
 			player.addAnimation("jump", [4]);
 			
-			add(player);
+			
 
 			add(door1);
 			add(key1);
+			add(player);
 
 		}
 		
@@ -305,59 +306,59 @@ package
 				player.followPath(path,100,null,true);
 				//_action = ACTION_GO;
 			}
-			if(zombie.pathSpeed==0){
-				zombie.color=0x800000;
-				isFollowing=true;
-				if(xPos==24){
-					xPos=7;
-					//zombie.facing=FlxObject.LEFT;
-				}
-				else{
-					xPos=24;
-					//zombie.facing=FlxObject.RIGHT;
-				}
-			}
-			if(isFollowing){
-
-			var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(xPos*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
-			//Tell unit to follow path
-			zombie.followPath(path,50,FlxObject.PATH_FORWARD,true);
-			isFollowing=false;
-			};
-			if(detect(zombie,player)){
-				this.isChasing=true;
-				var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(player.x + player.width / 2, player.y + player.height / 2));
-				//Tell unit to follow path
-				zombie.followPath(path,70,FlxObject.PATH_FORWARD,true);
-				isFollowing=false;
-				zombie.color=0xFFD700;
-			}
-			else 
-			{
-				if(zombie.pathSpeed==0 && this.isChasing)
-				{
-				isFollowing=true;
-				this.isChasing=false;
-				}
-				else if(this.isChasing)
-				{
-					var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(player.x + player.width / 2, player.y + player.height / 2));
-					//Tell unit to follow path
-					if(path !=null)
-					{
-						zombie.followPath(path,70,FlxObject.PATH_FORWARD,true);
-					}
-					else{
-						if(FlxG.collide(zombie,collisionMap)){
-							isFollowing=true;
-							this.isChasing=false;
-							zombie.stopFollowingPath(true);
-						}
-						
-					}
-				}
-				zombie.color=0x800000;
-			}
+//			if(zombie.pathSpeed==0){
+//				zombie.color=0x800000;
+//				isFollowing=true;
+//				if(xPos==24){
+//					xPos=7;
+//					//zombie.facing=FlxObject.LEFT;
+//				}
+//				else{
+//					xPos=24;
+//					//zombie.facing=FlxObject.RIGHT;
+//				}
+//			}
+//			if(isFollowing){
+//
+//			var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(xPos*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
+//			//Tell unit to follow path
+//			zombie.followPath(path,50,FlxObject.PATH_FORWARD,true);
+//			isFollowing=false;
+//			};
+//			if(detect(zombie,player)){
+//				this.isChasing=true;
+//				var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(player.x + player.width / 2, player.y + player.height / 2));
+//				//Tell unit to follow path
+//				zombie.followPath(path,70,FlxObject.PATH_FORWARD,true);
+//				isFollowing=false;
+//				zombie.color=0xFFD700;
+//			}
+//			else 
+//			{
+//				if(zombie.pathSpeed==0 && this.isChasing)
+//				{
+//				isFollowing=true;
+//				this.isChasing=false;
+//				}
+//				else if(this.isChasing)
+//				{
+//					var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(player.x + player.width / 2, player.y + player.height / 2));
+//					//Tell unit to follow path
+//					if(path !=null)
+//					{
+//						zombie.followPath(path,70,FlxObject.PATH_FORWARD,true);
+//					}
+//					else{
+//						if(FlxG.collide(zombie,collisionMap)){
+//							isFollowing=true;
+//							this.isChasing=false;
+//							zombie.stopFollowingPath(true);
+//						}
+//						
+//					}
+//				}
+//				zombie.color=0x800000;
+//			}
 			//ANIMATION
 			 if(player.velocity.x == 0 || player.velocity.y == 0)
 			{
