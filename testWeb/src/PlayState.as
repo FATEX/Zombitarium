@@ -77,6 +77,8 @@ package
 		private var door5:UnlockedDoor = new UnlockedDoor(200, 175);
 		private var door6:UnlockedDoor = new UnlockedDoor(265, 175);
 		
+		private var infected:Zombie;
+		
 		//constants For detection
 		private var distanceCanSee:int = 100;
 		private var coneWidth:Number = 45;
@@ -253,6 +255,7 @@ package
 			// Tilemaps can be collided just like any other FlxObject, and flixel
 			// automatically collides each individual tile with the object.
 			FlxG.collide(player, collisionMap);
+			//FlxG.collide(infected, collisionMap);
 			
 			highlightBox.x = Math.floor(FlxG.mouse.x / TILE_WIDTH) * TILE_WIDTH;
 			highlightBox.y = Math.floor(FlxG.mouse.y / TILE_HEIGHT) * TILE_HEIGHT;
@@ -337,9 +340,18 @@ package
 			}
 			}
 		else{
-			var infected:Zombie = new Zombie(man.x,man.y,man.width,man.health,man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+			var t:FlxText;
+			
+			infected = new Zombie(man.x,man.y,man.width,man.health,man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+			//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
+			FlxG.collide(infected, collisionMap);
+			
 			add(infected);
-			infected.attackNearestHuman(collisionMap,infected.findNearestHuman(collisionMap,humans,infected.origin));
+			//var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+			var path:FlxPath = collisionMap.findPath(new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2), new FlxPoint(100, 100), false);
+			t = new FlxText(0,20,FlxG.width,"path" + path);
+			add(t);
+			infected.attackNearestHuman(collisionMap, path);
 			var pos:int = humans.indexOf(man);
 			humans[pos].x=1000000000;
 			zombies.push(infected);

@@ -11,8 +11,8 @@ package
 	public class Zombie extends FlxSprite
 	{
 		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
-		private var xPos:int = 0;
-		private var yPos:int = 0;
+		public var xPos:int = 0;
+		public var yPos:int = 0;
 		private var width:int = 0;
 		private var height:int = 0;
 		private var xDrag: int = 0;
@@ -40,18 +40,19 @@ package
 			var minLength:int = int.MAX_VALUE;
 			var path:FlxPath = null;
 			var nearestPath: FlxPath = null;
-			while(i < humanP.length){
-				path = collisionMap.findPath(zombieP, new FlxPoint(50, 80), false);
+			path = collisionMap.findPath(zombieP, new FlxPoint(100, 100), false);
+			/*while(i < humanP.length){
+				path = collisionMap.findPath(zombieP, new FlxPoint(81, 100), false);
 				if(path!=null){
 					nearestPath=path;
 				}
-	/*			if(path != null && minLength > collisionMap.getPathLength()){
+				/*if(path != null && minLength > collisionMap.getPathLength()){
 					minLength = collisionMap.getPathLength();
 					nearestPath = path;
 				}*/
-				i++;
-			}
-			return nearestPath;
+				//i++;
+			//}
+			return path;
 		}
 		
 		/*public function attackNearestHuman(collisionMap:FlxTilemap, zombieP:FlxPoint, humanP:FlxPoint):void{
