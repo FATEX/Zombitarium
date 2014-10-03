@@ -209,7 +209,7 @@ package
 		}
 		
 		private function characterLoader():void{
-			humans = new Vector.<FlxSprite>();
+			humans = new Vector.<Human>();
 			var btarray:ByteArray;
 			btarray = new default_characters();
 			var wholeLevel:String = btarray.readMultiByte(btarray.bytesAvailable, btarray.endian);

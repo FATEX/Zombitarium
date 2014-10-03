@@ -1,5 +1,6 @@
 package
 {
+	import objects.Human;
 	import org.flixel.FlxGame;
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
@@ -33,13 +34,13 @@ package
 			this.yMaxVelocity = yMaxVelocity;
 		}
 		
-		public function findNearestHuman(collisionMap:FlxTilemap, humanP:Array, zombieP:FlxPoint):FlxPath{
+		public function findNearestHuman(collisionMap:FlxTilemap, humanP:Vector, zombieP:FlxPoint):FlxPath{
 			var i:int = 0;
 			var minLength:int = 10000;
 			var path:FlxPath = null;
 			var nearestPath: FlxPath = null;
 			while(i < humanP.length){
-				path = collisionMap.findPath(zombieP, humanP[i], false);
+				path = collisionMap.findPath(zombieP, new FlxPoint((humanP[i] as Human).x, (humanP[i] as Human).y), false);
 				if(path != null && minLength > collisionMap.getPathLength()){
 					minLength = collisionMap.getPathLength();
 					nearestPath = path;
