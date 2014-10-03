@@ -5,6 +5,7 @@ package
 	import flash.ui.Keyboard;
 	
 	import org.flixel.FlxButton;
+	import org.flixel.FlxCamera;
 	import org.flixel.FlxG;
 	import org.flixel.FlxObject;
 	import org.flixel.FlxPath;
@@ -12,8 +13,8 @@ package
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
-	import org.flixel.FlxU;
 	import org.flixel.FlxTilemap;
+	import org.flixel.FlxU;
 
 	public class PlayState extends FlxState
 	{
@@ -107,6 +108,39 @@ package
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
 			destination = new FlxPoint(0,0);
 			setupPlayer();
+			
+			// Then we setup two cameras to follow each of the two players
+			
+			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4); // we put the first one in the top left corner
+			cam.follow(player);
+			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
+			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
+			cam.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
+			FlxG.addCamera(cam);
+			
+			// Almost the same thing as the first camera
+			cam = new FlxCamera(FlxG.width,0, FlxG.width/2, FlxG.height);    // and the second one in the top middle of the screen
+			//cam.follow(zombie);
+			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
+			//cam.color = 0xCCCCFF; // Add a light blue tint to the camera
+			FlxG.addCamera(cam);
+			
+			cam = new FlxCamera(0,FlxG.height, FlxG.width/2, FlxG.height);    // and the second one in the top middle of the screen
+			//cam.follow(zombie);
+			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
+			//cam.color = 0xCCCCFF; // Add a light blue tint to the camera
+			FlxG.addCamera(cam);
+			
+			// add quit button
+			/*var quitBtn:FlxButton = new FlxButton(1000, 1000, "Quit", onQuit); //put the button out of screen so we don't see in the two other cameras
+			add(quitBtn);
+			
+			// Create a camera focused on the quit button.
+			// We do this because we don't want the quit button to be
+			// tinted by the other cameras.
+			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+			cam.follow(quitBtn);
+			FlxG.addCamera(cam);*/
 			
 			// When switching between modes here, the map is reloaded with it's own data, so the positions of tiles are kept the same
 			// Notice that different tilesets are used when the auto mode is switched
@@ -218,6 +252,7 @@ package
 		
 		private function setupPlayer():void
 		{
+			//add(collisionMap);
 			zombie = new FlxSprite(7*TILE_WIDTH, 11*TILE_HEIGHT);
 			zombie.loadGraphic(ImgSpaceman, true, true, 16);
 			
@@ -268,6 +303,8 @@ package
 			//doorKey.loadGraphic(ImgKey, false, false, 16); 
 			add(door1);
 			add(key1);
+			
+			
 			
 			//door = new FlxSprite(120, 255); 
 			//door.loadGraphic(ImgDoor, false, false, 30); 
