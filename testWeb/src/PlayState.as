@@ -1,8 +1,7 @@
 package
 {
 	import flash.display.BlendMode;
-	import flash.events.KeyboardEvent;
-	import flash.ui.Keyboard;
+	import flash.utils.ByteArray;	
 	
 	import objects.Human;
 	
@@ -33,6 +32,8 @@ package
 		[Embed(source = 'default_auto.txt', mimeType = 'application/octet-stream')]private static var default_auto:Class;
 		[Embed(source = 'default_alt.txt', mimeType = 'application/octet-stream')]private static var default_alt:Class;
 		[Embed(source = 'default_empty.txt', mimeType = 'application/octet-stream')]private static var default_empty:Class;
+		[Embed(source = 'default_characters.txt', mimeType = 'application/octet-stream')]private static var default_characters:Class;
+
 
 		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
 		[Embed(source="key.png")] private static var ImgKey:Class;
@@ -51,8 +52,11 @@ package
 		private var highlightBox:FlxObject;
 		
 		// Player modified from "Mode" demo
+
 		private var player:Zombie;
-		private var zombie:Human;
+		private var humans:Vector.<Human>;
+		private var zombies:Vector.<Zombie>;
+
 		private var isFollowing:Boolean;
 		private var isChasing:Boolean=false;
 		private var xPos:int;
@@ -63,15 +67,15 @@ package
 		private var helperTxt:FlxText;
 		private var destination:FlxPoint;
 		// Key and Door
-//		private var keyCollected:Boolean = false;
-//		private var doorOpen:Boolean = false;
-//		private var doorKey:FlxSprite;
-//		private var door:FlxSprite;
-//		private var doorOpenImg:FlxSprite;
-//		private var pressed:Boolean = true;
 		private var door1:Door = new Door(120, 255);
 		private var key1:Key = new Key(collisionMap, door1, player, 40, 260);
+		private var door2:Door = new Door(375, 255);
+		private var key2:Key = new Key(collisionMap, door2, player, 375, 180);
 
+		private var door3:UnlockedDoor = new UnlockedDoor(55, 15);
+		private var door4:UnlockedDoor = new UnlockedDoor(55, 270);
+		private var door5:UnlockedDoor = new UnlockedDoor(200, 175);
+		private var door6:UnlockedDoor = new UnlockedDoor(265, 175);
 		
 		//constants For detection
 		private var distanceCanSee:int = 100;
@@ -81,7 +85,7 @@ package
 			FlxG.framerate = 50;
 			FlxG.flashFramerate = 50;
 			//Load _datamap to _map and add to PlayState
-			
+			zombies = new Vector.<Zombie>();
 			// Creates a new tilemap with no arguments
 			collisionMap = new FlxTilemap();
 			isFollowing = true;
@@ -110,9 +114,10 @@ package
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
 			destination = new FlxPoint(0,0);
 			setupPlayer();
+			characterLoader();
 			
 			// Then we setup two cameras to follow each of the two players
-			
+			/*
 			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
 			cam.follow(player);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
@@ -206,14 +211,49 @@ package
 			add(helperTxt);
 		}
 		
+		private function characterLoader():void{
+			humans = new Vector.<Human>();
+			var btarray:ByteArray;
+			btarray = new default_characters();
+			var wholeLevel:String = btarray.readMultiByte(btarray.bytesAvailable, btarray.endian);
+			var arLines:Array = wholeLevel.split("\n");
+			var x:int;
+			var y:int;
+			var type:String;
+			var lineArray:Array;
+			var h:Human;
+			for each (var singleLine:String in arLines)
+			{
+				lineArray = singleLine.split(",");
+				//player.x=(lineArray.length-1)*TILE_WIDTH;
+				//player.y=(lineArray.length-1)*TILE_HEIGHT;
+				
+				type = lineArray[0];
+				x = int(lineArray[1]);
+				y = int(lineArray[2]);
+				if(type=="H"){
+					h=new Human(x*TILE_WIDTH,y*TILE_HEIGHT);
+					humans.push(h);
+				}
+				if(type=="R"){
+					h.addRoutePoints(new FlxPoint(x*TILE_WIDTH,y*TILE_HEIGHT));
+				}
+				if(type=="P"){
+					player.x=x*TILE_WIDTH;
+					player.y=y*TILE_HEIGHT;
+				}
+			}
+			for each(var hum:Human in humans){
+				add(hum);
+			}
+		}
+		
 		override public function update():void
 		{
 			// Tilemaps can be collided just like any other FlxObject, and flixel
 			// automatically collides each individual tile with the object.
 			FlxG.collide(player, collisionMap);
-			if(player.alive && zombie.alive){
-				FlxG.collide(player,zombie,collided);
-			}
+			
 			highlightBox.x = Math.floor(FlxG.mouse.x / TILE_WIDTH) * TILE_WIDTH;
 			highlightBox.y = Math.floor(FlxG.mouse.y / TILE_HEIGHT) * TILE_HEIGHT;
 			
@@ -231,25 +271,33 @@ package
 			}
 			
 			updatePlayer();
-			zombie.humanUpdate(collisionMap);
-			
-			if(player.alive && zombie.alive){
-				if(detect(zombie,player)){
-					zombie.setPath(new FlxPoint(player.x + player.width / 2, player.y + player.height / 2),collisionMap);
-					zombie.color=0xFFD700;
-				}
-				else if(zombie.pathSpeed==0){
-					zombie.goBack(collisionMap);
-				}
-				else if(zombie.isFollowing){
-					if(FlxG.collide(zombie,collisionMap)){
-						zombie.goBack(collisionMap);
+			for(var i:int=0; i<humans.length;i++){
+				for (var j:int=0;j<zombies.length;j++){
+					humans[i].humanUpdate(collisionMap);
+					if(zombies[j].alive && humans[i].alive){
+						FlxG.collide(zombies[j],humans[i],collided);
+					}
+					if(zombies[j].alive && humans[i].alive){
+						if(detect(humans[i],zombies[j])){
+							humans[i].setPath(new FlxPoint(zombies[j].x + zombies[j].width / 2, zombies[j].y + zombies[j].height / 2),collisionMap);
+							humans[i].color=0xFFD700;
+						}
+						else if(humans[i].pathSpeed==0){
+							humans[i].goBack(collisionMap);
+						}
+						else if(humans[i].isFollowing){
+							if(FlxG.collide(humans[i],collisionMap)){
+								humans[i].goBack(collisionMap);
+							}
+						}
+						else{
+							humans[i].color=0x800000;
+						}
 					}
 				}
-				else{
-					zombie.color=0x800000;
-				}
 			}
+			
+			
 			super.update();
 		}
 		public function collided(obj1:FlxObject,obj2:FlxObject):void{
@@ -291,6 +339,10 @@ package
 		else{
 			var infected:Zombie = new Zombie(man.x,man.y,man.width,man.health,man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 			add(infected);
+			infected.attackNearestHuman(collisionMap,infected.findNearestHuman(collisionMap,humans,infected.origin));
+			var pos:int = humans.indexOf(man);
+			humans[pos].x=1000000000;
+			zombies.push(infected);
 			remove(man,true);
 			man.alive=false;
 		}
@@ -304,29 +356,7 @@ package
 		
 		private function setupPlayer():void
 		{
-			zombie = new Human(6*TILE_WIDTH,2*TILE_HEIGHT);
-			zombie.loadGraphic(ImgSpaceman, true, true, 16);
 			
-			//bounding box tweaks
-			zombie.width = 14;
-			zombie.height = 14;
-			zombie.offset.x = 1;
-			zombie.offset.y = 1;
-			
-			//basic player physics
-			zombie.drag.x = 640;
-			zombie.drag.y = 640;
-			//player.acceleration.y = 420;
-			zombie.maxVelocity.x = 80;
-			zombie.maxVelocity.y = 80;
-			
-			//animations
-			zombie.addAnimation("idle", [0]);
-			zombie.addAnimation("run", [1, 2, 3, 0], 12);
-			zombie.addAnimation("jump", [4]);
-			
-			add(zombie);
-			zombie.color=0x800000;
 			//zombie.addRoutePoints(new FlxPoint(24*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
 			//zombie.addRoutePoints(new FlxPoint(zombie.x,zombie.y));
 			player = new Zombie(20, 20,14,14,640,640,80,80);
@@ -349,33 +379,46 @@ package
 			player.addAnimation("idle", [0]);
 			player.addAnimation("run", [1, 2, 3, 0], 12);
 			player.addAnimation("jump", [4]);
+			zombies.push(player);
 			
-			add(player);
-			
-			//doorKey = new FlxSprite(40, 260); 
-			//doorKey.loadGraphic(ImgKey, false, false, 16); 
+
+
 			add(door1);
 			add(key1);
+
+			add(player);
+
+
 			
+			add(door2);
+			add(key2);
 			
-			
-			//door = new FlxSprite(120, 255); 
-			//door.loadGraphic(ImgDoor, false, false, 30); 
-			//door.maxVelocity.x = 0;
-			//door.maxVelocity.y = 0;
-			//door.immovable = true;
-			//add(door);
-			
-			//doorOpenImg = new FlxSprite(120, 255); 
-			//doorOpenImg.loadGraphic(ImgDoorOpen, false, false, 30); 
-			//doorOpenImg.immovable = true;
+			add(door3);
+			add(door4);
+			add(door5);
+			add(door6);
+
+			//add(player);
+
+
 		}
 		
 		private function updatePlayer():void
 		{
 			wrap(player);
-			key1.checkCollision(collisionMap, door1, player, 8, 17);
+			key1.checkCollision(collisionMap, door1, player, 8, 16);
 			door1.updateDoor();
+			key2.checkCollision(collisionMap, door2, player, 24, 16);
+			door2.updateDoor();
+			
+			door3.checkCollision(collisionMap, player, 4, 1);
+			door3.updateDoor();
+			door4.checkCollision(collisionMap, player, 4, 17);
+			door4.updateDoor();
+			door5.checkCollision(collisionMap, player, 13, 11);
+			door5.updateDoor();
+			door6.checkCollision(collisionMap, player, 17, 11);
+			door6.updateDoor();
 			//MOVEMENT
 			player.acceleration.x = 0;
 			player.acceleration.y = 0;
@@ -415,7 +458,7 @@ package
 				player.followPath(path,100,null,true);
 				//_action = ACTION_GO;
 			}
-			
+
 			//ANIMATION
 			 if(player.velocity.x == 0 || player.velocity.y == 0)
 			{
@@ -425,8 +468,8 @@ package
 			{
 				player.play("run");
 			}
-		}
 		
+		}
 
 		private function detect(looker:Human,lookee:FlxObject):Boolean
 		{
@@ -434,6 +477,9 @@ package
 				if(FlxU.getDistance(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))<=this.distanceCanSee){
 					var angle:Number = FlxU.getAngle(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2));
 					if(angle>=looker.getAngle()-this.coneWidth && angle<=looker.getAngle()+this.coneWidth){
+						return true;
+					}
+					else if(looker.pathSpeed==0){
 						return true;
 					}
 				}
@@ -448,4 +494,4 @@ package
 			obj.y = (obj.y + obj.height / 2) % FlxG.height - obj.height / 2;
 		}
 	}
-}
+} 

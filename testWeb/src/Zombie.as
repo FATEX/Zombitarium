@@ -1,5 +1,7 @@
 package
 {
+	import objects.Human;
+	
 	import org.flixel.FlxGame;
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
@@ -33,17 +35,20 @@ package
 			this.yMaxVelocity = yMaxVelocity;
 		}
 		
-		public function findNearestHuman(collisionMap:FlxTilemap, humanP:Array, zombieP:FlxPoint):FlxPath{
+		public function findNearestHuman(collisionMap:FlxTilemap, humanP:Vector.<Human>, zombieP:FlxPoint):FlxPath{
 			var i:int = 0;
-			var minLength:int = 10000;
+			var minLength:int = int.MAX_VALUE;
 			var path:FlxPath = null;
 			var nearestPath: FlxPath = null;
 			while(i < humanP.length){
-				path = collisionMap.findPath(zombieP, humanP[i], false);
-				if(path != null && minLength > collisionMap.getPathLength()){
+				path = collisionMap.findPath(zombieP, new FlxPoint(50, 80), false);
+				if(path!=null){
+					nearestPath=path;
+				}
+	/*			if(path != null && minLength > collisionMap.getPathLength()){
 					minLength = collisionMap.getPathLength();
 					nearestPath = path;
-				}
+				}*/
 				i++;
 			}
 			return nearestPath;
@@ -55,7 +60,8 @@ package
 		}*/
 		
 		public function attackNearestHuman(collisionMap:FlxTilemap, path:FlxPath):void{
-			this.followPath(path,50, PATH_FORWARD, true);
+			if(path!=null)
+				this.followPath(path,50, PATH_FORWARD, true);
 		}
 		
 		public function setColor(c:int):void{

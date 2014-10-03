@@ -3,7 +3,6 @@ package objects
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
-	import fla;
 	
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
@@ -30,7 +29,7 @@ package objects
 		
 		public var originX:Number;
 		public var originY:Number;
-		public var isStunned = false;
+		public var isStunned:Boolean = false;
 		
 		public function Human(originX:Number, originY:Number)
 		{
@@ -100,7 +99,9 @@ package objects
 		public function goBack(collisionMap:FlxTilemap):void{
 			
 			var pp:FlxPath = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2),new FlxPoint(this.originX,this.originY));
+			if(pp!=null){
 			super.followPath(pp,50,PATH_FORWARD,true);
+			}
 			isFollowing=false;
 			isPathSet=false;
 		}
