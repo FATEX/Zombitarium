@@ -4,6 +4,8 @@ package
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
 	
+	import objects.Human;
+	
 	import org.flixel.FlxButton;
 	import org.flixel.FlxCamera;
 	import org.flixel.FlxG;
@@ -49,8 +51,8 @@ package
 		private var highlightBox:FlxObject;
 		
 		// Player modified from "Mode" demo
-		private var player:FlxSprite;
-		private var zombie:FlxSprite;
+		private var player:Zombie;
+		private var zombie:Human;
 		private var isFollowing:Boolean;
 		private var isChasing:Boolean=false;
 		private var xPos:int;
@@ -209,7 +211,9 @@ package
 			// Tilemaps can be collided just like any other FlxObject, and flixel
 			// automatically collides each individual tile with the object.
 			FlxG.collide(player, collisionMap);
-			FlxG.collide(player,zombie,collided);
+			if(player.alive && zombie.alive){
+				FlxG.collide(player,zombie,collided);
+			}
 			highlightBox.x = Math.floor(FlxG.mouse.x / TILE_WIDTH) * TILE_WIDTH;
 			highlightBox.y = Math.floor(FlxG.mouse.y / TILE_HEIGHT) * TILE_HEIGHT;
 			
@@ -227,21 +231,69 @@ package
 			}
 			
 			updatePlayer();
+			zombie.humanUpdate(collisionMap);
+			
+			if(player.alive && zombie.alive){
+				if(detect(zombie,player)){
+					zombie.setPath(new FlxPoint(player.x + player.width / 2, player.y + player.height / 2),collisionMap);
+					zombie.color=0xFFD700;
+				}
+				else if(zombie.pathSpeed==0){
+					zombie.goBack(collisionMap);
+				}
+				else if(zombie.isFollowing){
+					if(FlxG.collide(zombie,collisionMap)){
+						zombie.goBack(collisionMap);
+					}
+				}
+				else{
+					zombie.color=0x800000;
+				}
+			}
 			super.update();
 		}
 		public function collided(obj1:FlxObject,obj2:FlxObject):void{
-			if(zombie.facing==FlxObject.LEFT && zombie.x>player.x){
-				player.color=0x0000ff;
+			var man:Human;
+			var zom:Zombie;
+			if(obj1 is Human){
+				if(obj2 is Zombie){
+					man = Human(obj1);
+					zom = Zombie(obj2);
+				}
+				else{
+					return;
+				}
 			}
-			else if(zombie.facing==FlxObject.LEFT && zombie.x<=player.x){
-				zombie.color=0x0000ff;
+			else if(obj1 is Zombie){
+				if(obj2 is Human){
+					zom = Zombie(obj1);
+					man = Human(obj2);
+				}
+				else{
+					return;
+				}
 			}
-			else if(zombie.facing==FlxObject.RIGHT && zombie.x>player.x){
-				zombie.color=0x0000ff;
+			else{
+				return;
 			}
-			else if(zombie.facing==FlxObject.RIGHT && zombie.x<=player.x){
-				player.color=0x0000ff;
+		if(this.detect(man,zom)){
+			remove(zom,true);
+			man.goBack(collisionMap);
+			zom.alive=false;
+			if(man.isStunned){
+				remove(man,true);
+				man.alive=false;
 			}
+			else{
+				man.stunHuman();
+			}
+			}
+		else{
+			var infected:Zombie = new Zombie(man.x,man.y,man.width,man.health,man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+			add(infected);
+			remove(man,true);
+			man.alive=false;
+		}
 			
 		}
 		public override function draw():void
@@ -252,8 +304,7 @@ package
 		
 		private function setupPlayer():void
 		{
-			//add(collisionMap);
-			zombie = new FlxSprite(7*TILE_WIDTH, 11*TILE_HEIGHT);
+			zombie = new Human(6*TILE_WIDTH,2*TILE_HEIGHT);
 			zombie.loadGraphic(ImgSpaceman, true, true, 16);
 			
 			//bounding box tweaks
@@ -276,7 +327,9 @@ package
 			
 			add(zombie);
 			zombie.color=0x800000;
-			player = new FlxSprite(20, 20);
+			//zombie.addRoutePoints(new FlxPoint(24*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
+			//zombie.addRoutePoints(new FlxPoint(zombie.x,zombie.y));
+			player = new Zombie(20, 20,14,14,640,640,80,80);
 			player.loadGraphic(ImgSpaceman, true, true, 16);
 			
 			//bounding box tweaks
@@ -362,55 +415,7 @@ package
 				player.followPath(path,100,null,true);
 				//_action = ACTION_GO;
 			}
-			if(zombie.pathSpeed==0){
-				zombie.color=0x800000;
-				isFollowing=true;
-				if(xPos==24){
-					xPos=7;
-					//zombie.facing=FlxObject.LEFT;
-				}
-				else{
-					xPos=24;
-					//zombie.facing=FlxObject.RIGHT;
-				}
-			}
-			if(isFollowing){
-
-			var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(xPos*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
-			//Tell unit to follow path
-			zombie.followPath(path,50,FlxObject.PATH_FORWARD,true);
-			isFollowing=false;
-			};
-			if(detect(zombie,player)){
-				this.isChasing=true;
-				var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(player.x + player.width / 2, player.y + player.height / 2));
-				//Tell unit to follow path
-				zombie.followPath(path,70,FlxObject.PATH_FORWARD,true);
-				isFollowing=false;
-				zombie.color=0xFFD700;
-			}
-			else{
-				if(zombie.pathSpeed==0 && this.isChasing){
-					isFollowing=true;
-					this.isChasing=false;
-				}
-				else if(this.isChasing){
-					var path:FlxPath = collisionMap.findPath(new FlxPoint(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2), new FlxPoint(player.x + player.width / 2, player.y + player.height / 2));
-					//Tell unit to follow path
-					if(path !=null){
-						zombie.followPath(path,70,FlxObject.PATH_FORWARD,true);
-					}
-					else{
-						if(FlxG.collide(zombie,collisionMap)){
-							isFollowing=true;
-							this.isChasing=false;
-							zombie.stopFollowingPath(true);
-						}
-						
-					}
-				}
-				zombie.color=0x800000;
-			}
+			
 			//ANIMATION
 			 if(player.velocity.x == 0 || player.velocity.y == 0)
 			{
@@ -423,12 +428,12 @@ package
 		}
 		
 
-		private function detect(looker:FlxObject,lookee:FlxObject):Boolean
+		private function detect(looker:Human,lookee:FlxObject):Boolean
 		{
 			if(collisionMap.ray(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))){
 				if(FlxU.getDistance(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))<=this.distanceCanSee){
 					var angle:Number = FlxU.getAngle(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2));
-					if(angle>=looker.angle-this.coneWidth && angle<=looker.angle+this.coneWidth){
+					if(angle>=looker.getAngle()-this.coneWidth && angle<=looker.getAngle()+this.coneWidth){
 						return true;
 					}
 				}
