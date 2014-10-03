@@ -7,7 +7,7 @@ package
 	{
 		public function testWeb() 
 		{
-			super(820, 630, MenuState, 4, 20, 20);
+			super(820, 630, MenuState, 2, 20, 20);
 		}
 	}
 }

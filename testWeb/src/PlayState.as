@@ -111,7 +111,7 @@ package
 			
 			// Then we setup two cameras to follow each of the two players
 			
-			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4); // we put the first one in the top left corner
+			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
 			cam.follow(player);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
 			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
@@ -119,13 +119,13 @@ package
 			FlxG.addCamera(cam);
 			
 			// Almost the same thing as the first camera
-			cam = new FlxCamera(FlxG.width,0, FlxG.width/2, FlxG.height);    // and the second one in the top middle of the screen
+			cam = new FlxCamera(FlxG.width,0, FlxG.width/2, FlxG.height,4);    // and the second one in the top middle of the screen
 			//cam.follow(zombie);
 			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
 			//cam.color = 0xCCCCFF; // Add a light blue tint to the camera
 			FlxG.addCamera(cam);
 			
-			cam = new FlxCamera(0,FlxG.height, FlxG.width/2, FlxG.height);    // and the second one in the top middle of the screen
+			cam = new FlxCamera(0,FlxG.height, FlxG.width/2, FlxG.height,4);    // and the second one in the top middle of the screen
 			//cam.follow(zombie);
 			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
 			//cam.color = 0xCCCCFF; // Add a light blue tint to the camera
