@@ -1,6 +1,9 @@
 package
 {
 	import flash.display.BlendMode;
+	import flash.utils.ByteArray;
+	
+	import objects.Human;
 	
 	import org.flixel.FlxButton;
 	import org.flixel.FlxCamera;
@@ -29,6 +32,8 @@ package
 		[Embed(source = 'default_auto.txt', mimeType = 'application/octet-stream')]private static var default_auto:Class;
 		[Embed(source = 'default_alt.txt', mimeType = 'application/octet-stream')]private static var default_alt:Class;
 		[Embed(source = 'default_empty.txt', mimeType = 'application/octet-stream')]private static var default_empty:Class;
+		[Embed(source = 'default_characters.txt', mimeType = 'application/octet-stream')]private static var default_characters:Class;
+
 
 		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
 		[Embed(source="key.png")] private static var ImgKey:Class;
@@ -49,6 +54,7 @@ package
 		// Player modified from "Mode" demo
 		private var player:FlxSprite;
 		private var zombie:FlxSprite;
+		private var humans:Vector.<Human>;
 		private var isFollowing:Boolean;
 		private var isChasing:Boolean=false;
 		private var xPos:int;
@@ -200,6 +206,43 @@ package
 			
 			helperTxt = new FlxText(12 + autoAltBtn.width*2, FlxG.height - 30, 150, "Click to place tiles\nShift-Click to remove tiles\nArrow keys to move");
 			add(helperTxt);
+		}
+		
+		private function characterLoader():void{
+			humans = new Vector.<FlxSprite>();
+			var btarray:ByteArray;
+			btarray = new default_characters();
+			var wholeLevel:String = btarray.readMultiByte(btarray.bytesAvailable, btarray.endian);
+			var arLines:Array = wholeLevel.split("\n");
+			var x:int;
+			var y:int;
+			var type:String;
+			var lineArray:Array;
+			var h:Human;
+			for each (var singleLine:String in arLines)
+			{
+				lineArray = singleLine.split(",");
+				//player.x=(lineArray.length-1)*TILE_WIDTH;
+				//player.y=(lineArray.length-1)*TILE_HEIGHT;
+				
+				type = lineArray[0];
+				x = int(lineArray[1]);
+				y = int(lineArray[2]);
+				if(type=="H"){
+					h=new Human(x*TILE_WIDTH,y*TILE_HEIGHT);
+					humans.push(h);
+				}
+				if(type=="R"){
+					h.addRoutePoints(new FlxPoint(x*TILE_WIDTH,y*TILE_HEIGHT));
+				}
+				if(type=="P"){
+					player.x=x*TILE_WIDTH;
+					player.y=y*TILE_HEIGHT;
+				}
+			}
+			for each(var hum:Human in humans){
+				add(hum);
+			}
 		}
 		
 		override public function update():void
