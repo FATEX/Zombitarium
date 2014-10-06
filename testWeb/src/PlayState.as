@@ -1,7 +1,7 @@
 package
 {
 	import flash.display.BlendMode;
-	import flash.utils.ByteArray;	
+	import flash.utils.ByteArray;
 	
 	import objects.Human;
 	
@@ -224,7 +224,7 @@ package
 			var y:int;
 			var type:String;
 			var lineArray:Array;
-			var h:Human;
+			var h:Human=new Human(0,0);
 			for each (var singleLine:String in arLines)
 			{
 				lineArray = singleLine.split(",");
@@ -235,19 +235,25 @@ package
 				x = int(lineArray[1]);
 				y = int(lineArray[2]);
 				if(type=="H"){
-					h=new Human(x*TILE_WIDTH,y*TILE_HEIGHT);
+					h=new Human(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
 					humans.push(h);
 				}
 				if(type=="R"){
-					h.addRoutePoints(new FlxPoint(x*TILE_WIDTH,y*TILE_HEIGHT));
+					h.addRoutePoints(new FlxPoint(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2));
+				}
+				if(type=="D"){
+					h.angle=x;
+					
 				}
 				if(type=="P"){
 					player.x=x*TILE_WIDTH;
 					player.y=y*TILE_HEIGHT;
+					
 				}
 			}
 			for each(var hum:Human in humans){
 				add(hum);
+//				hum.followPath(collisionMap.findPath(new FlxPoint(hum.x+hum.width/2,hum.y+hum.height/2),new FlxPoint(hum.x+hum.width/2,hum.y+hum.height/2)));
 			}
 		}
 		
@@ -278,6 +284,7 @@ package
 			for(var i:int=0; i<humans.length;i++){
 				for (var j:int=0;j<zombies.length;j++){
 					humans[i].humanUpdate(collisionMap);
+					
 					if(zombies[j].alive && humans[i].alive){
 						FlxG.collide(zombies[j],humans[i],collided);
 					}
@@ -298,6 +305,11 @@ package
 							humans[i].color=0x800000;
 						}
 					}
+				}
+			}
+			for(var w:int=0; w<zombies.length;w++){
+				if(zombies[w]!= player){
+					zombies[w].zombieUpdate(collisionMap,humans,new FlxPoint(zombies[w].x+zombies[w].width/2,zombies[w].y+zombies[w].height/2));
 				}
 			}
 			
@@ -333,6 +345,20 @@ package
 			man.goBack(collisionMap);
 			zom.alive=false;
 			if(man.isStunned){
+				infected = new Zombie(man.x,man.y,man.width,man.health,man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+				//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
+				//FlxG.collide(infected, collisionMap);
+				var pos2:int = humans.indexOf(man);
+				//humans[pos].x=1000000000;
+				humans.splice(pos2,1);
+				
+				add(infected);
+				var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+				
+				//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
+				//add(t);
+				infected.attackNearestHuman(collisionMap, path2);
+				zombies.push(infected);
 				remove(man,true);
 				man.alive=false;
 			}
@@ -345,16 +371,17 @@ package
 			
 			infected = new Zombie(man.x,man.y,man.width,man.health,man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 			//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
-			FlxG.collide(infected, collisionMap);
+			//FlxG.collide(infected, collisionMap);
+			var pos:int = humans.indexOf(man);
+			//humans[pos].x=1000000000;
+			humans.splice(pos,1);
 			
 			add(infected);
-			//var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
-			var path:FlxPath = collisionMap.findPath(new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2), new FlxPoint(100, 100), false);
-			t = new FlxText(0,20,FlxG.width,"path" + path);
-			add(t);
+			var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+			
+			//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
+			//add(t);
 			infected.attackNearestHuman(collisionMap, path);
-			var pos:int = humans.indexOf(man);
-			humans[pos].x=1000000000;
 			zombies.push(infected);
 			remove(man,true);
 			man.alive=false;
@@ -488,9 +515,9 @@ package
 					if(angle>=looker.getAngle()-this.coneWidth && angle<=looker.getAngle()+this.coneWidth){
 						return true;
 					}
-					else if(looker.pathSpeed==0){
-						return true;
-					}
+					//else if(looker.pathSpeed==0){
+						//return true;
+					//}
 				}
 			}
 			return false;
