@@ -112,17 +112,17 @@ package objects
 			}
 			else{
 				this.moves=true;
-			var ppppp:FlxPath;
+			var pathBeingMade:FlxPath;
 			if(!this.isPathSet && this.pathSpeed==0 && this.isFollowing==false && routePoints.length>0){
-				ppppp = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2), routePoints[0]);
+				pathBeingMade = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2), routePoints[0]);
 				var i:Number;
-				//ppppp.nodes = ppppp.nodes.concat(collisionMap.findPath(routePoints[0], routePoints[1]));
-				//ppppp.nodes = ppppp.nodes.concat(collisionMap.findPath(routePoints[1], routePoints[2]));
+				//pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath(routePoints[0], routePoints[1]));
+				//pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath(routePoints[1], routePoints[2]));
 				for(i=1; i<routePoints.length;i++){
-					ppppp.nodes = ppppp.nodes.concat(collisionMap.findPath((routePoints[i-1]),routePoints[i]).nodes);
+					pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath((routePoints[i-1]),routePoints[i]).nodes);
 				}
-				ppppp.nodes = ppppp.nodes.concat(collisionMap.findPath((routePoints[i-1]),new FlxPoint(super.x + super.width / 2, super.y + super.height / 2)).nodes);
-				setRoute(ppppp);
+				pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath((routePoints[i-1]),new FlxPoint(super.x + super.width / 2, super.y + super.height / 2)).nodes);
+				setRoute(pathBeingMade);
 				this.isPathSet=true;
 			}
 			}

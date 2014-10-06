@@ -19,6 +19,7 @@ package
 		private var yDrag: int = 0;
 		private var xMaxVelocity: int = 0;
 		private var yMaxVelocity: int = 0;
+		private var humanFollowing:Human;
 		//private var color: int = 0;
  		public function Zombie(xPos:int, yPos:int, width:int, height:int, xDrag:int, yDrag:int, xMaxVelocity:int, yMaxVelocity:int)
 		{
@@ -40,18 +41,27 @@ package
 			var minLength:int = int.MAX_VALUE;
 			var path:FlxPath = null;
 			var nearestPath: FlxPath = null;
-			path = collisionMap.findPath(zombieP, new FlxPoint(100, 100), false);
-			/*while(i < humanP.length){
-				path = collisionMap.findPath(zombieP, new FlxPoint(81, 100), false);
+			for(var j:int = 0; j<humanP.length;j++){
+				var path2:FlxPath = collisionMap.findPath(zombieP, new FlxPoint(humanP[j].x+humanP[j].width/2, humanP[j].y+humanP[j].height/2), false);
+				if(path2!=null){
+					path=path2;
+					this.humanFollowing=humanP[j];
+					break;
+				}
+			}
+			/*
+			//path = collisionMap.findPath(zombieP, new FlxPoint(humanP[1].x, humanP[1].y), false);
+			while(i < humanP.length){
+				path = collisionMap.findPath(zombieP, new FlxPoint(humanP[i].x+humanP[i].width/2, humanP[i].y+humanP[i].height/2));
 				if(path!=null){
 					nearestPath=path;
 				}
-				/*if(path != null && minLength > collisionMap.getPathLength()){
-					minLength = collisionMap.getPathLength();
-					nearestPath = path;
-				}*/
-				//i++;
-			//}
+				//if(path != null && minLength > collisionMap.getPathLength()){
+					//minLength = collisionMap.getPathLength();
+					//nearestPath = path;
+				//}
+				i++;
+			}*/
 			return path;
 		}
 		
@@ -61,10 +71,24 @@ package
 		}*/
 		
 		public function attackNearestHuman(collisionMap:FlxTilemap, path:FlxPath):void{
-			if(path!=null)
+			if(path!=null){
 				this.followPath(path,50, PATH_FORWARD, true);
+			}
 		}
-		
+		public function zombieUpdate(collisionMap:FlxTilemap, humanP:Vector.<Human>, zombieP:FlxPoint):void{
+			if(humanP!=null && humanP.indexOf(this.humanFollowing)==-1){
+				this.stopFollowingPath(true);
+				this.pathSpeed=0;
+				this.velocity=new FlxPoint(0,0);
+				this.attackNearestHuman(collisionMap,this.findNearestHuman(collisionMap,humanP,zombieP));
+			}
+			if(this.pathSpeed==0){
+				var path:FlxPath = this.findNearestHuman(collisionMap,humanP,zombieP);
+				if(path!=null)
+					this.attackNearestHuman(collisionMap,path);
+			}
+			
+		}
 		public function setColor(c:int):void{
 			//super().color = c;
 			this.color = c;
