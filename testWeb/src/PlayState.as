@@ -179,23 +179,23 @@ package
 			});
 			add(autoAltBtn);
 			
-			resetBtn = new FlxButton(8 + autoAltBtn.width, FlxG.height - 24, "Reset", function():void
+			resetBtn = new FlxButton(FlxG.width/2 - autoAltBtn.width,5, "Reset", function():void
 			{
 				switch(collisionMap.auto)
 				{
 					case FlxTilemap.AUTO:
 						collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 						
-						player.x = 64;
-						player.y = 220;
+						player.x = 20;
+						player.y = 75;
 						break;
-						
+					
 					case FlxTilemap.ALT:
 						collisionMap.loadMap(new default_alt(), alt_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
 						player.x = 64;
 						player.y = 128;
 						break;
-						
+					
 					case FlxTilemap.OFF:
 						collisionMap.loadMap(new default_empty(), empty_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 						player.x = 64;
@@ -205,12 +205,13 @@ package
 			});
 			add(resetBtn);
 			
-			quitBtn = new FlxButton(FlxG.width - resetBtn.width - 4, FlxG.height - 24, "Quit",
+			quitBtn = new FlxButton(FlxG.width/2 - resetBtn.width, 30, "Quit",
 				function():void { FlxG.fade(0xff000000, 0.22, function():void { FlxG.switchState(new MenuState()); } ); } );
 			add(quitBtn);
 			
-			helperTxt = new FlxText(12 + autoAltBtn.width*2, FlxG.height - 30, 150, "Click to place tiles\nShift-Click to remove tiles\nArrow keys to move");
+			helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
 			add(helperTxt);
+	
 		}
 		
 		private function characterLoader():void{
@@ -397,11 +398,7 @@ package
 
 			add(door1);
 			add(key1);
-
-			add(player);
-
-
-			
+	
 			add(door2);
 			add(key2);
 			
@@ -410,7 +407,7 @@ package
 			add(door5);
 			add(door6);
 
-			//add(player);
+			add(player);
 
 
 		}
