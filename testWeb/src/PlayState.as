@@ -28,12 +28,15 @@ package
 		
 		// Tileset that works with OFF mode (do what you want mode)
 		[Embed(source = 'empty_tiles.png')]private static var empty_tiles:Class;
+		[Embed(source = 'win.jpg')]private static var winImg:Class;
+		[Embed(source = 'game-over.jpg')]private static var loseImg:Class;
 		
 		// Default tilemaps. Embedding text files is a little weird.
 		[Embed(source = 'default_auto.txt', mimeType = 'application/octet-stream')]private static var default_auto:Class;
 		[Embed(source = 'default_alt.txt', mimeType = 'application/octet-stream')]private static var default_alt:Class;
 		[Embed(source = 'default_empty.txt', mimeType = 'application/octet-stream')]private static var default_empty:Class;
 		[Embed(source = 'default_characters.txt', mimeType = 'application/octet-stream')]private static var default_characters:Class;
+		[Embed(source = 'default_chars_hard.txt', mimeType = 'application/octet-stream')]private static var default_chars_hard:Class;
 		
 		[Embed(source = 'level_middle.txt', mimeType = 'application/octet-stream')]private static var default_middle:Class;
 		[Embed(source = 'level_hard.txt', mimeType = 'application/octet-stream')]private static var default_hard:Class;
@@ -61,6 +64,9 @@ package
 		private var player:Zombie;
 		private var humans:Vector.<Human>;
 		private var zombies:Vector.<Zombie>;
+		
+		private var winPic:FlxSprite = new FlxSprite(10,10);
+		private var losePic:FlxSprite = new FlxSprite(10,10);
 
 		private var isFollowing:Boolean;
 		private var isChasing:Boolean=false;
@@ -120,7 +126,7 @@ package
 			 */
 			
 			// Initializes the map using the generated string, the tile images, and the tile size
-			collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			add(collisionMap);
 			
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
@@ -205,13 +211,13 @@ package
 			
 			// Then we setup camera to follow the players
 			
-			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
-			cam.follow(player);
-			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-			cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
-			FlxG.addCamera(cam);
-			
+			//var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
+//			cam.follow(player);
+//			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
+//			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
+//			cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
+//			FlxG.addCamera(cam);
+//			
 			
 			
 			// add buttons
@@ -247,9 +253,9 @@ package
 				}
 			});
 			add(resetBtn);
-			cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-			cam.follow(resetBtn);
-			FlxG.addCamera(cam);
+//			cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
+//			cam.follow(resetBtn);
+//			FlxG.addCamera(cam);
 			
 			nextLevelBtn = new FlxButton(FlxG.width/2 - autoAltBtn.width, 130, "Next Level", function():void
 			{
@@ -269,16 +275,16 @@ package
 				}
 			});
 			add(nextLevelBtn);
-			cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
-			cam.follow(nextLevelBtn);
-			FlxG.addCamera(cam);
-			
-			quitBtn = new FlxButton(FlxG.width/2 - resetBtn.width, 30, "Quit",
+//			cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
+//			cam.follow(nextLevelBtn);
+//			FlxG.addCamera(cam);
+//			
+			quitBtn = new FlxButton(FlxG.width/2-80, 30, "Quit",
 				function():void { FlxG.fade(0xff000000, 0.22, function():void { FlxG.switchState(new MenuState()); } ); } );
 			add(quitBtn);
-			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-			cam.follow(quitBtn);
-			FlxG.addCamera(cam);
+//			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+//			cam.follow(quitBtn);
+//			FlxG.addCamera(cam);
 			
 			helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
 			add(helperTxt);
@@ -292,7 +298,10 @@ package
 			keys = new Vector.<Key>();
 			unlockedDoors = new Vector.<UnlockedDoor>();
 			var btarray:ByteArray;
-			btarray = new default_characters();
+			
+			//btarray = new default_characters();
+			btarray = new default_chars_hard();
+		
 			var wholeLevel:String = btarray.readMultiByte(btarray.bytesAvailable, btarray.endian);
 			var arLines:Array = wholeLevel.split("\n");
 			var x:int;
@@ -526,6 +535,10 @@ package
 //			door5.updateDoor();
 //			door6.checkCollision(collisionMap, player, 17, 11);
 //			door6.updateDoor();
+			if (player.alive == false) {
+				losePic.loadGraphic(loseImg,false, false);
+				add(losePic);
+			}
 			
 			for (var i:Number=0;i<doors.length;i++){
 				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/2)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/8)/TILE_HEIGHT),zombies);
