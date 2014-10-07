@@ -81,7 +81,7 @@ package
 		private var area:FlxSprite;
 		
 		//constants For detection
-		private var distanceCanSee:int = 100;
+		private var distanceCanSee:int = 50;
 		private var coneWidth:Number = 45;
 		override public function create():void
 		{

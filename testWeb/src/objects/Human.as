@@ -60,7 +60,7 @@ package objects
 		private function follow():void
 		{
 			
-				if(isFollowing){
+				if(isFollowing && nextPath!=null){
 					super.followPath(nextPath,70,PATH_FORWARD,true);
 				}else{
 					super.followPath(myroute,50,PATH_LOOP_FORWARD,true);	
