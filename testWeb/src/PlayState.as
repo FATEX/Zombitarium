@@ -83,13 +83,6 @@ package
 		private var keys:Vector.<Key>;
 		private var doors:Vector.<Door>;
 		private var unlockedDoors:Vector.<UnlockedDoor>;
-
-
-		//private var door3:UnlockedDoor = new UnlockedDoor(55, 15);
-		//private var door4:UnlockedDoor = new UnlockedDoor(55, 270);
-		//private var door5:UnlockedDoor = new UnlockedDoor(200, 175);
-		//private var door6:UnlockedDoor = new UnlockedDoor(265, 175);
-		
 		
 		private var level:int = 0;
 		
@@ -136,112 +129,40 @@ package
 			characterLoader();
 			
 
-			for each(var d:Door in doors){
-				add(d);
-			}
 			
-			for each(var ud:UnlockedDoor in unlockedDoors){
-				add(ud);
-			}
-			
-			for each(var k:Key in keys){
-				add(k);
-			}
-			
-			// Then we setup two cameras to follow each of the two players
-			/*
->>>>>>> 5ecde288d1f2f638481422f426b0b7ccd0cc0c43
-			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
-			cam.follow(player);
-=======
-			//var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
-			//cam.follow(player);
->>>>>>> Stashed changes
-			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-			//cam.setBounds(0,0,collisionMap.width, collisionMap.height/2);
-			//cam.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
-<<<<<<< Updated upstream
-			FlxG.addCamera(cam);
-			
-=======
-			//FlxG.addCamera(cam);
-			/*
->>>>>>> Stashed changes
-			// Almost the same thing as the first camera
-			cam = new FlxCamera(FlxG.width,0, FlxG.width/2, FlxG.height,4);    // and the second one in the top middle of the screen
-			//cam.follow(zombie);
-			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-			//cam.color = 0xCCCCFF; // Add a light blue tint to the camera
-			FlxG.addCamera(cam);
-			
-			cam = new FlxCamera(0,FlxG.height, FlxG.width/2, FlxG.height,4);    // and the second one in the top middle of the screen
-			//cam.follow(zombie);
-			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-			//cam.color = 0xCCCCFF; // Add a light blue tint to the camera
-			FlxG.addCamera(cam);
-			
-			// add quit button
-			/*var quitBtn:FlxButton = new FlxButton(1000, 1000, "Quit", onQuit); //put the button out of screen so we don't see in the two other cameras
-			add(quitBtn);
-			
-			// Create a camera focused on the quit button.
-			// We do this because we don't want the quit button to be
-			// tinted by the other cameras.
-			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-			cam.follow(quitBtn);
-			FlxG.addCamera(cam);*/
 			
 			// When switching between modes here, the map is reloaded with it's own data, so the positions of tiles are kept the same
 			// Notice that different tilesets are used when the auto mode is switched
-			autoAltBtn = new FlxButton(4, FlxG.height - 24, "AUTO", function():void
-
-			{
-				switch(collisionMap.auto)
-				{
-					case FlxTilemap.AUTO:
-						collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
-							alt_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
-						autoAltBtn.label.text = "ALT";
-						break;
-					
-					case FlxTilemap.ALT:
-						collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
-							empty_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
-						autoAltBtn.label.text = "OFF";
-						break;
-					
-					case FlxTilemap.OFF:
-						collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
-							auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-						autoAltBtn.label.text = "AUTO";
-						break;
-				}
-				
-			});
-			
-			// Then we setup camera to follow the players
-			
-			//var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
-//			cam.follow(player);
-//			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-//			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-//			cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
-//			FlxG.addCamera(cam);
-//			
-			
-			
-			// add buttons
-//			add(autoAltBtn);
-//			cam = new FlxCamera(2, 2, autoAltBtn.width, autoAltBtn.height);
-//			cam.follow(autoAltBtn);
-//			FlxG.addCamera(cam);
-//			
+//			autoAltBtn = new FlxButton(4, FlxG.height - 24, "AUTO", function():void
+//
+//			{
+//				switch(collisionMap.auto)
+//				{
+//					case FlxTilemap.AUTO:
+//						collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
+//							alt_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
+//						autoAltBtn.label.text = "ALT";
+//						break;
+//					
+//					case FlxTilemap.ALT:
+//						collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
+//							empty_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+//						autoAltBtn.label.text = "OFF";
+//						break;
+//					
+//					case FlxTilemap.OFF:
+//						collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
+//							auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+//						autoAltBtn.label.text = "AUTO";
+//						break;
+//				}
+//				
+//			});
 			
 
 			resetBtn = new FlxButton(-100, 42, "Reset", function():void
 			{
 				if(level==0){
-					
 					remove(collisionMap);
 					collisionMap = new FlxTilemap();
 					collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
@@ -272,35 +193,10 @@ package
 					
 					setupPlayer();
 					characterLoader();
+	
+					add(player);
+					addCam();
 					
-					
-					for each(var g:Door in doors){
-						add(g);
-					}
-					
-					for each(var ug:UnlockedDoor in unlockedDoors){
-						add(ug);
-					}
-					
-					for each(var s:Key in keys){
-						add(s);
-					}
-					var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
-					cam.follow(player);
-					// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-					cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-					cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
-					FlxG.addCamera(cam);
-					cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
-					cam.follow(nextLevelBtn);
-					FlxG.addCamera(cam);
-					
-					cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-					cam.follow(quitBtn);
-					FlxG.addCamera(cam);
-					cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-					cam.follow(resetBtn);
-					FlxG.addCamera(cam);
 				}
 				if (level == 1) 
 				{
@@ -334,39 +230,14 @@ package
 					
 					setupPlayer();
 					characterLoader();
-					
-					
-					for each(var g:Door in doors){
-						add(g);
-					}
-					
-					for each(var ug:UnlockedDoor in unlockedDoors){
-						add(ug);
-					}
-					
-					for each(var s:Key in keys){
-						add(s);
-					}
-					var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
-					cam.follow(player);
-					// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-					cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-					cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
-					FlxG.addCamera(cam);
-					cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
-					cam.follow(nextLevelBtn);
-					FlxG.addCamera(cam);
-					
-					cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-					cam.follow(quitBtn);
-					FlxG.addCamera(cam);
-					cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-					cam.follow(resetBtn);
-					FlxG.addCamera(cam);
+
+					add(player);
+					addCam();
 					
 					
 				} else if (level == 2)
-				{remove(collisionMap);
+				{
+					remove(collisionMap);
 					collisionMap = new FlxTilemap();
 					collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 					add(collisionMap);
@@ -396,48 +267,17 @@ package
 					
 					setupPlayer();
 					characterLoader();
-					
-					
-					for each(var g:Door in doors){
-						add(g);
-					}
-					
-					for each(var ug:UnlockedDoor in unlockedDoors){
-						add(ug);
-					}
-					
-					for each(var s:Key in keys){
-						add(s);
-					}
-					var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
-					cam.follow(player);
-					// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-					cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-					cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
-					FlxG.addCamera(cam);
-					cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
-					cam.follow(nextLevelBtn);
-					FlxG.addCamera(cam);
-					
-					cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-					cam.follow(quitBtn);
-					FlxG.addCamera(cam);
-					cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-					cam.follow(resetBtn);
-					FlxG.addCamera(cam);
+		
+					addCam();
 				}
 			});
 			add(resetBtn);
-//			cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-//			cam.follow(resetBtn);
-//			FlxG.addCamera(cam);
 			
 			nextLevelBtn = new FlxButton(-100, 130, "Next Level", function():void
 			{
 				level++;
 				level = level%3;
 				if(level==0){
-					
 					remove(collisionMap);
 					collisionMap = new FlxTilemap();
 					collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
@@ -468,35 +308,7 @@ package
 					
 					setupPlayer();
 					characterLoader();
-					
-					
-					for each(var g:Door in doors){
-						add(g);
-					}
-					
-					for each(var ug:UnlockedDoor in unlockedDoors){
-						add(ug);
-					}
-					
-					for each(var s:Key in keys){
-						add(s);
-					}
-					var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
-					cam.follow(player);
-					// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-					cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-					cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
-					FlxG.addCamera(cam);
-					cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
-					cam.follow(nextLevelBtn);
-					FlxG.addCamera(cam);
-					
-					cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-					cam.follow(quitBtn);
-					FlxG.addCamera(cam);
-					cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-					cam.follow(resetBtn);
-					FlxG.addCamera(cam);
+					addCam();
 				}
 				if (level == 1) 
 				{
@@ -530,40 +342,9 @@ package
 					
 					setupPlayer();
 					characterLoader();
-					
-					
-					for each(var g:Door in doors){
-						add(g);
-					}
-					
-					for each(var ug:UnlockedDoor in unlockedDoors){
-						add(ug);
-					}
-					
-					for each(var s:Key in keys){
-						add(s);
-					}
-					var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
-					cam.follow(player);
-					// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-					cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-					cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
-					FlxG.addCamera(cam);
-					cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
-					cam.follow(nextLevelBtn);
-					FlxG.addCamera(cam);
-					
-					cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-					cam.follow(quitBtn);
-					FlxG.addCamera(cam);
-					cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-					cam.follow(resetBtn);
-					FlxG.addCamera(cam);
-					
-					
+					addCam();					
 				} else if (level == 2)
-				{remove(collisionMap);
-					collisionMap = new FlxTilemap();
+				{
 					collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 					add(collisionMap);
 					remove(player,true);
@@ -592,67 +373,42 @@ package
 					
 					setupPlayer();
 					characterLoader();
-					
-					
-					for each(var g:Door in doors){
-						add(g);
-					}
-					
-					for each(var ug:UnlockedDoor in unlockedDoors){
-						add(ug);
-					}
-					
-					for each(var s:Key in keys){
-						add(s);
-					}
-					var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
-					cam.follow(player);
-					// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-					cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-					cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
-					FlxG.addCamera(cam);
-					cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
-					cam.follow(nextLevelBtn);
-					FlxG.addCamera(cam);
-					
-					cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-					cam.follow(quitBtn);
-					FlxG.addCamera(cam);
-					cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-					cam.follow(resetBtn);
-					FlxG.addCamera(cam);
+					addCam();
 				}
 			});
 			add(nextLevelBtn);
-			//var cam:FlxCamera= new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
-			//cam.follow(nextLevelBtn);
-			//FlxG.addCamera(cam);
+
 			
 			quitBtn = new FlxButton(-1000, 30, "Quit",
 				function():void { FlxG.fade(0xff000000, 0.22, function():void { FlxG.switchState(new MenuState()); } ); } );
 			add(quitBtn);
-//			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-//			cam.follow(quitBtn);
-//			FlxG.addCamera(cam);
+			
+			add(player);
+			addCam();
+			//helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
+			//add(helperTxt);
+	
+		}
+		
+		private function addCam():void {
 			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
 			cam.follow(player);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
 			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-			cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
-			FlxG.addCamera(cam);
-			cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
-			cam.follow(nextLevelBtn);
+			//cam.color = 0xFFFFFF; 
 			FlxG.addCamera(cam);
 			
 			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
 			cam.follow(quitBtn);
 			FlxG.addCamera(cam);
+			
 			cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
 			cam.follow(resetBtn);
 			FlxG.addCamera(cam);
-			//helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
-			//add(helperTxt);
-	
+			
+			cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
+			cam.follow(nextLevelBtn);
+			FlxG.addCamera(cam);
 		}
 		
 		
@@ -719,6 +475,17 @@ package
 					unlockedDoor = new UnlockedDoor(x*TILE_WIDTH-unlockedDoor.width/2,y*TILE_HEIGHT-unlockedDoor.height/8);
 					unlockedDoors.push(unlockedDoor);
 				}
+			}
+			for each(var g:Door in doors){
+				add(g);
+			}
+			
+			for each(var ug:UnlockedDoor in unlockedDoors){
+				add(ug);
+			}
+			
+			for each(var s:Key in keys){
+				add(s);
 			}
 			for each(var hum:Human in humans){
 				add(hum);
@@ -879,11 +646,10 @@ package
 			//animations
 			player.addAnimation("idle", [0]);
 			player.addAnimation("run", [0, 1, 2, 3], 12);
-			//player.addAnimation("jump", [4]);
 			zombies.push(player);
 
 
-			add(player);
+			//add(player);
 
 		}
 		
@@ -892,19 +658,6 @@ package
 		{
 			wrap(player);
 
-//			key1.checkCollision(collisionMap, door1, player, 8, 16);
-//			door1.updateDoor();
-//			key2.checkCollision(collisionMap, door2, player, 24, 16);
-//			door2.updateDoor();
-//			
-//			door3.checkCollision(collisionMap, player, 4, 1);
-//			door3.updateDoor();
-//			door4.checkCollision(collisionMap, player, 4, 17);
-//			door4.updateDoor();
-//			door5.checkCollision(collisionMap, player, 13, 11);
-//			door5.updateDoor();
-//			door6.checkCollision(collisionMap, player, 17, 11);
-//			door6.updateDoor();
 			if (player.alive == false) {
 				//losePic.loadGraphic(loseImg,false, false);
 				//add(losePic);
