@@ -20,7 +20,7 @@ package
 			super(tx,ty);
 			this.loadGraphic(ImgKey, false, false, 16);
 		}
-		public function checkCollision(c, d, p, tx, ty) { 
+		public function checkCollision(c, d, p, tx, ty, zombies:Vector.<Zombie>) { 
 			if(keyCollected == false){ // if we still haven't collected the key
 				if(FlxG.collide(p, this)){ // and if the player collides with the key
 					this.visible = false; // hide the key from view
@@ -35,6 +35,9 @@ package
 						d.doorOpen = true;
 						c.setTile(tx, ty, 0);
 						c.setTile(tx, ty, 0);
+						for(var i:int =0; i<zombies.length;i++){
+							zombies[i].checkPath(c);
+						}
 						
 					} else if (FlxG.keys.E == false) {
 						pressed = true;
@@ -47,6 +50,9 @@ package
 					pressed = false;
 					d.doorOpen = false;
 					c.setTile(tx, ty, 1);		
+					for(var j:int =0; j<zombies.length;j++){
+						zombies[j].checkPath(c);
+					}
 				} 
 				else if (FlxG.keys.E == false) {
 					pressed = true;

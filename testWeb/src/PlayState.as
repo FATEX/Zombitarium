@@ -11,6 +11,7 @@ package
 	import org.flixel.FlxObject;
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
+	import org.flixel.FlxSave;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
@@ -38,11 +39,12 @@ package
 		[Embed(source = 'level_hard.txt', mimeType = 'application/octet-stream')]private static var default_hard:Class;
 
 
-		//[Embed(source="player.png")] private static var ImgSpaceman:Class;
+
+		[Embed(source="walk_zombie_front.png")] private static var ImgSpaceman:Class;
+
 		[Embed(source="key.png")] private static var ImgKey:Class;
 		[Embed(source="door.png")] private static var ImgDoor:Class;
 		[Embed(source="doorOpen.png")] private static var ImgDoorOpen:Class;
-		
 		
 		// Some static constants for the size of the tilemap tiles
 		private const TILE_WIDTH:uint = 16;
@@ -114,9 +116,10 @@ package
 		private var level:int = 1;
 		
 		private var infected:Zombie;
+		private var area:FlxSprite;
 		
 		//constants For detection
-		private var distanceCanSee:int = 100;
+		private var distanceCanSee:int = 50;
 		private var coneWidth:Number = 45;
 		override public function create():void
 		{
@@ -154,7 +157,42 @@ package
 			setupPlayer();
 			characterLoader();
 			
-			autoAltBtn = new FlxButton(FlxG.width/2 - 80, 100, "AUTO", function():void
+
+			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
+			cam.follow(player);
+			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
+			cam.setBounds(0,0,collisionMap.width, collisionMap.height/2);
+			//cam.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
+			FlxG.addCamera(cam);
+			
+			// Almost the same thing as the first camera
+			cam = new FlxCamera(FlxG.width,0, FlxG.width/2, FlxG.height,4);    // and the second one in the top middle of the screen
+			//cam.follow(zombie);
+			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
+			//cam.color = 0xCCCCFF; // Add a light blue tint to the camera
+			FlxG.addCamera(cam);
+			
+			cam = new FlxCamera(0,FlxG.height, FlxG.width/2, FlxG.height,4);    // and the second one in the top middle of the screen
+			//cam.follow(zombie);
+			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
+			//cam.color = 0xCCCCFF; // Add a light blue tint to the camera
+			FlxG.addCamera(cam);
+			
+			// add quit button
+			/*var quitBtn:FlxButton = new FlxButton(1000, 1000, "Quit", onQuit); //put the button out of screen so we don't see in the two other cameras
+			add(quitBtn);
+			
+			// Create a camera focused on the quit button.
+			// We do this because we don't want the quit button to be
+			// tinted by the other cameras.
+			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+			cam.follow(quitBtn);
+			FlxG.addCamera(cam);*/
+			
+			// When switching between modes here, the map is reloaded with it's own data, so the positions of tiles are kept the same
+			// Notice that different tilesets are used when the auto mode is switched
+			autoAltBtn = new FlxButton(4, FlxG.height - 24, "AUTO", function():void
+
 			{
 				switch(collisionMap.auto)
 				{
@@ -436,7 +474,7 @@ package
 			//zombie.addRoutePoints(new FlxPoint(24*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
 			//zombie.addRoutePoints(new FlxPoint(zombie.x,zombie.y));
 			player = new Zombie(20, 20,14,14,640,640,80,80);
-			
+			player.loadGraphic(ImgSpaceman, true, true, 16);
 			//bounding box tweaks
 			player.width = 14;
 			player.height = 14;
@@ -452,8 +490,8 @@ package
 			
 			//animations
 			player.addAnimation("idle", [0]);
-			player.addAnimation("run", [1, 2, 3, 0], 12);
-			player.addAnimation("jump", [4]);
+			player.addAnimation("run", [0, 1, 2, 3], 12);
+			//player.addAnimation("jump", [4]);
 			zombies.push(player);
 
 			addDoors();
@@ -491,46 +529,10 @@ package
 				add(door3_5);
 				add(door3_6);			}
 		}
-		
-		private function updateDoors():void 
-		{
-			if (level == 1) {
-				key1.checkCollision(collisionMap, door1, player, 8, 16);
-				door1.updateDoor();
-				key2.checkCollision(collisionMap, door2, player, 24, 16);
-				door2.updateDoor();
-				
-				door3.checkCollision(collisionMap, player, 4, 1);
-				door3.updateDoor();
-				door4.checkCollision(collisionMap, player, 4, 17);
-				door4.updateDoor();
-				door5.checkCollision(collisionMap, player, 13, 11);
-				door5.updateDoor();
-				door6.checkCollision(collisionMap, player, 17, 11);
-				door6.updateDoor();
-			} else if (level == 2) {
-				key2_1.checkCollision(collisionMap, door1, player, 8, 16);
-				door2_1.updateDoor();
-				key2_2.checkCollision(collisionMap, door2, player, 24, 16);
-				door2_2.updateDoor();
-				
-				door2_3.checkCollision(collisionMap, player, 4, 1);
-				door2_3.updateDoor();
-				door2_4.checkCollision(collisionMap, player, 4, 17);
-				door2_4.updateDoor();
-				door2_5.checkCollision(collisionMap, player, 13, 11);
-				door2_5.updateDoor();
-				door2_6.checkCollision(collisionMap, player, 17, 11);
-				door2_6.updateDoor();
-			} else if (level == 3) {
-				
-			}
-				
-		}
+
 		private function updatePlayer():void
 		{
 			wrap(player);
-			updateDoors();
 			//MOVEMENT
 			player.acceleration.x = 0;
 			player.acceleration.y = 0;
@@ -557,7 +559,7 @@ package
 			
 
 			//ANIMATION
-			 if(player.velocity.x == 0 || player.velocity.y == 0)
+			 if(player.velocity.x == 0 && player.velocity.y == 0)
 			{
 				player.play("idle");
 			}
