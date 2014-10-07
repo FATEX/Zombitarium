@@ -28,7 +28,7 @@ package
 				this.immovable = true;
 			}
 		}
-		public function checkCollision(c, p, tx, ty) { 
+		public function checkCollision(c, p, tx, ty, zombies:Vector.<Zombie>) { 
 		
 			if(doorOpen == false){ // if the door hasn't been opened yet
 
@@ -37,7 +37,9 @@ package
 						doorOpen = true;
 						c.setTile(tx, ty, 0);
 						c.setTile(tx, ty, 0);
-						
+						for(var i:int =0; i<zombies.length;i++){
+							zombies[i].checkPath(c);
+						}
 					} else if (FlxG.keys.E == false) {
 						pressed = true;
 					}
@@ -48,7 +50,10 @@ package
 				if (FlxG.keys.E && pressed && FlxG.overlap(p, this)) {
 					pressed = false;
 					doorOpen = false;
-					c.setTile(tx, ty, 1);		
+					c.setTile(tx, ty, 1);
+					for(var j:int =0; j<zombies.length;j++){
+						zombies[j].checkPath(c);
+					}
 				} 
 				else if (FlxG.keys.E == false) {
 					pressed = true;

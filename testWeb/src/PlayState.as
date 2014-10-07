@@ -11,12 +11,12 @@ package
 	import org.flixel.FlxObject;
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
+	import org.flixel.FlxSave;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
 	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
-	import org.osmf.net.StreamingURLResource;
 
 	public class PlayState extends FlxState
 	{
@@ -36,11 +36,10 @@ package
 		[Embed(source = 'default_characters.txt', mimeType = 'application/octet-stream')]private static var default_characters:Class;
 
 
-		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
+		[Embed(source="walk_zombie_front.png")] private static var ImgSpaceman:Class;
 		[Embed(source="key.png")] private static var ImgKey:Class;
 		[Embed(source="door.png")] private static var ImgDoor:Class;
 		[Embed(source="doorOpen.png")] private static var ImgDoorOpen:Class;
-		
 		
 		// Some static constants for the size of the tilemap tiles
 		private const TILE_WIDTH:uint = 16;
@@ -82,9 +81,10 @@ package
 		//private var door6:UnlockedDoor = new UnlockedDoor(265, 175);
 		
 		private var infected:Zombie;
+		private var area:FlxSprite;
 		
 		//constants For detection
-		private var distanceCanSee:int = 100;
+		private var distanceCanSee:int = 50;
 		private var coneWidth:Number = 45;
 		override public function create():void
 		{
@@ -139,10 +139,10 @@ package
 			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
 			cam.follow(player);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-			cam.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
+			cam.setBounds(0,0,collisionMap.width, collisionMap.height/2);
+			//cam.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
 			FlxG.addCamera(cam);
-			
+			/*
 			// Almost the same thing as the first camera
 			cam = new FlxCamera(FlxG.width,0, FlxG.width/2, FlxG.height,4);    // and the second one in the top middle of the screen
 			//cam.follow(zombie);
@@ -455,8 +455,8 @@ package
 			
 			//animations
 			player.addAnimation("idle", [0]);
-			player.addAnimation("run", [1, 2, 3, 0], 12);
-			player.addAnimation("jump", [4]);
+			player.addAnimation("run", [0, 1, 2, 3], 12);
+			//player.addAnimation("jump", [4]);
 			zombies.push(player);
 			
 			
@@ -500,13 +500,13 @@ package
 //			door6.updateDoor();
 			
 			for (var i:Number=0;i<doors.length;i++){
-				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/2)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/8)/TILE_HEIGHT));
+				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/2)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/8)/TILE_HEIGHT),zombies);
 				doors[i].updateDoor();
 			}
 			
 			for each(var ud:UnlockedDoor in unlockedDoors){
 				//trace(Math.abs((ud.y+ud.height/4)/TILE_HEIGHT));
-				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/2)/TILE_WIDTH), Math.round((ud.y+ud.height/8)/TILE_HEIGHT));
+				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/2)/TILE_WIDTH), Math.round((ud.y+ud.height/8)/TILE_HEIGHT),zombies);
 				ud.updateDoor();
 			}
 			
@@ -551,7 +551,7 @@ package
 			}
 
 			//ANIMATION
-			 if(player.velocity.x == 0 || player.velocity.y == 0)
+			 if(player.velocity.x == 0 && player.velocity.y == 0)
 			{
 				player.play("idle");
 			}
