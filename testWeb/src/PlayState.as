@@ -11,6 +11,7 @@ package
 	import org.flixel.FlxObject;
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
+	import org.flixel.FlxSave;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
@@ -39,7 +40,6 @@ package
 		[Embed(source="key.png")] private static var ImgKey:Class;
 		[Embed(source="door.png")] private static var ImgDoor:Class;
 		[Embed(source="doorOpen.png")] private static var ImgDoorOpen:Class;
-		
 		
 		// Some static constants for the size of the tilemap tiles
 		private const TILE_WIDTH:uint = 16;
@@ -78,6 +78,7 @@ package
 		private var door6:UnlockedDoor = new UnlockedDoor(265, 175);
 		
 		private var infected:Zombie;
+		private var area:FlxSprite;
 		
 		//constants For detection
 		private var distanceCanSee:int = 100;
@@ -118,15 +119,13 @@ package
 			setupPlayer();
 			characterLoader();
 			
-			// Then we setup two cameras to follow each of the two players
-			/*
 			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
 			cam.follow(player);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-			cam.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
+			cam.setBounds(0,0,collisionMap.width, collisionMap.height/2);
+			//cam.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
 			FlxG.addCamera(cam);
-			
+			/*
 			// Almost the same thing as the first camera
 			cam = new FlxCamera(FlxG.width,0, FlxG.width/2, FlxG.height,4);    // and the second one in the top middle of the screen
 			//cam.follow(zombie);
