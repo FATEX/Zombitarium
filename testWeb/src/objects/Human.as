@@ -30,7 +30,7 @@ package objects
 		public var originX:Number;
 		public var originY:Number;
 		public var isStunned:Boolean = false;
-		
+		public var restingAngle:Number=0;
 		public function Human(originX:Number, originY:Number)
 		{
 			super(originX, originY);
@@ -105,7 +105,10 @@ package objects
 			isFollowing=false;
 			isPathSet=false;
 		}
-		
+		public function setAngle(ang:Number):void{
+			this.angle=ang;
+			this.restingAngle=ang;
+		}
 		public function humanUpdate(collisionMap:FlxTilemap):void{
 			if(this.isStunned){
 				this.moves=false;
@@ -125,6 +128,9 @@ package objects
 				setRoute(pathBeingMade);
 				this.isPathSet=true;
 			}
+			}
+			if(this.pathSpeed==0){
+				this.angle=this.restingAngle;
 			}
 		}
 		
