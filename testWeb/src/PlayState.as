@@ -35,7 +35,7 @@ package
 		[Embed(source = 'default_characters.txt', mimeType = 'application/octet-stream')]private static var default_characters:Class;
 
 
-		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
+		[Embed(source="walk_zombie_front.png")] private static var ImgSpaceman:Class;
 		[Embed(source="key.png")] private static var ImgKey:Class;
 		[Embed(source="door.png")] private static var ImgDoor:Class;
 		[Embed(source="doorOpen.png")] private static var ImgDoorOpen:Class;
@@ -416,8 +416,8 @@ package
 			
 			//animations
 			player.addAnimation("idle", [0]);
-			player.addAnimation("run", [1, 2, 3, 0], 12);
-			player.addAnimation("jump", [4]);
+			player.addAnimation("run", [0, 1, 2, 3], 12);
+			//player.addAnimation("jump", [4]);
 			zombies.push(player);
 			
 
@@ -445,18 +445,18 @@ package
 		private function updatePlayer():void
 		{
 			wrap(player);
-			key1.checkCollision(collisionMap, door1, player, 8, 16);
+			key1.checkCollision(collisionMap, door1, player, 8, 16,zombies);
 			door1.updateDoor();
-			key2.checkCollision(collisionMap, door2, player, 24, 16);
+			key2.checkCollision(collisionMap, door2, player, 24, 16,zombies);
 			door2.updateDoor();
 			
-			door3.checkCollision(collisionMap, player, 4, 1);
+			door3.checkCollision(collisionMap, player, 4, 1,zombies);
 			door3.updateDoor();
-			door4.checkCollision(collisionMap, player, 4, 17);
+			door4.checkCollision(collisionMap, player, 4, 17,zombies);
 			door4.updateDoor();
-			door5.checkCollision(collisionMap, player, 13, 11);
+			door5.checkCollision(collisionMap, player, 13, 11,zombies);
 			door5.updateDoor();
-			door6.checkCollision(collisionMap, player, 17, 11);
+			door6.checkCollision(collisionMap, player, 17, 11,zombies);
 			door6.updateDoor();
 			//MOVEMENT
 			player.acceleration.x = 0;
@@ -499,7 +499,7 @@ package
 			}
 
 			//ANIMATION
-			 if(player.velocity.x == 0 || player.velocity.y == 0)
+			 if(player.velocity.x == 0 && player.velocity.y == 0)
 			{
 				player.play("idle");
 			}

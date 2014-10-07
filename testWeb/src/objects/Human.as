@@ -13,7 +13,7 @@ package objects
 	{
 		private const TILE_WIDTH:uint = 16;
 		private const TILE_HEIGHT:uint = 16;
-		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
+		[Embed(source="walk_nurse_front.png")] private static var ImgSpaceman:Class;
 		
 		//path array of flxpoints
 		//detect() super type
