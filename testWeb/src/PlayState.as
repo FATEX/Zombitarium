@@ -33,6 +33,9 @@ package
 		[Embed(source = 'default_alt.txt', mimeType = 'application/octet-stream')]private static var default_alt:Class;
 		[Embed(source = 'default_empty.txt', mimeType = 'application/octet-stream')]private static var default_empty:Class;
 		[Embed(source = 'default_characters.txt', mimeType = 'application/octet-stream')]private static var default_characters:Class;
+		
+		[Embed(source = 'level_middle.txt', mimeType = 'application/octet-stream')]private static var default_middle:Class;
+		[Embed(source = 'level_hard.txt', mimeType = 'application/octet-stream')]private static var default_hard:Class;
 
 
 		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
@@ -111,6 +114,7 @@ package
 			
 			// Initializes the map using the generated string, the tile images, and the tile size
 			collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			//levelLoader();
 			add(collisionMap);
 			
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
@@ -212,6 +216,16 @@ package
 			helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
 			add(helperTxt);
 	
+		}
+		
+		private function levelLoader():void {
+			if (FlxG.keys.ONE) {
+				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			} else if (FlxG.keys.TWO) {
+				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			} else if (FlxG.keys.THREE) {
+				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			}
 		}
 		
 		private function characterLoader():void{
