@@ -241,7 +241,7 @@ package
 					h.addRoutePoints(new FlxPoint(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2));
 				}
 				if(type=="D"){
-					h.angle=x;
+					h.setAngle(x);
 					
 				}
 				if(type=="P"){
