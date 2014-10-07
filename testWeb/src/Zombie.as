@@ -10,7 +10,7 @@ package
 	
 	public class Zombie extends FlxSprite
 	{
-		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
+		[Embed(source="player.png")] private static var ImgSpaceman:Class;
 		public var xPos:int = 0;
 		public var yPos:int = 0;
 		private var width:int = 0;
@@ -24,7 +24,7 @@ package
  		public function Zombie(xPos:int, yPos:int, width:int, height:int, xDrag:int, yDrag:int, xMaxVelocity:int, yMaxVelocity:int)
 		{
 			super(xPos,yPos);
-			this.loadGraphic(ImgSpaceman, true, true, 16);
+			this.loadGraphic(ImgSpaceman, true, true, 16,16);
 			//this.loadGraphic();
 			this.xPos = xPos;
 			this.yPos = yPos;

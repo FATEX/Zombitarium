@@ -38,7 +38,7 @@ package
 		[Embed(source = 'level_hard.txt', mimeType = 'application/octet-stream')]private static var default_hard:Class;
 
 
-		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
+		//[Embed(source="player.png")] private static var ImgSpaceman:Class;
 		[Embed(source="key.png")] private static var ImgKey:Class;
 		[Embed(source="door.png")] private static var ImgDoor:Class;
 		[Embed(source="doorOpen.png")] private static var ImgDoorOpen:Class;
@@ -67,9 +67,10 @@ package
 		private var autoAltBtn:FlxButton;
 		private var resetBtn:FlxButton;
 		private var quitBtn:FlxButton;
+		private var nextLevelBtn:FlxButton;
 		private var helperTxt:FlxText;
 		private var destination:FlxPoint;
-		// Key and Door
+		// Key and Door Level One
 		private var door1:Door = new Door(120, 255);
 		private var key1:Key = new Key(collisionMap, door1, player, 40, 260);
 		private var door2:Door = new Door(375, 255);
@@ -79,6 +80,38 @@ package
 		private var door4:UnlockedDoor = new UnlockedDoor(55, 270);
 		private var door5:UnlockedDoor = new UnlockedDoor(200, 175);
 		private var door6:UnlockedDoor = new UnlockedDoor(265, 175);
+		
+		// Key and Door Level Two
+		private var door2_1:Door = new Door(120, 255);
+		private var key2_1:Key = new Key(collisionMap, door1, player, 40, 260);
+		private var door2_2:Door = new Door(375, 255);
+		private var key2_2:Key = new Key(collisionMap, door2, player, 375, 180);
+		
+		private var door2_3:UnlockedDoor = new UnlockedDoor(55, 15);
+		private var door2_4:UnlockedDoor = new UnlockedDoor(55, 270);
+		private var door2_5:UnlockedDoor = new UnlockedDoor(200, 175);
+		private var door2_6:UnlockedDoor = new UnlockedDoor(265, 175);
+		
+		// Key and Door Level Three
+		private var door3_1:Door = new Door(120, 255);
+		private var key3_1:Key = new Key(collisionMap, door1, player, 40, 260);
+		private var door3_2:Door = new Door(375, 255);
+		private var key3_2:Key = new Key(collisionMap, door2, player, 375, 180);
+		
+		private var door3_3:UnlockedDoor = new UnlockedDoor(55, 15);
+		private var door3_4:UnlockedDoor = new UnlockedDoor(55, 270);
+		private var door3_5:UnlockedDoor = new UnlockedDoor(200, 175);
+		private var door3_6:UnlockedDoor = new UnlockedDoor(265, 175);
+		private var door3_7:UnlockedDoor = new UnlockedDoor(55, 15);
+		private var door3_8:UnlockedDoor = new UnlockedDoor(55, 270);
+		private var door3_9:UnlockedDoor = new UnlockedDoor(200, 175);
+		private var door3_10:UnlockedDoor = new UnlockedDoor(265, 175);
+		private var door3_11:UnlockedDoor = new UnlockedDoor(55, 15);
+		private var door3_12:UnlockedDoor = new UnlockedDoor(55, 270);
+		private var door3_13:UnlockedDoor = new UnlockedDoor(200, 175);
+		private var door3_14:UnlockedDoor = new UnlockedDoor(265, 175);
+		
+		private var level:int = 1;
 		
 		private var infected:Zombie;
 		
@@ -114,7 +147,6 @@ package
 			
 			// Initializes the map using the generated string, the tile images, and the tile size
 			collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-			//levelLoader();
 			add(collisionMap);
 			
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
@@ -122,42 +154,7 @@ package
 			setupPlayer();
 			characterLoader();
 			
-			// Then we setup two cameras to follow each of the two players
-			/*
-			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
-			cam.follow(player);
-			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-			cam.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
-			FlxG.addCamera(cam);
-			
-			// Almost the same thing as the first camera
-			cam = new FlxCamera(FlxG.width,0, FlxG.width/2, FlxG.height,4);    // and the second one in the top middle of the screen
-			//cam.follow(zombie);
-			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-			//cam.color = 0xCCCCFF; // Add a light blue tint to the camera
-			FlxG.addCamera(cam);
-			
-			cam = new FlxCamera(0,FlxG.height, FlxG.width/2, FlxG.height,4);    // and the second one in the top middle of the screen
-			//cam.follow(zombie);
-			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-			//cam.color = 0xCCCCFF; // Add a light blue tint to the camera
-			FlxG.addCamera(cam);
-			
-			// add quit button
-			/*var quitBtn:FlxButton = new FlxButton(1000, 1000, "Quit", onQuit); //put the button out of screen so we don't see in the two other cameras
-			add(quitBtn);
-			
-			// Create a camera focused on the quit button.
-			// We do this because we don't want the quit button to be
-			// tinted by the other cameras.
-			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-			cam.follow(quitBtn);
-			FlxG.addCamera(cam);*/
-			
-			// When switching between modes here, the map is reloaded with it's own data, so the positions of tiles are kept the same
-			// Notice that different tilesets are used when the auto mode is switched
-			autoAltBtn = new FlxButton(4, FlxG.height - 24, "AUTO", function():void
+			autoAltBtn = new FlxButton(FlxG.width/2 - 80, 100, "AUTO", function():void
 			{
 				switch(collisionMap.auto)
 				{
@@ -166,13 +163,13 @@ package
 							alt_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
 						autoAltBtn.label.text = "ALT";
 						break;
-						
+					
 					case FlxTilemap.ALT:
 						collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
 							empty_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 						autoAltBtn.label.text = "OFF";
 						break;
-						
+					
 					case FlxTilemap.OFF:
 						collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
 							auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
@@ -181,8 +178,26 @@ package
 				}
 				
 			});
-			add(autoAltBtn);
 			
+			// Then we setup camera to follow the players
+			
+			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
+			cam.follow(player);
+			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
+			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
+			cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
+			FlxG.addCamera(cam);
+			
+			
+			
+			// add buttons
+//			add(autoAltBtn);
+//			cam = new FlxCamera(2, 2, autoAltBtn.width, autoAltBtn.height);
+//			cam.follow(autoAltBtn);
+//			FlxG.addCamera(cam);
+//			
+			
+
 			resetBtn = new FlxButton(FlxG.width/2 - autoAltBtn.width,5, "Reset", function():void
 			{
 				switch(collisionMap.auto)
@@ -208,25 +223,44 @@ package
 				}
 			});
 			add(resetBtn);
+			cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
+			cam.follow(resetBtn);
+			FlxG.addCamera(cam);
+			
+			nextLevelBtn = new FlxButton(FlxG.width/2 - autoAltBtn.width, 130, "Next Level", function():void
+			{
+				if (level == 1) 
+				{
+					collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+					player.x = 10;
+					player.y = 10;
+					level++;
+					
+				} else if (level == 2)
+				{
+					collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+					player.x = 30;
+					player.y = 18;
+					level++;
+				}
+			});
+			add(nextLevelBtn);
+			cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
+			cam.follow(nextLevelBtn);
+			FlxG.addCamera(cam);
 			
 			quitBtn = new FlxButton(FlxG.width/2 - resetBtn.width, 30, "Quit",
 				function():void { FlxG.fade(0xff000000, 0.22, function():void { FlxG.switchState(new MenuState()); } ); } );
 			add(quitBtn);
+			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+			cam.follow(quitBtn);
+			FlxG.addCamera(cam);
 			
 			helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
 			add(helperTxt);
 	
 		}
 		
-		private function levelLoader():void {
-			if (FlxG.keys.ONE) {
-				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-			} else if (FlxG.keys.TWO) {
-				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-			} else if (FlxG.keys.THREE) {
-				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-			}
-		}
 		
 		private function characterLoader():void{
 			humans = new Vector.<Human>();
@@ -281,18 +315,6 @@ package
 			highlightBox.x = Math.floor(FlxG.mouse.x / TILE_WIDTH) * TILE_WIDTH;
 			highlightBox.y = Math.floor(FlxG.mouse.y / TILE_HEIGHT) * TILE_HEIGHT;
 			
-			if (FlxG.mouse.pressed())
-			{
-				// FlxTilemaps can be manually edited at runtime as well.
-				// Setting a tile to 0 removes it, and setting it to anything else will place a tile.
-				// If auto map is on, the map will automatically update all surrounding tiles.
-				if(FlxG.keys.B){
-					destination = new FlxPoint(FlxG.mouse.x, FlxG.mouse.y);
-				}
-				else{
-					collisionMap.setTile(FlxG.mouse.x / TILE_WIDTH, FlxG.mouse.y / TILE_HEIGHT, FlxG.keys.SHIFT?0:1);
-				}
-			}
 			
 			updatePlayer();
 			for(var i:int=0; i<humans.length;i++){
@@ -414,7 +436,6 @@ package
 			//zombie.addRoutePoints(new FlxPoint(24*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
 			//zombie.addRoutePoints(new FlxPoint(zombie.x,zombie.y));
 			player = new Zombie(20, 20,14,14,640,640,80,80);
-			player.loadGraphic(ImgSpaceman, true, true, 16);
 			
 			//bounding box tweaks
 			player.width = 14;
@@ -434,41 +455,82 @@ package
 			player.addAnimation("run", [1, 2, 3, 0], 12);
 			player.addAnimation("jump", [4]);
 			zombies.push(player);
-			
 
-
-			add(door1);
-			add(key1);
-	
-			add(door2);
-			add(key2);
-			
-			add(door3);
-			add(door4);
-			add(door5);
-			add(door6);
-
+			addDoors();
 			add(player);
-
-
 		}
 		
+		private function addDoors():void {
+			if (level == 1) {
+				add(door1);
+				add(key1);				
+				add(door2);
+				add(key2);				
+				add(door3);
+				add(door4);
+				add(door5);
+				add(door6);
+			} else if (level == 2)
+			{
+				add(door2_1);
+				add(key2_1);				
+				add(door2_2);
+				add(key2_2);				
+				add(door2_3);
+				add(door2_4);
+				add(door2_5);
+				add(door2_6);
+			} else if (level == 3)
+			{
+				add(door3_1);
+				add(key3_1);				
+				add(door3_2);
+				add(key3_2);				
+				add(door3_3);
+				add(door3_4);
+				add(door3_5);
+				add(door3_6);			}
+		}
+		
+		private function updateDoors():void 
+		{
+			if (level == 1) {
+				key1.checkCollision(collisionMap, door1, player, 8, 16);
+				door1.updateDoor();
+				key2.checkCollision(collisionMap, door2, player, 24, 16);
+				door2.updateDoor();
+				
+				door3.checkCollision(collisionMap, player, 4, 1);
+				door3.updateDoor();
+				door4.checkCollision(collisionMap, player, 4, 17);
+				door4.updateDoor();
+				door5.checkCollision(collisionMap, player, 13, 11);
+				door5.updateDoor();
+				door6.checkCollision(collisionMap, player, 17, 11);
+				door6.updateDoor();
+			} else if (level == 2) {
+				key2_1.checkCollision(collisionMap, door1, player, 8, 16);
+				door2_1.updateDoor();
+				key2_2.checkCollision(collisionMap, door2, player, 24, 16);
+				door2_2.updateDoor();
+				
+				door2_3.checkCollision(collisionMap, player, 4, 1);
+				door2_3.updateDoor();
+				door2_4.checkCollision(collisionMap, player, 4, 17);
+				door2_4.updateDoor();
+				door2_5.checkCollision(collisionMap, player, 13, 11);
+				door2_5.updateDoor();
+				door2_6.checkCollision(collisionMap, player, 17, 11);
+				door2_6.updateDoor();
+			} else if (level == 3) {
+				
+			}
+				
+		}
 		private function updatePlayer():void
 		{
 			wrap(player);
-			key1.checkCollision(collisionMap, door1, player, 8, 16);
-			door1.updateDoor();
-			key2.checkCollision(collisionMap, door2, player, 24, 16);
-			door2.updateDoor();
-			
-			door3.checkCollision(collisionMap, player, 4, 1);
-			door3.updateDoor();
-			door4.checkCollision(collisionMap, player, 4, 17);
-			door4.updateDoor();
-			door5.checkCollision(collisionMap, player, 13, 11);
-			door5.updateDoor();
-			door6.checkCollision(collisionMap, player, 17, 11);
-			door6.updateDoor();
+			updateDoors();
 			//MOVEMENT
 			player.acceleration.x = 0;
 			player.acceleration.y = 0;
@@ -492,22 +554,7 @@ package
 				player.facing = FlxObject.DOWN;
 				player.acceleration.y += player.drag.y;
 			}
-			if (FlxG.mouse.pressed())
-			{
-				// FlxTilemaps can be manually edited at runtime as well.
-				// Setting a tile to 0 removes it, and setting it to anything else will place a tile.
-				// If auto map is on, the map will automatically update all surrounding tiles.
-				if(FlxG.keys.B){
-					destination = new FlxPoint(FlxG.mouse.x, FlxG.mouse.y);
-				}
-			}
-			if(FlxG.keys.A){
-				var path:FlxPath = collisionMap.findPath(new FlxPoint(player.x + player.width / 2, player.y + player.height / 2), destination);
-				
-				//Tell unit to follow path
-				player.followPath(path,100,null,true);
-				//_action = ACTION_GO;
-			}
+			
 
 			//ANIMATION
 			 if(player.velocity.x == 0 || player.velocity.y == 0)
