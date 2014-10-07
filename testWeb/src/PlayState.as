@@ -34,10 +34,10 @@ package
 		[Embed(source = 'default_alt.txt', mimeType = 'application/octet-stream')]private static var default_alt:Class;
 		[Embed(source = 'default_empty.txt', mimeType = 'application/octet-stream')]private static var default_empty:Class;
 		[Embed(source = 'default_characters.txt', mimeType = 'application/octet-stream')]private static var default_characters:Class;
+		[Embed(source = 'default_characters_level_middle.txt', mimeType = 'application/octet-stream')]private static var default_characters2:Class;
 		
 		[Embed(source = 'level_middle.txt', mimeType = 'application/octet-stream')]private static var default_middle:Class;
 		[Embed(source = 'level_hard.txt', mimeType = 'application/octet-stream')]private static var default_hard:Class;
-
 
 
 		[Embed(source="walk_zombie_front.png")] private static var ImgSpaceman:Class;
@@ -84,7 +84,7 @@ package
 		//private var door6:UnlockedDoor = new UnlockedDoor(265, 175);
 		
 		
-		private var level:int = 1;
+		private var level:int = 0;
 		
 		private var infected:Zombie;
 		private var area:FlxSprite;
@@ -146,11 +146,20 @@ package
 >>>>>>> 5ecde288d1f2f638481422f426b0b7ccd0cc0c43
 			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
 			cam.follow(player);
+=======
+			//var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
+			//cam.follow(player);
+>>>>>>> Stashed changes
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-			cam.setBounds(0,0,collisionMap.width, collisionMap.height/2);
+			//cam.setBounds(0,0,collisionMap.width, collisionMap.height/2);
 			//cam.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
+<<<<<<< Updated upstream
 			FlxG.addCamera(cam);
 			
+=======
+			//FlxG.addCamera(cam);
+			/*
+>>>>>>> Stashed changes
 			// Almost the same thing as the first camera
 			cam = new FlxCamera(FlxG.width,0, FlxG.width/2, FlxG.height,4);    // and the second one in the top middle of the screen
 			//cam.follow(zombie);
@@ -253,19 +262,193 @@ package
 			
 			nextLevelBtn = new FlxButton(FlxG.width/2 - autoAltBtn.width, 130, "Next Level", function():void
 			{
+				level++;
+				level = level%3;
+				if(level==0){
+					
+					remove(collisionMap);
+					collisionMap = new FlxTilemap();
+					collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+					add(collisionMap);
+					remove(player,true);
+					for(var i:int=0; i<zombies.length;i++){
+						remove(zombies[i]);
+					}
+					for(var j:int=0; j<humans.length;j++){
+						remove(humans[j]);
+					}
+					for each(var d:Door in doors){
+						remove(d);
+					}
+					
+					for each(var ud:UnlockedDoor in unlockedDoors){
+						remove(ud);
+					}
+					
+					for each(var k:Key in keys){
+						remove(k);
+					}
+					zombies = new Vector.<Zombie>();
+					humans = new Vector.<Human>();
+					doors = new Vector.<Door>;
+					unlockedDoors = new Vector.<UnlockedDoor>();
+					keys = new Vector.<Key>();
+					
+					setupPlayer();
+					characterLoader();
+					
+					
+					for each(var g:Door in doors){
+						add(g);
+					}
+					
+					for each(var ug:UnlockedDoor in unlockedDoors){
+						add(ug);
+					}
+					
+					for each(var s:Key in keys){
+						add(s);
+					}
+					var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
+					cam.follow(player);
+					// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
+					cam.setBounds(0,0,collisionMap.width, collisionMap.height);
+					cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
+					FlxG.addCamera(cam);
+					cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
+					cam.follow(nextLevelBtn);
+					FlxG.addCamera(cam);
+					
+					cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+					cam.follow(quitBtn);
+					FlxG.addCamera(cam);
+					cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
+					cam.follow(resetBtn);
+					FlxG.addCamera(cam);
+				}
 				if (level == 1) 
 				{
+					remove(collisionMap);
+					collisionMap = new FlxTilemap();
 					collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-					player.x = 10;
-					player.y = 10;
-					level++;
+					add(collisionMap);
+					remove(player,true);
+					for(var i:int=0; i<zombies.length;i++){
+						remove(zombies[i]);
+					}
+					for(var j:int=0; j<humans.length;j++){
+						remove(humans[j]);
+					}
+					for each(var d:Door in doors){
+						remove(d);
+					}
+					
+					for each(var ud:UnlockedDoor in unlockedDoors){
+						remove(ud);
+					}
+					
+					for each(var k:Key in keys){
+						remove(k);
+					}
+					zombies = new Vector.<Zombie>();
+					humans = new Vector.<Human>();
+					doors = new Vector.<Door>;
+					unlockedDoors = new Vector.<UnlockedDoor>();
+					keys = new Vector.<Key>();
+					
+					setupPlayer();
+					characterLoader();
+					
+					
+					for each(var g:Door in doors){
+						add(g);
+					}
+					
+					for each(var ug:UnlockedDoor in unlockedDoors){
+						add(ug);
+					}
+					
+					for each(var s:Key in keys){
+						add(s);
+					}
+					var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
+					cam.follow(player);
+					// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
+					cam.setBounds(0,0,collisionMap.width, collisionMap.height);
+					cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
+					FlxG.addCamera(cam);
+					cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
+					cam.follow(nextLevelBtn);
+					FlxG.addCamera(cam);
+					
+					cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+					cam.follow(quitBtn);
+					FlxG.addCamera(cam);
+					cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
+					cam.follow(resetBtn);
+					FlxG.addCamera(cam);
+					
 					
 				} else if (level == 2)
-				{
+				{remove(collisionMap);
+					collisionMap = new FlxTilemap();
 					collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-					player.x = 30;
-					player.y = 18;
-					level++;
+					add(collisionMap);
+					remove(player,true);
+					for(var i:int=0; i<zombies.length;i++){
+						remove(zombies[i]);
+					}
+					for(var j:int=0; j<humans.length;j++){
+						remove(humans[j]);
+					}
+					for each(var d:Door in doors){
+						remove(d);
+					}
+					
+					for each(var ud:UnlockedDoor in unlockedDoors){
+						remove(ud);
+					}
+					
+					for each(var k:Key in keys){
+						remove(k);
+					}
+					zombies = new Vector.<Zombie>();
+					humans = new Vector.<Human>();
+					doors = new Vector.<Door>;
+					unlockedDoors = new Vector.<UnlockedDoor>();
+					keys = new Vector.<Key>();
+					
+					setupPlayer();
+					characterLoader();
+					
+					
+					for each(var g:Door in doors){
+						add(g);
+					}
+					
+					for each(var ug:UnlockedDoor in unlockedDoors){
+						add(ug);
+					}
+					
+					for each(var s:Key in keys){
+						add(s);
+					}
+					var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
+					cam.follow(player);
+					// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
+					cam.setBounds(0,0,collisionMap.width, collisionMap.height);
+					cam.color = 0xFFFFFF; // add a light red tint to the camera to differentiate it from the other
+					FlxG.addCamera(cam);
+					cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
+					cam.follow(nextLevelBtn);
+					FlxG.addCamera(cam);
+					
+					cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+					cam.follow(quitBtn);
+					FlxG.addCamera(cam);
+					cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
+					cam.follow(resetBtn);
+					FlxG.addCamera(cam);
 				}
 			});
 			add(nextLevelBtn);
@@ -273,7 +456,7 @@ package
 			cam.follow(nextLevelBtn);
 			FlxG.addCamera(cam);
 			
-			quitBtn = new FlxButton(FlxG.width/2 - resetBtn.width, 30, "Quit",
+			quitBtn = new FlxButton(FlxG.width, 30, "Quit",
 				function():void { FlxG.fade(0xff000000, 0.22, function():void { FlxG.switchState(new MenuState()); } ); } );
 			add(quitBtn);
 			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
@@ -292,7 +475,12 @@ package
 			keys = new Vector.<Key>();
 			unlockedDoors = new Vector.<UnlockedDoor>();
 			var btarray:ByteArray;
-			btarray = new default_characters();
+			if(level==0){
+				btarray = new default_characters();
+			}
+			else if(level==1){
+				btarray = new default_characters2();
+			}
 			var wholeLevel:String = btarray.readMultiByte(btarray.bytesAvailable, btarray.endian);
 			var arLines:Array = wholeLevel.split("\n");
 			var x:int;
