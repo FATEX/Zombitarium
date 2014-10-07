@@ -15,8 +15,8 @@ package
 
 		public var xPos:int = 0;
 		public var yPos:int = 0;
-		private var width:int = 0;
-		private var height:int = 0;
+		//private var width:int = 0;
+		//private var height:int = 0;
 		private var xDrag: int = 0;
 		private var yDrag: int = 0;
 		private var xMaxVelocity: int = 0;
