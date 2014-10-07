@@ -36,7 +36,6 @@ package
 		[Embed(source = 'default_alt.txt', mimeType = 'application/octet-stream')]private static var default_alt:Class;
 		[Embed(source = 'default_empty.txt', mimeType = 'application/octet-stream')]private static var default_empty:Class;
 		[Embed(source = 'default_characters.txt', mimeType = 'application/octet-stream')]private static var default_characters:Class;
-		[Embed(source = 'default_chars_hard.txt', mimeType = 'application/octet-stream')]private static var default_chars_hard:Class;
 		
 		[Embed(source = 'level_middle.txt', mimeType = 'application/octet-stream')]private static var default_middle:Class;
 		[Embed(source = 'level_hard.txt', mimeType = 'application/octet-stream')]private static var default_hard:Class;
@@ -126,7 +125,7 @@ package
 			 */
 			
 			// Initializes the map using the generated string, the tile images, and the tile size
-			collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			add(collisionMap);
 			
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
@@ -299,8 +298,7 @@ package
 			unlockedDoors = new Vector.<UnlockedDoor>();
 			var btarray:ByteArray;
 			
-			//btarray = new default_characters();
-			btarray = new default_chars_hard();
+			btarray = new default_characters();
 		
 			var wholeLevel:String = btarray.readMultiByte(btarray.bytesAvailable, btarray.endian);
 			var arLines:Array = wholeLevel.split("\n");
