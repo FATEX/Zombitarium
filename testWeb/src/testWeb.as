@@ -11,7 +11,7 @@ package
 		public function testWeb() 
 		{
 
-			super(900, 600, MenuState, 2, 20, 20);
+			super(900, 600, MenuState, 1, 20, 20);
 
 
 		}

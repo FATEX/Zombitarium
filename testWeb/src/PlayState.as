@@ -194,7 +194,6 @@ package
 					setupPlayer();
 					characterLoader();
 	
-					add(player);
 					addCam();
 					
 				}
@@ -231,7 +230,6 @@ package
 					setupPlayer();
 					characterLoader();
 
-					add(player);
 					addCam();
 					
 					
@@ -383,7 +381,6 @@ package
 				function():void { FlxG.fade(0xff000000, 0.22, function():void { FlxG.switchState(new MenuState()); } ); } );
 			add(quitBtn);
 			
-			add(player);
 			addCam();
 			//helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
 			//add(helperTxt);
@@ -391,6 +388,7 @@ package
 		}
 		
 		private function addCam():void {
+			add(player);
 			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
 			cam.follow(player);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap

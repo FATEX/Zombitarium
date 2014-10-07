@@ -7,12 +7,12 @@ package
 		override public function create():void
 		{
 			var t:FlxText;
-			t = new FlxText(0,(FlxG.height/2-20)/2,(FlxG.width)/2,"Zombify");
-			t.size = 32;
+			t = new FlxText(0,(FlxG.height/2-20),(FlxG.width),"Zombify");
+			t.size = 64
 			t.alignment = "center";
 			add(t);
-			t = new FlxText((FlxG.width/2-100)/2,(FlxG.height-50)/2,200,"click to play");
-			t.size = 16;
+			t = new FlxText((FlxG.width/2-100),(FlxG.height-50),200,"click to play");
+			t.size = 24;
 			t.alignment = "center";
 			add(t);
 			
