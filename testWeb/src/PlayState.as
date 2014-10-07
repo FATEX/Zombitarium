@@ -16,6 +16,7 @@ package
 	import org.flixel.FlxText;
 	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
+	import org.osmf.net.StreamingURLResource;
 
 	public class PlayState extends FlxState
 	{
@@ -67,15 +68,18 @@ package
 		private var helperTxt:FlxText;
 		private var destination:FlxPoint;
 		// Key and Door
-		private var door1:Door = new Door(120, 255);
-		private var key1:Key = new Key(collisionMap, door1, player, 40, 260);
-		private var door2:Door = new Door(375, 255);
-		private var key2:Key = new Key(collisionMap, door2, player, 375, 180);
+		//private var door1:Door = new Door(120, 255);
+		//private var key1:Key = new Key(collisionMap, door1, player, 40, 260);
+		//private var door2:Door = new Door(375, 255);
+		//private var key2:Key = new Key(collisionMap, door2, player, 375, 180);
+		private var keys:Vector.<Key>;
+		private var doors:Vector.<Door>;
+		private var unlockedDoors:Vector.<UnlockedDoor>;
 
-		private var door3:UnlockedDoor = new UnlockedDoor(55, 15);
-		private var door4:UnlockedDoor = new UnlockedDoor(55, 270);
-		private var door5:UnlockedDoor = new UnlockedDoor(200, 175);
-		private var door6:UnlockedDoor = new UnlockedDoor(265, 175);
+		//private var door3:UnlockedDoor = new UnlockedDoor(55, 15);
+		//private var door4:UnlockedDoor = new UnlockedDoor(55, 270);
+		//private var door5:UnlockedDoor = new UnlockedDoor(200, 175);
+		//private var door6:UnlockedDoor = new UnlockedDoor(265, 175);
 		
 		private var infected:Zombie;
 		
@@ -117,6 +121,18 @@ package
 			destination = new FlxPoint(0,0);
 			setupPlayer();
 			characterLoader();
+			
+			for each(var d:Door in doors){
+				add(d);
+			}
+			
+			for each(var ud:UnlockedDoor in unlockedDoors){
+				add(ud);
+			}
+			
+			for each(var k:Key in keys){
+				add(k);
+			}
 			
 			// Then we setup two cameras to follow each of the two players
 			/*
@@ -215,6 +231,9 @@ package
 		
 		private function characterLoader():void{
 			humans = new Vector.<Human>();
+			doors = new Vector.<Door>();
+			keys = new Vector.<Key>();
+			unlockedDoors = new Vector.<UnlockedDoor>();
 			var btarray:ByteArray;
 			btarray = new default_characters();
 			var wholeLevel:String = btarray.readMultiByte(btarray.bytesAvailable, btarray.endian);
@@ -224,6 +243,9 @@ package
 			var type:String;
 			var lineArray:Array;
 			var h:Human=new Human(0,0);
+			var door:Door = new Door(0,0);
+			var key:Key = new Key(collisionMap, door, player,0,0);
+			var unlockedDoor:UnlockedDoor = new UnlockedDoor(0,0);
 			for each (var singleLine:String in arLines)
 			{
 				lineArray = singleLine.split(",");
@@ -248,6 +270,18 @@ package
 					player.x=x*TILE_WIDTH;
 					player.y=y*TILE_HEIGHT;
 					
+				}
+				if(type=="LDOOR"){
+					door = new Door(x*TILE_WIDTH-door.width/2,y*TILE_HEIGHT-door.height/8);
+					doors.push(door);
+				}
+				if(type=="KEY"){
+					key = new Key(collisionMap, door, player, x*TILE_WIDTH,y*TILE_HEIGHT+key.height/2);
+					keys.push(key);
+				}
+				if(type=="UDOOR"){
+					unlockedDoor = new UnlockedDoor(x*TILE_WIDTH-unlockedDoor.width/2,y*TILE_HEIGHT-unlockedDoor.height/8);
+					unlockedDoors.push(unlockedDoor);
 				}
 			}
 			for each(var hum:Human in humans){
@@ -282,11 +316,13 @@ package
 			updatePlayer();
 			for(var i:int=0; i<humans.length;i++){
 				for (var j:int=0;j<zombies.length;j++){
+					try{
 					humans[i].humanUpdate(collisionMap);
 					
 					if(zombies[j].alive && humans[i].alive){
 						FlxG.collide(zombies[j],humans[i],collided);
 					}
+					
 					if(zombies[j].alive && humans[i].alive){
 						if(detect(humans[i],zombies[j])){
 							humans[i].setPath(new FlxPoint(zombies[j].x + zombies[j].width / 2, zombies[j].y + zombies[j].height / 2),collisionMap);
@@ -303,6 +339,9 @@ package
 						else{
 							humans[i].color=0x800000;
 						}
+					}
+					}catch(e:Error){
+						break;
 					}
 				}
 			}
@@ -420,22 +459,23 @@ package
 			player.addAnimation("jump", [4]);
 			zombies.push(player);
 			
+			
+			
 
-
-			add(door1);
-			add(key1);
+//			add(door1);
+//			add(key1);
 
 			add(player);
 
 
 			
-			add(door2);
-			add(key2);
-			
-			add(door3);
-			add(door4);
-			add(door5);
-			add(door6);
+//			add(door2);
+//			add(key2);
+//			
+//			add(door3);
+//			add(door4);
+//			add(door5);
+//			add(door6);
 
 			//add(player);
 
@@ -445,19 +485,31 @@ package
 		private function updatePlayer():void
 		{
 			wrap(player);
-			key1.checkCollision(collisionMap, door1, player, 8, 16);
-			door1.updateDoor();
-			key2.checkCollision(collisionMap, door2, player, 24, 16);
-			door2.updateDoor();
+//			key1.checkCollision(collisionMap, door1, player, 8, 16);
+//			door1.updateDoor();
+//			key2.checkCollision(collisionMap, door2, player, 24, 16);
+//			door2.updateDoor();
+//			
+//			door3.checkCollision(collisionMap, player, 4, 1);
+//			door3.updateDoor();
+//			door4.checkCollision(collisionMap, player, 4, 17);
+//			door4.updateDoor();
+//			door5.checkCollision(collisionMap, player, 13, 11);
+//			door5.updateDoor();
+//			door6.checkCollision(collisionMap, player, 17, 11);
+//			door6.updateDoor();
 			
-			door3.checkCollision(collisionMap, player, 4, 1);
-			door3.updateDoor();
-			door4.checkCollision(collisionMap, player, 4, 17);
-			door4.updateDoor();
-			door5.checkCollision(collisionMap, player, 13, 11);
-			door5.updateDoor();
-			door6.checkCollision(collisionMap, player, 17, 11);
-			door6.updateDoor();
+			for (var i:Number=0;i<doors.length;i++){
+				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/2)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/8)/TILE_HEIGHT));
+				doors[i].updateDoor();
+			}
+			
+			for each(var ud:UnlockedDoor in unlockedDoors){
+				//trace(Math.abs((ud.y+ud.height/4)/TILE_HEIGHT));
+				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/2)/TILE_WIDTH), Math.round((ud.y+ud.height/8)/TILE_HEIGHT));
+				ud.updateDoor();
+			}
+			
 			//MOVEMENT
 			player.acceleration.x = 0;
 			player.acceleration.y = 0;
