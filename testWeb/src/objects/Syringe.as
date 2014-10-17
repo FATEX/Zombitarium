@@ -6,7 +6,7 @@ package objects
 	{
 		private const TILE_WIDTH:uint = 16;
 		private const TILE_HEIGHT:uint = 16;
-		private var angle:int;
+		private var angle1:int;
 		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
 		
 		public function Syringe(direction:int, xPos:int, yPos:int)
@@ -28,20 +28,20 @@ package objects
 			
 			//animations
 			super.addAnimation("run", [1, 2, 3, 0], 12);
-			angle = direction;
+			angle1 = direction;
 		}
 		
 		public function updatePos(rate:int){
-			if(angle == 0){
+			if(angle1 == 0){
 				this.acceleration.y -= rate;
 			}
-			if(angle == 90){
+			if(angle1 == 90){
 				this.acceleration.x += rate
 			}
-			if(angle == 180){
+			if(angle1 == 180){
 				this.acceleration.y += rate
 			}
-			if(angle == -90){
+			if(angle1 == -90){
 				this.acceleration.x -= rate
 			}
 			
