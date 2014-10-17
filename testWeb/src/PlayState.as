@@ -5,6 +5,8 @@ package
 	
 	import objects.Human;
 	import objects.Janitor;
+	import objects.Nurse;
+	import objects.Patient;
 	
 	import org.flixel.FlxButton;
 	import org.flixel.FlxCamera;
@@ -18,6 +20,7 @@ package
 	import org.flixel.FlxText;
 	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
+	import flash.net.SharedObject;
 
 	public class PlayState extends FlxState
 	{
@@ -70,7 +73,7 @@ package
 		
 		private var winPic:FlxSprite = new FlxSprite(10,10);
 		private var losePic:FlxSprite = new FlxSprite(10,10);
-
+		
 		private var isFollowing:Boolean;
 		private var isChasing:Boolean=false;
 		private var xPos:int;
@@ -86,10 +89,19 @@ package
 		private var doors:Vector.<Door>;
 		private var unlockedDoors:Vector.<UnlockedDoor>;
 		
-		private var level:int = 0;
+		private static var level:int = 0;
 		
 		private var infected:Zombie;
 		private var area:FlxSprite;
+		
+		//Cameras
+		private var cam:FlxCamera;
+		private var camQuit:FlxCamera;
+		private var camReset:FlxCamera;
+		private var camNextLevel:FlxCamera;
+		
+		private static var resetNumber:int = 0;
+		
 		
 		//constants For detection
 		private var distanceCanSee:int = 50;
@@ -97,6 +109,7 @@ package
 		
 		override public function create():void
 		{
+			
 			FlxG.framerate = 50;
 			FlxG.flashFramerate = 50;
 			//Load _datamap to _map and add to PlayState
@@ -123,265 +136,41 @@ package
 			 */
 			
 			// Initializes the map using the generated string, the tile images, and the tile size
-			collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			if(level==0){
+				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			}
+			else if(level==1){
+				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			}
+			else if(level==2){
+				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			}
 			add(collisionMap);
-			
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
 			destination = new FlxPoint(0,0);
 			setupPlayer();
 			characterLoader();
 			
 
-			
-			
-			// When switching between modes here, the map is reloaded with it's own data, so the positions of tiles are kept the same
-			// Notice that different tilesets are used when the auto mode is switched
-//			autoAltBtn = new FlxButton(4, FlxG.height - 24, "AUTO", function():void
-//
-//			{
-//				switch(collisionMap.auto)
-//				{
-//					case FlxTilemap.AUTO:
-//						collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
-//							alt_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
-//						autoAltBtn.label.text = "ALT";
-//						break;
-//					
-//					case FlxTilemap.ALT:
-//						collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
-//							empty_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
-//						autoAltBtn.label.text = "OFF";
-//						break;
-//					
-//					case FlxTilemap.OFF:
-//						collisionMap.loadMap(FlxTilemap.arrayToCSV(collisionMap.getData(true), collisionMap.widthInTiles),
-//							auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-//						autoAltBtn.label.text = "AUTO";
-//						break;
-//				}
-//				
-//			});
-			
-
-			resetBtn = new FlxButton(-100, 42, "Reset", function():void
+			/*resetBtn = new FlxButton(-100, 42, "Reset", function():void
 			{
-				if(level==0){
-					remove(collisionMap);
-					collisionMap = new FlxTilemap();
-					collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-					add(collisionMap);
-					remove(player,true);
-					for(var i:int=0; i<zombies.length;i++){
-						remove(zombies[i]);
-					}
-					for(var j:int=0; j<humans.length;j++){
-						remove(humans[j]);
-					}
-					for each(var d:Door in doors){
-						remove(d);
-					}
-					
-					for each(var ud:UnlockedDoor in unlockedDoors){
-						remove(ud);
-					}
-					
-					for each(var k:Key in keys){
-						remove(k);
-					}
-					zombies = new Vector.<Zombie>();
-					humans = new Vector.<Human>();
-					doors = new Vector.<Door>;
-					unlockedDoors = new Vector.<UnlockedDoor>();
-					keys = new Vector.<Key>();
-					
-					setupPlayer();
-					characterLoader();
-	
-					addCam();
-					
-				}
-				if (level == 1) 
-				{
-					remove(collisionMap);
-					collisionMap = new FlxTilemap();
-					collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-					add(collisionMap);
-					remove(player,true);
-					for(var i:int=0; i<zombies.length;i++){
-						remove(zombies[i]);
-					}
-					for(var j:int=0; j<humans.length;j++){
-						remove(humans[j]);
-					}
-					for each(var d:Door in doors){
-						remove(d);
-					}
-					
-					for each(var ud:UnlockedDoor in unlockedDoors){
-						remove(ud);
-					}
-					
-					for each(var k:Key in keys){
-						remove(k);
-					}
-					zombies = new Vector.<Zombie>();
-					humans = new Vector.<Human>();
-					doors = new Vector.<Door>;
-					unlockedDoors = new Vector.<UnlockedDoor>();
-					keys = new Vector.<Key>();
-					
-					setupPlayer();
-					characterLoader();
-
-					addCam();
-					
-					
-				} else if (level == 2)
-				{
-					remove(collisionMap);
-					collisionMap = new FlxTilemap();
-					collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-					add(collisionMap);
-					remove(player,true);
-					for(var i:int=0; i<zombies.length;i++){
-						remove(zombies[i]);
-					}
-					for(var j:int=0; j<humans.length;j++){
-						remove(humans[j]);
-					}
-					for each(var d:Door in doors){
-						remove(d);
-					}
-					
-					for each(var ud:UnlockedDoor in unlockedDoors){
-						remove(ud);
-					}
-					
-					for each(var k:Key in keys){
-						remove(k);
-					}
-					zombies = new Vector.<Zombie>();
-					humans = new Vector.<Human>();
-					doors = new Vector.<Door>;
-					unlockedDoors = new Vector.<UnlockedDoor>();
-					keys = new Vector.<Key>();
-					
-					setupPlayer();
-					characterLoader();
-		
-					addCam();
-				}
+				resetGame();
 			});
-			add(resetBtn);
+			add(resetBtn);*/
 			
 			nextLevelBtn = new FlxButton(-100, 130, "Next Level", function():void
 			{
 				level++;
 				level = level%3;
-				if(level==0){
-					remove(collisionMap);
-					collisionMap = new FlxTilemap();
-					collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-					add(collisionMap);
-					remove(player,true);
-					for(var i:int=0; i<zombies.length;i++){
-						remove(zombies[i]);
-					}
-					for(var j:int=0; j<humans.length;j++){
-						remove(humans[j]);
-					}
-					for each(var d:Door in doors){
-						remove(d);
-					}
-					
-					for each(var ud:UnlockedDoor in unlockedDoors){
-						remove(ud);
-					}
-					
-					for each(var k:Key in keys){
-						remove(k);
-					}
-					zombies = new Vector.<Zombie>();
-					humans = new Vector.<Human>();
-					doors = new Vector.<Door>;
-					unlockedDoors = new Vector.<UnlockedDoor>();
-					keys = new Vector.<Key>();
-					
-					setupPlayer();
-					characterLoader();
-					addCam();
-				}
-				if (level == 1) 
-				{
-					remove(collisionMap);
-					collisionMap = new FlxTilemap();
-					collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-					add(collisionMap);
-					remove(player,true);
-					for(var i:int=0; i<zombies.length;i++){
-						remove(zombies[i]);
-					}
-					for(var j:int=0; j<humans.length;j++){
-						remove(humans[j]);
-					}
-					for each(var d:Door in doors){
-						remove(d);
-					}
-					
-					for each(var ud:UnlockedDoor in unlockedDoors){
-						remove(ud);
-					}
-					
-					for each(var k:Key in keys){
-						remove(k);
-					}
-					zombies = new Vector.<Zombie>();
-					humans = new Vector.<Human>();
-					doors = new Vector.<Door>;
-					unlockedDoors = new Vector.<UnlockedDoor>();
-					keys = new Vector.<Key>();
-					
-					setupPlayer();
-					characterLoader();
-					addCam();					
-				} else if (level == 2)
-				{
-					collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
-					add(collisionMap);
-					remove(player,true);
-					for(var i:int=0; i<zombies.length;i++){
-						remove(zombies[i]);
-					}
-					for(var j:int=0; j<humans.length;j++){
-						remove(humans[j]);
-					}
-					for each(var d:Door in doors){
-						remove(d);
-					}
-					
-					for each(var ud:UnlockedDoor in unlockedDoors){
-						remove(ud);
-					}
-					
-					for each(var k:Key in keys){
-						remove(k);
-					}
-					zombies = new Vector.<Zombie>();
-					humans = new Vector.<Human>();
-					doors = new Vector.<Door>;
-					unlockedDoors = new Vector.<UnlockedDoor>();
-					keys = new Vector.<Key>();
-					
-					setupPlayer();
-					characterLoader();
-					addCam();
-				}
+				resetGame();
 			});
 			add(nextLevelBtn);
 
 			
 			quitBtn = new FlxButton(-1000, 30, "Quit",
-				function():void { FlxG.fade(0xff000000, 0.22, function():void { FlxG.switchState(new MenuState()); } ); } );
+				function():void { FlxG.fade(0xff000000, 0.22, function():void { 
+					FlxG.resetGame();
+				} ); } );
 			add(quitBtn);
 			
 			addCam();
@@ -390,26 +179,38 @@ package
 	
 		}
 		
+		private function resetGame():void{
+			FlxG.resetState();
+		}
+		
 		private function addCam():void {
 			add(player);
-			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
+			if(cam !=null){
+				FlxG.removeCamera(cam,false);
+				FlxG.removeCamera(camReset,false);
+				FlxG.removeCamera(camQuit,false);
+				FlxG.removeCamera(camNextLevel,false);
+			}
+			else{
+				cam = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
+				camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+				//camReset = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
+				camNextLevel = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
+			}
 			cam.follow(player);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
 			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
 			//cam.color = 0xFFFFFF; 
 			FlxG.addCamera(cam);
 			
-			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-			cam.follow(quitBtn);
-			FlxG.addCamera(cam);
+			camQuit.follow(quitBtn);
+			FlxG.addCamera(camQuit);
 			
-			cam = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-			cam.follow(resetBtn);
-			FlxG.addCamera(cam);
+			//camReset.follow(resetBtn);
+			//FlxG.addCamera(camReset);
 			
-			cam = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
-			cam.follow(nextLevelBtn);
-			FlxG.addCamera(cam);
+			camNextLevel.follow(nextLevelBtn);
+			FlxG.addCamera(camNextLevel);
 		}
 		
 		
@@ -422,11 +223,9 @@ package
 			var btarray:ByteArray;
 			if(level==0){
 				btarray = new default_characters();
-			}
-			else if(level==1){
+			}else if(level==1){
 				btarray = new default_characters2();
-			}
-			else if(level==2){
+			}else if(level==2){
 				btarray = new default_chars_hard();
 			}
 		
@@ -463,6 +262,14 @@ package
 					keys.push(key);
 					j.key=key;
 					j.key.visible=false;
+				}
+				if(type=="PATIENT"){
+					h=new Patient(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					humans.push(h);
+				}
+				if(type=="NURSE"){
+					h=new Nurse(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					humans.push(h);
 				}
 				if(type=="R"){
 					h.addRoutePoints(new FlxPoint(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2));
@@ -573,16 +380,15 @@ package
 		public function collided(obj1:FlxObject,obj2:FlxObject):void{
 			var man:Human;
 			var zom:Zombie;
+			var nur:Nurse;
 			if(obj1 is Human){
 				if(obj2 is Zombie){
 					man = Human(obj1);
 					zom = Zombie(obj2);
-				}
-				else{
+				}else{
 					return;
 				}
-			}
-			else if(obj1 is Zombie){
+			}else if(obj1 is Zombie){
 				if(obj2 is Human){
 					zom = Zombie(obj1);
 					man = Human(obj2);
@@ -590,63 +396,76 @@ package
 				else{
 					return;
 				}
-			}
-			else{
+			}else{
 				return;
 			}
-		if(this.detect(man,zom)){
-			if(man.isStunned){
-				infected = new Zombie(man.x,man.y,man.width,man.health,man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+			if(this.detect(man,zom)){
+				if(man.isStunned || man is Patient){
+					zom.disguiseOFF();
+					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+					//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
+					//FlxG.collide(infected, collisionMap);
+					var pos2:int = humans.indexOf(man);
+					//humans[pos].x=1000000000;
+					humans.splice(pos2,1);
+					
+					add(infected);
+					var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+					
+					//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
+					//add(t);
+					infected.attackNearestHuman(collisionMap, path2);
+					zombies.push(infected);
+					if(man is Janitor){
+						var jan:Janitor = man as Janitor;
+						jan.die();
+					}
+					if(man is Nurse){
+						if(zom==player){
+							zom.disguiseON();
+						}
+					}
+					remove(man,true);
+					man.alive=false;
+					
+				}else{
+					remove(zom,true);
+					man.goBack(collisionMap);
+					zom.alive=false;
+					man.stunHuman();
+				}
+			}else{
+				zom.disguiseOFF();
+				var t:FlxText;
+			
+				infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 				//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
 				//FlxG.collide(infected, collisionMap);
-				var pos2:int = humans.indexOf(man);
+				var pos:int = humans.indexOf(man);
 				//humans[pos].x=1000000000;
-				humans.splice(pos2,1);
+				humans.splice(pos,1);
 				
 				add(infected);
-				var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+				var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
 				
 				//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
 				//add(t);
-				infected.attackNearestHuman(collisionMap, path2);
+				infected.attackNearestHuman(collisionMap, path);
 				zombies.push(infected);
 				if(man is Janitor){
 					var jan:Janitor = man as Janitor;
 					jan.die();
 				}
+				if(man is Nurse){
+					if(zom==player){
+						zom.disguiseON();
+					}
+				}
 				remove(man,true);
 				man.alive=false;
-			}
-			else{
-				remove(zom,true);
-				man.goBack(collisionMap);
-				zom.alive=false;
-				man.stunHuman();
-			}
-			}
-		else{
-			var t:FlxText;
 			
-			infected = new Zombie(man.x,man.y,man.width,man.health,man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-			//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
-			//FlxG.collide(infected, collisionMap);
-			var pos:int = humans.indexOf(man);
-			//humans[pos].x=1000000000;
-			humans.splice(pos,1);
 			
-			add(infected);
-			var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
 			
-			//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
-			//add(t);
-			infected.attackNearestHuman(collisionMap, path);
-			zombies.push(infected);
-			if(man is Janitor){
-				var jan:Janitor = man as Janitor;
-				jan.die();
-			}
-			remove(man,true);
-			man.alive=false;
 		}
 			
 		}
@@ -701,13 +520,13 @@ package
 			
 			for each(var ud:UnlockedDoor in unlockedDoors){
 				//trace(Math.abs((ud.y+ud.height/4)/TILE_HEIGHT));
-				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/2)/TILE_WIDTH), Math.round((ud.y+ud.height/8)/TILE_HEIGHT),zombies);
+				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/2)/TILE_WIDTH), Math.round((ud.y+ud.height/8)/TILE_HEIGHT),zombies,player);
 				ud.updateDoor();
 			}
 
-			for (var t:Number=0;t<janitors.length;t++) {
-				janitors[t].die();
-			}
+//			for (var t:Number=0;t<janitors.length;t++) {
+//				janitors[t].die();
+//			}
 
 			
 
@@ -734,7 +553,9 @@ package
 				player.facing = FlxObject.DOWN;
 				player.acceleration.y += player.drag.y;
 			}
-			
+			if(FlxG.keys.justPressed("R")){
+				resetGame();
+			}
 
 			//ANIMATION
 			 if(player.velocity.x == 0 && player.velocity.y == 0)
@@ -750,6 +571,12 @@ package
 
 		private function detect(looker:Human,lookee:FlxObject):Boolean
 		{
+			if(lookee is Zombie){
+				var lookeeZ:Zombie = lookee as Zombie;
+				if(lookeeZ.isDisguised){
+					return false;
+				}
+			}
 			if(collisionMap.ray(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))){
 				if(FlxU.getDistance(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))<=this.distanceCanSee){
 					var angle:Number = FlxU.getAngle(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2));

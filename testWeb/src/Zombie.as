@@ -8,10 +8,15 @@ package
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxTilemap;
 	
+	import flash.utils.Timer;
+	import flash.events.TimerEvent;
+	
 	public class Zombie extends FlxSprite
 	{
 
 		[Embed(source="walk_nurse_front_dead.png")] private static var ImgSpaceman:Class;
+		[Embed(source="walk_zombie_front.png")] private static var ImgPlayer:Class;
+		[Embed(source="walk_nurse_front.png")] private static var ImgNurse:Class;
 
 		public var xPos:int = 0;
 		public var yPos:int = 0;
@@ -23,6 +28,8 @@ package
 		private var yMaxVelocity: int = 0;
 		private var humanFollowing:Human;
 		private var checkAgain:Boolean = true;
+		
+		public var isDisguised:Boolean = false;
 		//private var color: int = 0;
  		public function Zombie(xPos:int, yPos:int, width:int, height:int, xDrag:int, yDrag:int, xMaxVelocity:int, yMaxVelocity:int)
 		{
@@ -46,10 +53,10 @@ package
 			var nearestPath: FlxPath = null;
 			for(var j:int = 0; j<humanP.length;j++){
 				var path2:FlxPath = collisionMap.findPath(zombieP, new FlxPoint(humanP[j].x+humanP[j].width/2, humanP[j].y+humanP[j].height/2), false);
-				if(path2!=null){
+				if(path2!=null && path2.nodes.length<minLength){
 					path=path2;
 					this.humanFollowing=humanP[j];
-					break;
+					minLength = path2.nodes.length;
 				}
 			}
 			/*
@@ -79,12 +86,20 @@ package
 			}
 		}
 		public function checkPath(collisionMap:FlxTilemap):void{
-			if(this.humanFollowing!=null && collisionMap.findPath(new FlxPoint(this.x+this.width/2,this.y+this.height/2),new FlxPoint(this.humanFollowing.x+this.humanFollowing.width/2,this.humanFollowing.y+this.humanFollowing.height/2))==null){
-				this.humanFollowing=null;
-				this.stopFollowingPath(true);
-				this.pathSpeed=0;
-				this.velocity=new FlxPoint(0,0);
-			}	
+			/*if(this.humanFollowing!=null){
+				var pathChecker:FlxPath =collisionMap.findPath(new FlxPoint(this.x+this.width/2,this.y+this.height/2),new FlxPoint(this.humanFollowing.x+this.humanFollowing.width/2,this.humanFollowing.y+this.humanFollowing.height/2));
+				if(pathChecker==null){
+					this.humanFollowing=null;
+					this.stopFollowingPath(true);
+					this.pathSpeed=0;
+					this.velocity=new FlxPoint(0,0);
+				}
+				if(pathChecker!=null){
+					path = pathChecker;
+					this.stopFollowingPath(true);
+					this.attackNearestHuman(collisionMap,path);
+				}
+			}*/
 			this.checkAgain=true;
 				
 		}
@@ -97,14 +112,28 @@ package
 				this.humanFollowing=null;
 				this.attackNearestHuman(collisionMap,this.findNearestHuman(collisionMap,humanP,zombieP));
 			}
-			if(this.pathSpeed==0 && this.checkAgain){
+			if(this.humanFollowing!=null && humanP!=null && humanP.indexOf(this.humanFollowing)!=-1){
+				this.stopFollowingPath(true);
+				this.pathSpeed=0;
+				this.velocity=new FlxPoint(0,0);
+				path = collisionMap.findPath(zombieP, new FlxPoint(humanFollowing.x+humanFollowing.width/2, humanFollowing.y+humanFollowing.height/2), false);
+				this.attackNearestHuman(collisionMap,path);
+			}
+			if(this.checkAgain){
+				this.stopFollowingPath(true);
+				this.pathSpeed=0;
+				this.velocity=new FlxPoint(0,0);
+				this.humanFollowing=null;
 				var path:FlxPath = this.findNearestHuman(collisionMap,humanP,zombieP);
-				if(path!=null)
+				if(path!=null){
 					this.attackNearestHuman(collisionMap,path);
+					this.checkAgain=false;
+				}
 				else{
 					this.checkAgain=false;
 				}
 			}
+			
 			/*if(this.humanFollowing!=null && collisionMap.findPath(zombieP,new FlxPoint(this.humanFollowing.x+this.humanFollowing.width/2,this.humanFollowing.y+this.humanFollowing.height/2))==null){
 				this.humanFollowing=null;
 				this.stopFollowingPath(true);
@@ -125,6 +154,25 @@ package
 		
 		public function dieAnimation():void{
 			this.destroy();
+		}
+		
+		public function disguiseOFF():void{
+			if(isDisguised){
+				isDisguised=false;
+				this.loadGraphic(ImgPlayer, true, true, 16,16);
+			}
+		}
+		
+		public function disguiseON():void{
+			super.loadGraphic(ImgNurse, true, true, 16);
+			this.isDisguised = true;
+			var t:Timer = new Timer(5000);
+			t.addEventListener(TimerEvent.TIMER, onDelay);
+			t.start()
+		}
+		
+		private function onDelay(te:TimerEvent):void {
+			disguiseOFF();
 		}
 	}
 }
