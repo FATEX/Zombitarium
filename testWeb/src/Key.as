@@ -20,7 +20,7 @@ package
 			super(tx,ty);
 			this.loadGraphic(ImgKey, false, false, 16);
 		}
-		public function checkCollision(c, d, p, tx, ty, zombies:Vector.<Zombie>) { 
+		public function checkCollision(c, d, p, tx, ty, zombies:Vector.<Zombie>):void { 
 			if(keyCollected == false){ // if we still haven't collected the key
 				if(FlxG.collide(p, this)){ // and if the player collides with the key
 					this.visible = false; // hide the key from view
