@@ -1,6 +1,7 @@
 package
 {
 	import flash.display.BlendMode;
+	import flash.net.SharedObject;
 	import flash.utils.ByteArray;
 	
 	import objects.Human;
@@ -19,7 +20,6 @@ package
 	import org.flixel.FlxText;
 	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
-	import flash.net.SharedObject;
 
 	public class PlayState extends FlxState
 	{
@@ -48,7 +48,7 @@ package
 
 
 		[Embed(source="walk_zombie_front.png")] private static var ImgSpaceman:Class;
-
+		[Embed(source="blackScreen.png")] private static var BlackTile:Class;
 		[Embed(source="key.png")] private static var ImgKey:Class;
 		[Embed(source="door.png")] private static var ImgDoor:Class;
 		[Embed(source="doorOpen.png")] private static var ImgDoorOpen:Class;
@@ -100,6 +100,11 @@ package
 		
 		private static var resetNumber:int = 0;
 		
+		//Decides wheter the rooms go dark or not
+		public var darkRooms:Boolean=true;
+
+		
+		private var blankTiles:Array;
 		
 		//constants For detection
 		private var distanceCanSee:int = 50;
@@ -171,9 +176,75 @@ package
 			add(quitBtn);
 			
 			addCam();
+			blankTiles = new Array();
+			for(var q:int=0;q<collisionMap.widthInTiles;q++){
+				blankTiles[q]=new Array();
+			}
+			for(var i:int =0;i<collisionMap.widthInTiles;i++){
+				for(var j:int=0;j<collisionMap.heightInTiles;j++){
+					if(collisionMap.getTile(i,j)==0 && this.darkRooms){
+						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH,j*TILE_HEIGHT);
+						blankScreenTile.loadGraphic(BlackTile,false,false,16,16);
+						add(blankScreenTile);
+						blankTiles[i][j]=blankScreenTile;
+					}
+					else{
+						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH,j*TILE_HEIGHT);
+						blankScreenTile.loadGraphic(BlackTile,false,false,16,16);
+						blankScreenTile.visible=false;
+						add(blankScreenTile);
+						blankTiles[i][j]=blankScreenTile;
+					}
+					
+				}
+			}
+			revealBoard();
 			//helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
 			//add(helperTxt);
 	
+		}
+		
+		public function revealBoard():void{
+			if(this.darkRooms){
+			for(var i:int =0;i<collisionMap.widthInTiles;i++){
+				for(var j:int=0;j<collisionMap.heightInTiles;j++){
+					if(collisionMap.getTile(i,j)==0){
+						(FlxSprite(blankTiles[i][j])).visible=true;
+					}
+					else{
+						(FlxSprite(blankTiles[i][j])).visible=false;
+					}
+				}
+			}
+			var toVisit:Array = new Array();
+			var playerTileX:int=player.x/TILE_WIDTH;
+			var playerTileY:int=player.y/TILE_HEIGHT;
+			toVisit.push([playerTileX,playerTileY]);
+			toVisit.push([playerTileX+1,playerTileY+0]);
+			toVisit.push([playerTileX+1,playerTileY+1]);
+			toVisit.push([playerTileX+0,playerTileY+1]);
+			toVisit.push([playerTileX+1,playerTileY-1]);
+			toVisit.push([playerTileX-1,playerTileY-1]);
+			toVisit.push([playerTileX+0,playerTileY-1]);
+			toVisit.push([playerTileX-1,playerTileY+0]);
+			toVisit.push([playerTileX-1,playerTileY+1]);
+			while(toVisit.length>0){
+				var currentNode:Array = toVisit.pop();
+				if(collisionMap.getTile(currentNode[0],currentNode[1])==0 && (FlxSprite(blankTiles[currentNode[0]][currentNode[1]])).visible==true){
+					(FlxSprite(blankTiles[currentNode[0]][currentNode[1]])).visible=false;
+					toVisit.push([currentNode[0]+1,currentNode[1]+0]);
+					toVisit.push([currentNode[0]+1,currentNode[1]+1]);
+					toVisit.push([currentNode[0]+0,currentNode[1]+1]);
+					toVisit.push([currentNode[0]+1,currentNode[1]-1]);
+					toVisit.push([currentNode[0]-1,currentNode[1]-1]);
+					toVisit.push([currentNode[0]+0,currentNode[1]-1]);
+					toVisit.push([currentNode[0]-1,currentNode[1]+0]);
+					toVisit.push([currentNode[0]-1,currentNode[1]+1]);
+				}
+			}
+
+
+			}
 		}
 		
 		private function resetGame():void{
@@ -479,17 +550,16 @@ package
 			}
 			
 			for (var i:Number=0;i<doors.length;i++){
-				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/2)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/8)/TILE_HEIGHT),zombies);
+				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/2)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/8)/TILE_HEIGHT),zombies,this);
 				doors[i].updateDoor();
 			}
 			
 			for each(var ud:UnlockedDoor in unlockedDoors){
 				//trace(Math.abs((ud.y+ud.height/4)/TILE_HEIGHT));
-				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/2)/TILE_WIDTH), Math.round((ud.y+ud.height/8)/TILE_HEIGHT),zombies,player);
+				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/2)/TILE_WIDTH), Math.round((ud.y+ud.height/8)/TILE_HEIGHT),zombies,player,this);
 				ud.updateDoor();
 			}
 			
-
 			//MOVEMENT
 			player.acceleration.x = 0;
 			player.acceleration.y = 0;
