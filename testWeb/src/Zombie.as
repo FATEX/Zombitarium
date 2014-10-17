@@ -8,10 +8,15 @@ package
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxTilemap;
 	
+	import flash.utils.Timer;
+	import flash.events.TimerEvent;
+	
 	public class Zombie extends FlxSprite
 	{
 
 		[Embed(source="walk_nurse_front_dead.png")] private static var ImgSpaceman:Class;
+		[Embed(source="walk_zombie_front.png")] private static var ImgPlayer:Class;
+		[Embed(source="walk_nurse_front.png")] private static var ImgNurse:Class;
 
 		public var xPos:int = 0;
 		public var yPos:int = 0;
@@ -23,6 +28,8 @@ package
 		private var yMaxVelocity: int = 0;
 		private var humanFollowing:Human;
 		private var checkAgain:Boolean = true;
+		
+		public var isDisguised:Boolean = false;
 		//private var color: int = 0;
  		public function Zombie(xPos:int, yPos:int, width:int, height:int, xDrag:int, yDrag:int, xMaxVelocity:int, yMaxVelocity:int)
 		{
@@ -125,6 +132,25 @@ package
 		
 		public function dieAnimation():void{
 			this.destroy();
+		}
+		
+		public function disguiseOFF():void{
+			if(isDisguised){
+				isDisguised=false;
+				this.loadGraphic(ImgPlayer, true, true, 16,16);
+			}
+		}
+		
+		public function disguiseON():void{
+			super.loadGraphic(ImgNurse, true, true, 16);
+			this.isDisguised = true;
+			var t:Timer = new Timer(5000);
+			t.addEventListener(TimerEvent.TIMER, onDelay);
+			t.start()
+		}
+		
+		private function onDelay(te:TimerEvent):void {
+			disguiseOFF();
 		}
 	}
 }

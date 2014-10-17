@@ -31,6 +31,7 @@ package objects
 		public var originY:Number;
 		public var isStunned:Boolean = false;
 		public var restingAngle:Number=0;
+				
 		public function Human(originX:Number, originY:Number)
 		{
 			super(originX, originY);
@@ -112,22 +113,21 @@ package objects
 		public function humanUpdate(collisionMap:FlxTilemap):void{
 			if(this.isStunned){
 				this.moves=false;
-			}
-			else{
+			}else{
 				this.moves=true;
-			var pathBeingMade:FlxPath;
-			if(!this.isPathSet && this.pathSpeed==0 && this.isFollowing==false && routePoints.length>0){
-				pathBeingMade = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2), routePoints[0]);
-				var i:Number;
-				//pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath(routePoints[0], routePoints[1]));
-				//pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath(routePoints[1], routePoints[2]));
-				for(i=1; i<routePoints.length;i++){
-					pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath((routePoints[i-1]),routePoints[i]).nodes);
+				var pathBeingMade:FlxPath;
+				if(!this.isPathSet && this.pathSpeed==0 && this.isFollowing==false && routePoints.length>0){
+					pathBeingMade = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2), routePoints[0]);
+					var i:Number;
+					//pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath(routePoints[0], routePoints[1]));
+					//pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath(routePoints[1], routePoints[2]));
+					for(i=1; i<routePoints.length;i++){
+						pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath((routePoints[i-1]),routePoints[i]).nodes);
+					}
+					pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath((routePoints[i-1]),new FlxPoint(super.x + super.width / 2, super.y + super.height / 2)).nodes);
+					setRoute(pathBeingMade);
+					this.isPathSet=true;
 				}
-				pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath((routePoints[i-1]),new FlxPoint(super.x + super.width / 2, super.y + super.height / 2)).nodes);
-				setRoute(pathBeingMade);
-				this.isPathSet=true;
-			}
 			}
 			if(this.pathSpeed==0){
 				this.angle=this.restingAngle;
