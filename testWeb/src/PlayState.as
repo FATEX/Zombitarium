@@ -568,9 +568,6 @@ package
 				return;
 			}
 		if(this.detect(man,zom)){
-			remove(zom,true);
-			man.goBack(collisionMap);
-			zom.alive=false;
 			if(man.isStunned){
 				infected = new Zombie(man.x,man.y,man.width,man.health,man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 				//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
@@ -590,6 +587,9 @@ package
 				man.alive=false;
 			}
 			else{
+				remove(zom,true);
+				man.goBack(collisionMap);
+				zom.alive=false;
 				man.stunHuman();
 			}
 			}
