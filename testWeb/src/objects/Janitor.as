@@ -35,6 +35,7 @@ package objects
 		public function die() {
 			if (this.alive == false) {
 				
+				
 			}
 		}
 	}
