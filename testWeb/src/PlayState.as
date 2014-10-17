@@ -4,6 +4,8 @@ package
 	import flash.utils.ByteArray;
 	
 	import objects.Human;
+	import objects.Nurse;
+	import objects.Patient;
 	
 	import org.flixel.FlxButton;
 	import org.flixel.FlxCamera;
@@ -248,6 +250,14 @@ package
 					h=new Human(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
 					humans.push(h);
 				}
+				if(type=="PATIENT"){
+					h=new Patient(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					humans.push(h);
+				}
+				if(type=="NURSE"){
+					h=new Nurse(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					humans.push(h);
+				}
 				if(type=="R"){
 					h.addRoutePoints(new FlxPoint(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2));
 				}
@@ -345,16 +355,15 @@ package
 		public function collided(obj1:FlxObject,obj2:FlxObject):void{
 			var man:Human;
 			var zom:Zombie;
+			var nur:Nurse;
 			if(obj1 is Human){
 				if(obj2 is Zombie){
 					man = Human(obj1);
 					zom = Zombie(obj2);
-				}
-				else{
+				}else{
 					return;
 				}
-			}
-			else if(obj1 is Zombie){
+			}else if(obj1 is Zombie){
 				if(obj2 is Human){
 					zom = Zombie(obj1);
 					man = Human(obj2);
@@ -362,57 +371,66 @@ package
 				else{
 					return;
 				}
-			}
-			else{
+			}else{
 				return;
 			}
-		if(this.detect(man,zom)){
-			if(man.isStunned){
-				infected = new Zombie(man.x,man.y,man.width,man.health,man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+			if(this.detect(man,zom)){
+				if(man.isStunned || man is Patient){
+					zom.disguiseOFF();
+					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+					//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
+					//FlxG.collide(infected, collisionMap);
+					var pos2:int = humans.indexOf(man);
+					//humans[pos].x=1000000000;
+					humans.splice(pos2,1);
+					
+					add(infected);
+					var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+					
+					//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
+					//add(t);
+					infected.attackNearestHuman(collisionMap, path2);
+					zombies.push(infected);
+					if(man is Nurse){
+						if(zom==player){
+							zom.disguiseON();
+						}
+					}
+					remove(man,true);
+					man.alive=false;
+					
+				}else{
+					remove(zom,true);
+					man.goBack(collisionMap);
+					zom.alive=false;
+					man.stunHuman();
+				}
+			}else{
+				zom.disguiseOFF();
+				var t:FlxText;
+			
+				infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 				//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
 				//FlxG.collide(infected, collisionMap);
-				var pos2:int = humans.indexOf(man);
+				var pos:int = humans.indexOf(man);
 				//humans[pos].x=1000000000;
-				humans.splice(pos2,1);
+				humans.splice(pos,1);
 				
 				add(infected);
-				var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+				var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
 				
 				//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
 				//add(t);
-				infected.attackNearestHuman(collisionMap, path2);
+				infected.attackNearestHuman(collisionMap, path);
 				zombies.push(infected);
+				if(man is Nurse){
+					if(zom==player){
+						zom.disguiseON();
+					}
+				}
 				remove(man,true);
 				man.alive=false;
 			}
-			else{
-				remove(zom,true);
-				man.goBack(collisionMap);
-				zom.alive=false;
-				man.stunHuman();
-			}
-			}
-		else{
-			var t:FlxText;
-			
-			infected = new Zombie(man.x,man.y,man.width,man.health,man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-			//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
-			//FlxG.collide(infected, collisionMap);
-			var pos:int = humans.indexOf(man);
-			//humans[pos].x=1000000000;
-			humans.splice(pos,1);
-			
-			add(infected);
-			var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
-			
-			//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
-			//add(t);
-			infected.attackNearestHuman(collisionMap, path);
-			zombies.push(infected);
-			remove(man,true);
-			man.alive=false;
-		}
-			
 		}
 		public override function draw():void
 		{
@@ -513,6 +531,12 @@ package
 
 		private function detect(looker:Human,lookee:FlxObject):Boolean
 		{
+			if(lookee is Zombie){
+				var lookeeZ:Zombie = lookee as Zombie;
+				if(lookeeZ.isDisguised){
+					return false;
+				}
+			}
 			if(collisionMap.ray(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))){
 				if(FlxU.getDistance(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))<=this.distanceCanSee){
 					var angle:Number = FlxU.getAngle(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2));

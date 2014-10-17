@@ -1,17 +1,18 @@
 package objects
 {
-
-	public class Nurse extends Human
+	public class Patient extends Human
 	{
-		//nurses grant disguises
+		//patients don't attack
 		
 		[Embed(source="walk_nurse_front.png")] private static var ImgSpaceman:Class;
-		
-		public function Nurse(originX:Number, originY:Number)
+
+		public function Patient(originX:Number, originY:Number)
 		{
 			super(originX, originY);
 			super.loadGraphic(ImgSpaceman, true, true, 16);
+			//super.isStunned = true;
 		}
+		
 		
 	}
 }
