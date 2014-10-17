@@ -325,7 +325,7 @@ package
 							}
 						}
 						else{
-							humans[i].color=0x800000;
+							humans[i].color=0xffffff;
 						}
 					}
 					}catch(e:Error){
@@ -467,7 +467,7 @@ package
 			
 			for each(var ud:UnlockedDoor in unlockedDoors){
 				//trace(Math.abs((ud.y+ud.height/4)/TILE_HEIGHT));
-				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/2)/TILE_WIDTH), Math.round((ud.y+ud.height/8)/TILE_HEIGHT),zombies);
+				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/2)/TILE_WIDTH), Math.round((ud.y+ud.height/8)/TILE_HEIGHT),zombies,player);
 				ud.updateDoor();
 			}
 			

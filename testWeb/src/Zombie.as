@@ -46,10 +46,10 @@ package
 			var nearestPath: FlxPath = null;
 			for(var j:int = 0; j<humanP.length;j++){
 				var path2:FlxPath = collisionMap.findPath(zombieP, new FlxPoint(humanP[j].x+humanP[j].width/2, humanP[j].y+humanP[j].height/2), false);
-				if(path2!=null){
+				if(path2!=null && path2.nodes.length<minLength){
 					path=path2;
 					this.humanFollowing=humanP[j];
-					break;
+					minLength = path2.nodes.length;
 				}
 			}
 			/*
@@ -79,12 +79,20 @@ package
 			}
 		}
 		public function checkPath(collisionMap:FlxTilemap):void{
-			if(this.humanFollowing!=null && collisionMap.findPath(new FlxPoint(this.x+this.width/2,this.y+this.height/2),new FlxPoint(this.humanFollowing.x+this.humanFollowing.width/2,this.humanFollowing.y+this.humanFollowing.height/2))==null){
-				this.humanFollowing=null;
-				this.stopFollowingPath(true);
-				this.pathSpeed=0;
-				this.velocity=new FlxPoint(0,0);
-			}	
+			/*if(this.humanFollowing!=null){
+				var pathChecker:FlxPath =collisionMap.findPath(new FlxPoint(this.x+this.width/2,this.y+this.height/2),new FlxPoint(this.humanFollowing.x+this.humanFollowing.width/2,this.humanFollowing.y+this.humanFollowing.height/2));
+				if(pathChecker==null){
+					this.humanFollowing=null;
+					this.stopFollowingPath(true);
+					this.pathSpeed=0;
+					this.velocity=new FlxPoint(0,0);
+				}
+				if(pathChecker!=null){
+					path = pathChecker;
+					this.stopFollowingPath(true);
+					this.attackNearestHuman(collisionMap,path);
+				}
+			}*/
 			this.checkAgain=true;
 				
 		}
@@ -97,14 +105,28 @@ package
 				this.humanFollowing=null;
 				this.attackNearestHuman(collisionMap,this.findNearestHuman(collisionMap,humanP,zombieP));
 			}
-			if(this.pathSpeed==0 && this.checkAgain){
+			if(this.humanFollowing!=null && humanP!=null && humanP.indexOf(this.humanFollowing)!=-1){
+				this.stopFollowingPath(true);
+				this.pathSpeed=0;
+				this.velocity=new FlxPoint(0,0);
+				path = collisionMap.findPath(zombieP, new FlxPoint(humanFollowing.x+humanFollowing.width/2, humanFollowing.y+humanFollowing.height/2), false);
+				this.attackNearestHuman(collisionMap,path);
+			}
+			if(this.checkAgain){
+				this.stopFollowingPath(true);
+				this.pathSpeed=0;
+				this.velocity=new FlxPoint(0,0);
+				this.humanFollowing=null;
 				var path:FlxPath = this.findNearestHuman(collisionMap,humanP,zombieP);
-				if(path!=null)
+				if(path!=null){
 					this.attackNearestHuman(collisionMap,path);
+					this.checkAgain=false;
+				}
 				else{
 					this.checkAgain=false;
 				}
 			}
+			
 			/*if(this.humanFollowing!=null && collisionMap.findPath(zombieP,new FlxPoint(this.humanFollowing.x+this.humanFollowing.width/2,this.humanFollowing.y+this.humanFollowing.height/2))==null){
 				this.humanFollowing=null;
 				this.stopFollowingPath(true);

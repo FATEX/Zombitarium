@@ -28,7 +28,7 @@ package
 				this.immovable = true;
 			}
 		}
-		public function checkCollision(c, p, tx, ty, zombies:Vector.<Zombie>) { 
+		public function checkCollision(c, p, tx, ty, zombies:Vector.<Zombie>,player:Zombie) { 
 		
 			if(doorOpen == false){ // if the door hasn't been opened yet
 
@@ -38,7 +38,9 @@ package
 						c.setTile(tx, ty, 0);
 						c.setTile(tx, ty, 0);
 						for(var i:int =0; i<zombies.length;i++){
-							zombies[i].checkPath(c);
+							if(zombies[i]!=player){
+								zombies[i].checkPath(c);
+							}
 						}
 					} else if (FlxG.keys.E == false) {
 						pressed = true;
