@@ -8,6 +8,7 @@ package
 	{
 		private var keyCollected:Boolean = false;
 		private var pressed:Boolean = true;
+		public var collectable:Boolean = false;
 		private var collisionMap:FlxTilemap;
 		
 		[Embed(source="key.png")] private static var ImgKey:Class;
@@ -19,9 +20,10 @@ package
 		
 			super(tx,ty);
 			this.loadGraphic(ImgKey, false, false, 16);
+			this.immovable = true;
 		}
 		public function checkCollision(c, d, p, tx, ty, zombies:Vector.<Zombie>):void { 
-			if(keyCollected == false){ // if we still haven't collected the key
+			if(keyCollected == false && collectable){ // if we still haven't collected the key
 				if(FlxG.collide(p, this)){ // and if the player collides with the key
 					this.visible = false; // hide the key from view
 					keyCollected = true; // set our Boolean to true

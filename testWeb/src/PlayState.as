@@ -4,6 +4,7 @@ package
 	import flash.utils.ByteArray;
 	
 	import objects.Human;
+	import objects.Janitor;
 	
 	import org.flixel.FlxButton;
 	import org.flixel.FlxCamera;
@@ -64,6 +65,7 @@ package
 
 		private var player:Zombie;
 		private var humans:Vector.<Human>;
+		private var janitors:Vector.<Janitor>;
 		private var zombies:Vector.<Zombie>;
 		
 		private var winPic:FlxSprite = new FlxSprite(10,10);
@@ -92,6 +94,7 @@ package
 		//constants For detection
 		private var distanceCanSee:int = 50;
 		private var coneWidth:Number = 45;
+		
 		override public function create():void
 		{
 			FlxG.framerate = 50;
@@ -412,6 +415,7 @@ package
 		
 		private function characterLoader():void{
 			humans = new Vector.<Human>();
+			janitors = new Vector.<Janitor>();
 			doors = new Vector.<Door>();
 			keys = new Vector.<Key>();
 			unlockedDoors = new Vector.<UnlockedDoor>();
@@ -433,6 +437,8 @@ package
 			var type:String;
 			var lineArray:Array;
 			var h:Human=new Human(0,0);
+			//var d:Door = new Door(10, 10);
+			var j:Janitor=new Janitor(0,0);
 			var door:Door = new Door(0,0);
 			var key:Key = new Key(collisionMap, door, player,0,0);
 			var unlockedDoor:UnlockedDoor = new UnlockedDoor(0,0);
@@ -448,6 +454,15 @@ package
 				if(type=="H"){
 					h=new Human(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
 					humans.push(h);
+				}
+				if(type=="J"){
+					
+					j = new Janitor(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					humans.push(j);		
+					key = new Key(collisionMap, door, player, x*TILE_WIDTH,y*TILE_HEIGHT+key.height/2);
+					keys.push(key);
+					j.key=key;
+					j.key.visible=false;
 				}
 				if(type=="R"){
 					h.addRoutePoints(new FlxPoint(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2));
@@ -489,6 +504,9 @@ package
 				add(hum);
 //				hum.followPath(collisionMap.findPath(new FlxPoint(hum.x+hum.width/2,hum.y+hum.height/2),new FlxPoint(hum.x+hum.width/2,hum.y+hum.height/2)));
 			}
+//			for each(var jan:Janitor in janitors){
+//				add(jan);
+//			}
 		}
 		
 		override public function update():void
@@ -503,46 +521,55 @@ package
 			
 			
 			updatePlayer();
-			for(var i:int=0; i<humans.length;i++){
-				for (var j:int=0;j<zombies.length;j++){
-					try{
-					humans[i].humanUpdate(collisionMap);
-					
-					if(zombies[j].alive && humans[i].alive){
-						FlxG.collide(zombies[j],humans[i],collided);
-					}
-					
-					if(zombies[j].alive && humans[i].alive){
-						if(detect(humans[i],zombies[j])){
-							humans[i].setPath(new FlxPoint(zombies[j].x + zombies[j].width / 2, zombies[j].y + zombies[j].height / 2),collisionMap);
-							humans[i].color=0xFFD700;
-						}
-						else if(humans[i].pathSpeed==0){
-							humans[i].goBack(collisionMap);
-						}
-						else if(humans[i].isFollowing){
-							if(FlxG.collide(humans[i],collisionMap)){
-								humans[i].goBack(collisionMap);
-							}
-						}
-						else{
-							humans[i].color=0x800000;
-						}
-					}
-					}catch(e:Error){
-						break;
-					}
-				}
-			}
+			collideCheck(humans);
+			//collideCheck(janitors);
 			for(var w:int=0; w<zombies.length;w++){
 				if(zombies[w]!= player){
 					zombies[w].zombieUpdate(collisionMap,humans,new FlxPoint(zombies[w].x+zombies[w].width/2,zombies[w].y+zombies[w].height/2));
 				}
 			}
 			
+//			for(var t:int=0; t<janitors.length;t++){
+//				janitors[t].die();
+//			}
 			
 			super.update();
 		}
+		
+		public function collideCheck(type):void {
+			for(var i:int=0; i<type.length;i++){
+				for (var j:int=0;j<zombies.length;j++){
+					try{
+						type[i].humanUpdate(collisionMap);
+						
+						if(zombies[j].alive && type[i].alive){
+							FlxG.collide(zombies[j],type[i],collided);
+						}
+						
+						if(zombies[j].alive && type[i].alive){
+							if(detect(type[i],zombies[j])){
+								type[i].setPath(new FlxPoint(zombies[j].x + zombies[j].width / 2, zombies[j].y + zombies[j].height / 2),collisionMap);
+								type[i].color=0xFFD700;
+							}
+							else if(type[i].pathSpeed==0){
+								type[i].goBack(collisionMap);
+							}
+							else if(type[i].isFollowing){
+								if(FlxG.collide(type[i],collisionMap)){
+									type[i].goBack(collisionMap);
+								}
+							}
+							else{
+								//type[i].color=0x800000;
+							}
+						}
+					}catch(e:Error){
+						break;
+					}
+				}
+			}
+		}
+		
 		public function collided(obj1:FlxObject,obj2:FlxObject):void{
 			var man:Human;
 			var zom:Zombie;
@@ -583,6 +610,10 @@ package
 				//add(t);
 				infected.attackNearestHuman(collisionMap, path2);
 				zombies.push(infected);
+				if(man is Janitor){
+					var jan:Janitor = man as Janitor;
+					jan.die();
+				}
 				remove(man,true);
 				man.alive=false;
 			}
@@ -610,6 +641,10 @@ package
 			//add(t);
 			infected.attackNearestHuman(collisionMap, path);
 			zombies.push(infected);
+			if(man is Janitor){
+				var jan:Janitor = man as Janitor;
+				jan.die();
+			}
 			remove(man,true);
 			man.alive=false;
 		}
@@ -647,8 +682,6 @@ package
 			zombies.push(player);
 
 
-			//add(player);
-
 		}
 		
 
@@ -671,6 +704,11 @@ package
 				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/2)/TILE_WIDTH), Math.round((ud.y+ud.height/8)/TILE_HEIGHT),zombies);
 				ud.updateDoor();
 			}
+
+			for (var t:Number=0;t<janitors.length;t++) {
+				janitors[t].die();
+			}
+
 			
 
 			//MOVEMENT
@@ -718,9 +756,9 @@ package
 					if(angle>=looker.getAngle()-this.coneWidth && angle<=looker.getAngle()+this.coneWidth){
 						return true;
 					}
-					//else if(looker.pathSpeed==0){
-						//return true;
-					//}
+					else if(looker is Janitor){
+						return true;
+					}
 				}
 			}
 			return false;
