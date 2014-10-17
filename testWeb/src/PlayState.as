@@ -1,12 +1,11 @@
 package
 {
-	import flash.display.BlendMode;
-	import flash.net.SharedObject;
 	import flash.utils.ByteArray;
 	
 	import objects.Human;
 	import objects.Nurse;
 	import objects.Patient;
+	import objects.Syringe;
 	
 	import org.flixel.FlxButton;
 	import org.flixel.FlxCamera;
@@ -14,7 +13,6 @@ package
 	import org.flixel.FlxObject;
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
-	import org.flixel.FlxSave;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
@@ -423,6 +421,29 @@ package
 			
 			super.update();
 		}
+		
+		public function touched(obj1:FlxObject,obj2:FlxObject):void{
+			var syr: Syringe;
+			var zom:Zombie;
+			if(obj1 is FlxTilemap){
+				syr = Syringe(obj2);
+				remove(syr, true);
+				syr.destroy();
+				syr.exists = false;
+				
+			}
+			else if(obj1 is Zombie){
+				syr.explode();
+				zom = Zombie(obj1);
+				syr = Syringe(obj2);
+				remove(zom, true);
+				remove(syr, true);
+				zom.exists = false;
+				syr.exists = false;
+				syr.destory();
+			}
+		}
+		
 		public function collided(obj1:FlxObject,obj2:FlxObject):void{
 			var man:Human;
 			var zom:Zombie;
