@@ -192,7 +192,7 @@ package
 					else{
 						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH,j*TILE_HEIGHT);
 						blankScreenTile.loadGraphic(BlackTile,false,false,16,16);
-						blankScreenTile.visible=false;
+						//blankScreenTile.visible=false;
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
 					}
@@ -209,12 +209,12 @@ package
 			if(this.darkRooms){
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
-					if(collisionMap.getTile(i,j)==0){
+					//if(collisionMap.getTile(i,j)==0){
 						(FlxSprite(blankTiles[i][j])).visible=true;
-					}
-					else{
-						(FlxSprite(blankTiles[i][j])).visible=false;
-					}
+					//}
+					//else{
+						//(FlxSprite(blankTiles[i][j])).visible=false;
+					//}
 				}
 			}
 			var toVisit:Array = new Array();
@@ -241,6 +241,9 @@ package
 					toVisit.push([currentNode[0]+0,currentNode[1]-1]);
 					toVisit.push([currentNode[0]-1,currentNode[1]+0]);
 					toVisit.push([currentNode[0]-1,currentNode[1]+1]);
+				}
+				else {
+					(FlxSprite(blankTiles[currentNode[0]][currentNode[1]])).visible=false;
 				}
 			}
 
