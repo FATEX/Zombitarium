@@ -2,6 +2,7 @@ package
 {
 	import flash.utils.ByteArray;
 	
+	import objects.Doctor;
 	import objects.Human;
 	import objects.Janitor;
 	import objects.Nurse;
@@ -339,6 +340,10 @@ package
 				}
 				if(type=="PATIENT"){
 					h=new Patient(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					humans.push(h);
+				}
+				if(type=="DOCTOR"){
+					h=new Doctor(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
 					humans.push(h);
 				}
 				if(type=="NURSE"){
