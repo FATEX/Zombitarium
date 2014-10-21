@@ -2,6 +2,7 @@ package
 {
 	import flash.utils.ByteArray;
 	
+	import objects.Doctor;
 	import objects.Human;
 	import objects.Janitor;
 	import objects.Nurse;
@@ -341,6 +342,10 @@ package
 					h=new Patient(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
 					humans.push(h);
 				}
+				if(type=="DOCTOR"){
+					h=new Doctor(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					humans.push(h);
+				}
 				if(type=="NURSE"){
 					h=new Nurse(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
 					humans.push(h);
@@ -587,6 +592,12 @@ package
 					zom.alive=false;
 					man.stunHuman();
 				}
+				man.alerted.x=man.x;
+				man.alerted.y=man.y-man.height;
+				if(man.alertAdded){
+					remove(man.alerted);
+					man.alertAdded=false;
+				}
 			}else{
 				zom.disguiseOFF();
 				var t:FlxText;
@@ -613,6 +624,12 @@ package
 					if(zom==player){
 						zom.disguiseON();
 					}
+				}
+				man.alerted.x=man.x;
+				man.alerted.y=man.y-man.height;
+				if(man.alertAdded){
+					remove(man.alerted);
+					man.alertAdded=false;
 				}
 				remove(man,true);
 				man.alive=false;
