@@ -3,7 +3,6 @@ package objects
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
-	
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
@@ -14,6 +13,8 @@ package objects
 		private const TILE_WIDTH:uint = 16;
 		private const TILE_HEIGHT:uint = 16;
 		[Embed(source="walk_nurse_front.png")] private static var ImgSpaceman:Class;
+		[Embed(source="alert_anim.png")] private static var ImgAlert:Class;
+		
 		
 		//path array of flxpoints
 		//detect() super type
@@ -31,7 +32,10 @@ package objects
 		public var originY:Number;
 		public var isStunned:Boolean = false;
 		public var restingAngle:Number=0;
-				
+		public var alerted:FlxSprite;
+		public var alertAdded:Boolean = false;
+
+		
 		public function Human(originX:Number, originY:Number)
 		{
 			super(originX, originY);
@@ -56,6 +60,9 @@ package objects
 			super.addAnimation("idle", [0]);
 			super.addAnimation("run", [1, 2, 3, 0], 12);
 			super.addAnimation("jump", [4]);
+			alerted = new FlxSprite(originX,originY);
+			alerted.loadGraphic(ImgAlert,true,false,16,16);
+			alerted.addAnimation("alert",[0,1],12,true);
 		}
 		
 		private function follow():void

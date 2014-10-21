@@ -431,23 +431,42 @@ package
 						
 						if(zombies[j].alive && type[i].alive){
 							FlxG.collide(zombies[j],type[i],collided);
+							(Human(type[i])).alerted.x=(Human(type[i])).x;
+							(Human(type[i])).alerted.y=(Human(type[i])).y-(Human(type[i])).height;
+							if((Human(type[i])).alertAdded){
+								remove((Human(type[i])).alerted);
+								(Human(type[i])).alertAdded=false;
+							}
 						}
 						
 						if(zombies[j].alive && type[i].alive){
 							if(detect(type[i],zombies[j])){
+								(Human(type[i])).alerted.x=(Human(type[i])).x;
+								(Human(type[i])).alerted.y=(Human(type[i])).y-(Human(type[i])).height;
+								if(!(Human(type[i])).alertAdded){
+									add((Human(type[i])).alerted);
+									(Human(type[i])).alertAdded = true;
+								}
+								(Human(type[i])).alerted.play("alert");
 								type[i].setPath(new FlxPoint(zombies[j].x + zombies[j].width / 2, zombies[j].y + zombies[j].height / 2),collisionMap);
 								type[i].color=0xFFD700;
 							}
 							else if(type[i].pathSpeed==0){
 								type[i].goBack(collisionMap);
+								type[i].color=0xFFFFFF;
 							}
 							else if(type[i].isFollowing){
+								(Human(type[i])).alerted.x=(Human(type[i])).x;
+								(Human(type[i])).alerted.y=(Human(type[i])).y-(Human(type[i])).height;
 								if(FlxG.collide(type[i],collisionMap)){
+									remove((Human(type[i])).alerted);
+									(Human(type[i])).alertAdded=false;
 									type[i].goBack(collisionMap);
+									type[i].color=0xFFFFFF;
 								}
 							}
 							else{
-								//type[i].color=0x800000;
+								type[i].color=0xFFFFFF;
 							}
 						}
 					}catch(e:Error){
