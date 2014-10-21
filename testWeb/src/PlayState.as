@@ -586,6 +586,12 @@ package
 					zom.alive=false;
 					man.stunHuman();
 				}
+				man.alerted.x=man.x;
+				man.alerted.y=man.y-man.height;
+				if(man.alertAdded){
+					remove(man.alerted);
+					man.alertAdded=false;
+				}
 			}else{
 				zom.disguiseOFF();
 				var t:FlxText;
@@ -612,6 +618,12 @@ package
 					if(zom==player){
 						zom.disguiseON();
 					}
+				}
+				man.alerted.x=man.x;
+				man.alerted.y=man.y-man.height;
+				if(man.alertAdded){
+					remove(man.alerted);
+					man.alertAdded=false;
 				}
 				remove(man,true);
 				man.alive=false;
