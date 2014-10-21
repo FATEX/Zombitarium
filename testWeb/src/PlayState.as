@@ -511,8 +511,14 @@ package
 			}
 			else if(obj1 is Human){
 				man = Human(obj1);
+				remove(man.alerted);
 				syr = Syringe(obj2);
 				remove(man, true);
+				if(man is Janitor){
+					var jan:Janitor = man as Janitor;
+					jan.alive=false;
+					jan.die();
+				}
 				remove(syr, true);
 				man.exists = false;
 				man.alive = false;
