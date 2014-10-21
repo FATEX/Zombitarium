@@ -109,6 +109,8 @@ package
 		//constants For detection
 		private var distanceCanSee:int = 50;
 		private var coneWidth:Number = 45;
+		private var throwable:Boolean = true;
+		private var pSyringe: Syringe;
 		
 		override public function create():void
 		{
@@ -393,6 +395,11 @@ package
 			// Tilemaps can be collided just like any other FlxObject, and flixel
 			// automatically collides each individual tile with the object.
 			FlxG.collide(player, collisionMap);
+			FlxG.collide(collisionMap, pSyringe,touchedH);
+			for each(var hum:Human in humans){
+				FlxG.collide(hum,pSyringe, touchedH);
+			}
+			
 			//FlxG.collide(infected, collisionMap);
 			
 			highlightBox.x = Math.floor(FlxG.mouse.x / TILE_WIDTH) * TILE_WIDTH;
@@ -401,6 +408,7 @@ package
 			
 			updatePlayer();
 			collideCheck(humans);
+			//hitdetect(humans);
 			//collideCheck(janitors);
 			for(var w:int=0; w<zombies.length;w++){
 				if(zombies[w]!= player){
@@ -450,7 +458,7 @@ package
 		}
 		
 
-		public function touched(obj1:FlxObject,obj2:FlxObject):void{
+		public function touchedZ(obj1:FlxObject,obj2:FlxObject):void{
 			var syr: Syringe;
 			var zom:Zombie;
 			if(obj1 is FlxTilemap){
@@ -461,7 +469,7 @@ package
 				
 			}
 			else if(obj1 is Zombie){
-				syr.explode();
+				syr.explode();//might be a problem
 				zom = Zombie(obj1);
 				syr = Syringe(obj2);
 				remove(zom, true);
@@ -469,6 +477,31 @@ package
 				zom.exists = false;
 				syr.exists = false;
 				syr.destory();
+			}
+		}
+		
+		public function touchedH(obj1:FlxObject,obj2:FlxObject):void{
+			var syr: Syringe;
+			var man: Human;
+			if(obj1 is FlxTilemap){
+				syr = Syringe(obj2);
+				remove(syr, true);
+				syr.destroy();
+				syr.exists = false;
+				
+			}
+			else if(obj1 is Human){
+				man = Human(obj1);
+				syr = Syringe(obj2);
+				remove(man, true);
+				remove(syr, true);
+				man.exists = false;
+				man.alive = false;
+				syr.explode();//might be a problem
+				syr.destory();
+				syr.exists = false;
+				
+				
 			}
 		}
 		
@@ -630,27 +663,47 @@ package
 			if(FlxG.keys.LEFT)
 			{
 				player.facing = FlxObject.LEFT;
+				player.angle = -90;
 				player.acceleration.x -= player.drag.x;
 			}
 			else if(FlxG.keys.RIGHT)
 			{
 				player.facing = FlxObject.RIGHT;
+				player.angle = 90;
 				player.acceleration.x += player.drag.x;
 			}
 			if(FlxG.keys.UP)
 			{
 				player.facing = FlxObject.UP;
+				player.angle = 0;
 				player.acceleration.y -= player.drag.y;
 			}
 			else if(FlxG.keys.DOWN)
 			{
 				player.facing = FlxObject.DOWN;
+				player.angle = 180;
 				player.acceleration.y += player.drag.y;
+			}
+			else if(FlxG.keys.SPACE){
+				if(throwable){
+					pSyringe = new Syringe(player.angle, player.x, player.y);
+					add(pSyringe);
+					pSyringe.updatePos(100);
+					throwable = false;
+					//FlxG.collide(collisionMap, pSyringe, touchedH);
+					/*for(var i1:int = 0; i1<humans.length; i1++){
+						FlxG.collide(humans[i1],pSyringe, touchedH);
+					}*/
+					
+				}
+			}
+			else if(FlxG.keys.ALT){
+				throwable = true;
 			}
 			if(FlxG.keys.justPressed("R")){
 				resetGame();
 			}
-
+			
 			//ANIMATION
 			 if(player.velocity.x == 0 && player.velocity.y == 0)
 			{
@@ -663,6 +716,16 @@ package
 		
 		}
 
+		private function hitdetect(type){
+			if(pSyringe != null){
+				for(var i:int=0; i<type.length;i++){
+					if(humans[i].alive && pSyringe.exists){
+						FlxG.collide(humans[i],pSyringe,touchedH);
+					}
+				}
+			}
+			
+		}
 		private function detect(looker:Human,lookee:FlxObject):Boolean
 		{
 			if(lookee is Zombie){
