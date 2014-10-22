@@ -14,7 +14,7 @@ package objects
 	{
 		private const TILE_WIDTH:uint = 16;
 		private const TILE_HEIGHT:uint = 16;
-		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
+		[Embed(source="doctor_front_1.png")] private static var ImgSpaceman:Class;
 		
 		public function Doctor(originX:Number, originY:Number)
 		{
