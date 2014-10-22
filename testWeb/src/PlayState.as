@@ -33,15 +33,29 @@ package
 		[Embed(source = 'win.jpg')]private static var winImg:Class;
 		[Embed(source = 'game-over.jpg')]private static var loseImg:Class;
 		
-		// Default tilemaps. Embedding text files is a little weird.
-		[Embed(source = 'default_auto.txt', mimeType = 'application/octet-stream')]private static var default_auto:Class;
-		[Embed(source = 'default_alt.txt', mimeType = 'application/octet-stream')]private static var default_alt:Class;
-		[Embed(source = 'default_empty.txt', mimeType = 'application/octet-stream')]private static var default_empty:Class;
+		// Default character loading texts		
+		// [Embed(source = 'default_alt.txt', mimeType = 'application/octet-stream')]private static var default_alt:Class;
+		// f[Embed(source = 'default_empty.txt', mimeType = 'application/octet-stream')]private static var default_empty:Class;
+		[Embed(source = 'characters0.txt', mimeType = 'application/octet-stream')]private static var characters0:Class;
+		[Embed(source = 'characters1.txt', mimeType = 'application/octet-stream')]private static var characters1:Class;
+		[Embed(source = 'characters2.txt', mimeType = 'application/octet-stream')]private static var characters2:Class;
+		[Embed(source = 'characters3.txt', mimeType = 'application/octet-stream')]private static var characters3:Class;
+		[Embed(source = 'characters4.txt', mimeType = 'application/octet-stream')]private static var characters4:Class;
+		[Embed(source = 'characters5.txt', mimeType = 'application/octet-stream')]private static var characters5:Class;
+		[Embed(source = 'characters6.txt', mimeType = 'application/octet-stream')]private static var characters6:Class;
 		[Embed(source = 'default_characters.txt', mimeType = 'application/octet-stream')]private static var default_characters:Class;
 		[Embed(source = 'default_characters_level_middle.txt', mimeType = 'application/octet-stream')]private static var default_characters2:Class;
 		[Embed(source = 'hard_level_characters.txt', mimeType = 'application/octet-stream')]private static var default_chars_hard:Class;
 
-		
+		// Default levels
+		[Embed(source = 'level0.txt', mimeType = 'application/octet-stream')]private static var default_level0:Class;
+		[Embed(source = 'level1.txt', mimeType = 'application/octet-stream')]private static var default_level1:Class;
+		[Embed(source = 'level2.txt', mimeType = 'application/octet-stream')]private static var default_level2:Class;
+		[Embed(source = 'level3.txt', mimeType = 'application/octet-stream')]private static var default_level3:Class;
+		[Embed(source = 'level4.txt', mimeType = 'application/octet-stream')]private static var default_level4:Class;
+		[Embed(source = 'level5.txt', mimeType = 'application/octet-stream')]private static var default_level5:Class;
+		[Embed(source = 'level6.txt', mimeType = 'application/octet-stream')]private static var default_level6:Class;
+		[Embed(source = 'default_auto.txt', mimeType = 'application/octet-stream')]private static var default_auto:Class;
 		[Embed(source = 'level_middle.txt', mimeType = 'application/octet-stream')]private static var default_middle:Class;
 		[Embed(source = 'level_hard.txt', mimeType = 'application/octet-stream')]private static var default_hard:Class;
 
@@ -80,7 +94,7 @@ package
 		private var resetBtn:FlxButton;
 		private var quitBtn:FlxButton;
 		private var nextLevelBtn:FlxButton;
-		private var helperTxt:FlxText;
+		private var instructions:FlxText;
 		private var destination:FlxPoint;
 
 		private var keys:Vector.<Key>;
@@ -95,7 +109,6 @@ package
 		//Cameras
 		private var cam:FlxCamera;
 		private var camQuit:FlxCamera;
-		private var camReset:FlxCamera;
 		private var camNextLevel:FlxCamera;
 		
 		private static var resetNumber:int = 0;
@@ -109,6 +122,10 @@ package
 		//constants For detection
 		private var distanceCanSee:int = 50;
 		private var coneWidth:Number = 45;
+		
+		private var exitX:Number;
+		private var exitY:Number;
+		private var win:Boolean = false;
 		
 		override public function create():void
 		{
@@ -140,14 +157,36 @@ package
 			
 			// Initializes the map using the generated string, the tile images, and the tile size
 			if(level==0){
-				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);	
 			}
 			else if(level==1){
-				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==2){
+				collisionMap.loadMap(new default_level2(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			}
+			else if(level==3){
+				collisionMap.loadMap(new default_level3(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			}
+			else if(level==4){
+				collisionMap.loadMap(new default_level4(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			}
+			else if(level==5){
+				collisionMap.loadMap(new default_level5(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			}
+			else if(level==6){
+				collisionMap.loadMap(new default_level6(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			}
+			else if(level==7){
+				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			}
+			else if(level==8){
+				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+			}
+			else if(level==9){
 				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
+			
 			add(collisionMap);
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
 			destination = new FlxPoint(0,0);
@@ -161,10 +200,10 @@ package
 			});
 			add(resetBtn);*/
 			
-			nextLevelBtn = new FlxButton(-100, 130, "Next Level", function():void
+			nextLevelBtn = new FlxButton(-100, 70, "Next Level", function():void
 			{
 				level++;
-				level = level%3;
+				level = level%10;
 				resetGame();
 			});
 			add(nextLevelBtn);
@@ -172,6 +211,7 @@ package
 			
 			quitBtn = new FlxButton(-1000, 30, "Quit",
 				function():void { FlxG.fade(0xff000000, 0.22, function():void { 
+					level = 0;
 					FlxG.resetGame();
 				} ); } );
 			add(quitBtn);
@@ -202,6 +242,17 @@ package
 			revealBoard();
 			//helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
 			//add(helperTxt);
+			
+			instructions = new FlxText(15,15,120,"Arrow keys to move \nPress E to open doors \nPress R to reset");
+			if (level==0) {
+				add(instructions);
+			} else if (level==5) {
+				add(new FlxText(130,50,100,"If you zombify a nurse you get disguised for 5 seconds!"))
+			} else if (level==2) {
+				add(new FlxText(110,15,120,"BEWARE If a human sees you, it will go after you!"))
+			} else if (level==4) {
+				add(new FlxText(130,50,120,"BEWARE Janitors see everything...And they also have keys"))
+			}
 	
 		}
 		
@@ -252,14 +303,20 @@ package
 		}
 		
 		private function resetGame():void{
-			FlxG.resetState();
+			if (win) {
+				var t:FlxText;
+				t = new FlxText(0,(FlxG.height/2-20),(FlxG.width),"Zombify");
+				add(t);
+			} else {
+				FlxG.resetState();
+			}
+			win = false;
 		}
 		
 		private function addCam():void {
 			add(player);
 			if(cam !=null){
 				FlxG.removeCamera(cam,false);
-				FlxG.removeCamera(camReset,false);
 				FlxG.removeCamera(camQuit,false);
 				FlxG.removeCamera(camNextLevel,false);
 			}
@@ -267,7 +324,8 @@ package
 				cam = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
 				camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
 				//camReset = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-				camNextLevel = new FlxCamera(2, 82, nextLevelBtn.width, nextLevelBtn.height);
+				camNextLevel = new FlxCamera(2, 42, nextLevelBtn.width, nextLevelBtn.height);
+
 			}
 			cam.follow(player);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
@@ -277,7 +335,7 @@ package
 			
 			camQuit.follow(quitBtn);
 			FlxG.addCamera(camQuit);
-			
+
 			//camReset.follow(resetBtn);
 			//FlxG.addCamera(camReset);
 			
@@ -293,11 +351,25 @@ package
 			keys = new Vector.<Key>();
 			unlockedDoors = new Vector.<UnlockedDoor>();
 			var btarray:ByteArray;
-			if(level==0){
-				btarray = new default_characters();
+			if (level==0){
+				btarray = new characters0();
 			}else if(level==1){
-				btarray = new default_characters2();
+				btarray = new characters1();
 			}else if(level==2){
+				btarray = new characters2();
+			}else if(level==3){
+				btarray = new characters3();
+			}else if(level==4){
+				btarray = new characters4();
+			}else if(level==5){
+				btarray = new characters5();
+			}else if(level==6){
+				btarray = new characters6();
+			}else if(level==7){
+				btarray = new default_characters();
+			}else if(level==8){
+				btarray = new default_characters2();
+			}else if(level==9){
 				btarray = new default_chars_hard();
 			}
 		
@@ -361,11 +433,16 @@ package
 				}
 				if(type=="KEY"){
 					key = new Key(collisionMap, door, player, x*TILE_WIDTH,y*TILE_HEIGHT+key.height/2);
+					key.collectable = true;
 					keys.push(key);
 				}
 				if(type=="UDOOR"){
 					unlockedDoor = new UnlockedDoor(x*TILE_WIDTH-unlockedDoor.width/2,y*TILE_HEIGHT-unlockedDoor.height/8);
 					unlockedDoors.push(unlockedDoor);
+				}
+				if(type=="EXIT"){
+					exitX = x*TILE_WIDTH;
+					exitY = y*TILE_HEIGHT;
 				}
 			}
 			for each(var g:Door in doors){
@@ -386,6 +463,7 @@ package
 //			for each(var jan:Janitor in janitors){
 //				add(jan);
 //			}
+
 		}
 		
 		override public function update():void
@@ -660,6 +738,13 @@ package
 			{
 				player.play("run");
 			}
+			 
+			if (Math.abs(player.x- (exitX))<=2 && Math.abs(player.y - (exitY))<=2) {
+				win == true;
+				level++;
+				level = level%10;
+				resetGame();
+			}
 		
 		}
 
@@ -691,5 +776,6 @@ package
 			obj.x = (obj.x + obj.width / 2 + FlxG.width) % FlxG.width - obj.width / 2;
 			obj.y = (obj.y + obj.height / 2) % FlxG.height - obj.height / 2;
 		}
+		
 	}
 } 

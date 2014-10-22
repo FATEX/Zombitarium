@@ -25,6 +25,7 @@ package
 
 
 		public function checkCollision(c, d, p, tx, ty, zombies:Vector.<Zombie>, state:PlayState):void { 
+			
 			if(keyCollected == false && collectable){ // if we still haven't collected the key
 
 				if(FlxG.collide(p, this)){ // and if the player collides with the key
