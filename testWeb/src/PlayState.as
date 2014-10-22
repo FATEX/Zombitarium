@@ -249,12 +249,18 @@ package
 			instructions = new FlxText(15,15,120,"Arrow keys to move \nPress E to open doors \nPress R to reset");
 			if (level==0) {
 				add(instructions);
-			} else if (level==5) {
-				add(new FlxText(130,50,100,"If you zombify a nurse you get disguised for 5 seconds!"))
+			} else if (level==1) {
+				add(new FlxText(100,15,110,"You can zombify humans by running into them"))
 			} else if (level==2) {
 				add(new FlxText(110,15,120,"BEWARE If a human sees you, it will go after you!"))
+			} else if (level==3) {
+				add(new FlxText(130,50,120,"Humans can kill zombies...but not without getting stunned!"))
 			} else if (level==4) {
 				add(new FlxText(130,50,120,"BEWARE Janitors see everything...And they also have keys"))
+			} else if (level==5) {
+				add(new FlxText(130,50,100,"If you zombify a nurse you get disguised for 5 seconds!"))
+			} else if (level==6) {
+				add(new FlxText(130,50,100,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
 	
 		}
