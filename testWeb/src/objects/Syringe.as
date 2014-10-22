@@ -4,35 +4,75 @@ package objects
 
 	public class Syringe extends FlxSprite
 	{
+
 		private const TILE_WIDTH:uint = 100;
-		private const TILE_HEIGHT:uint =100;
-		private var angle1:int;
-		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
+		private const TILE_HEIGHT:uint = 100;
+		private var angle1:Number;
+		[Embed(source="syringe_useSUPERTINY.png")] private static var ImgSpaceman:Class;
 		
 		public function Syringe(direction:int, xPos:int, yPos:int)
 		{
-			super(xPos,yPos);
-			super.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH,TILE_HEIGHT);
+			var x:int = xPos;
+			var y:int = yPos;
+			if(direction == 0){
+				x = x+4;
+			}
+			else if(direction == 180){
+				x = x+4;
+				y = y+8;
+			}
+			else if (direction == 90){
+				x = x+8;
+				y = y+7;
+			}
+			else if(direction == -90){
+				x = x-4;
+				y = y+7;
+			}
+			super(x,y);
+			super.loadGraphic(ImgSpaceman, true, true, 8, 2.5);
 			//bounding box tweaks
-			super.width = TILE_WIDTH*7/8;
-			super.height = TILE_HEIGHT*7/8;
+			super.width = 8;
+			super.height =2.5;
 			super.offset.x = 1;
 			super.offset.y = 1;
 			
 			//basic player physics
-			super.drag.x = 640;
-			super.drag.y = 640;
+			super.drag.x = 200;
+			super.drag.y = 200;
 			//player.acceleration.y = 420;
 			super.maxVelocity.x = 80;
 			super.maxVelocity.y = 80;
-			
 			//animations
-			super.addAnimation("run", [1, 2, 3, 0], 12);
+			//super.addAnimation("run", [1, 2, 3, 0], 12);
 			angle1 = direction;
 		}
 		
 		public function updatePos(rate:int){
-			if(angle1 == 0){
+			//angle1 = angle1 +90;
+			angle1 = angle1*0.0174532925;
+			this.acceleration.x += Math.sin(angle1)*rate;
+			this.acceleration.y -= Math.cos(angle1)*rate;
+			//angle1 = angle1+90;
+			/*if(angle1<0 && angle1 >=-90){
+				this.acceleration.x += rate*Math.sin(angle1);
+				this.acceleration.y -= rate*Math.cos(angle1);
+			}
+			if(angle1<=-90 && angle1 >-180){
+				this.acceleration.x += rate*Math.sin(angle1);
+				this.acceleration.y -= rate*Math.cos(angle1);
+			}
+			if(angle1>=0 && angle1 < 90){
+				this.acceleration.x += rate*Math.sin(angle1);
+				this.acceleration.y -= rate*Math.cos(angle1);
+			}
+			if(angle1>=90 && angle1 < 180){
+				this.acceleration.x += rate*Math.sin(angle1);
+				this.acceleration.y -= rate*Math.cos(angle1);
+			}*/
+			
+			//this.acceleration.y += 100*Math.cos(angle1);
+			/*if(angle1 == 0){
 				this.acceleration.y -= rate;
 			}
 			if(angle1 == 90){
@@ -43,7 +83,7 @@ package objects
 			}
 			if(angle1 == -90){
 				this.acceleration.x -= rate
-			}
+			}*/
 			
 		}
 		

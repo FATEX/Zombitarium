@@ -1,5 +1,6 @@
 package
 {
+	import flash.text.TextField;
 	import flash.utils.ByteArray;
 	
 	import objects.Doctor;
@@ -126,10 +127,12 @@ package
 		private var coneWidth:Number = 45;
 		private var throwable:Boolean = true;
 		private var pSyringe: Syringe;
+		private var dSyringe: Syringe;
 		
 		private var exitX:Number;
 		private var exitY:Number;
 		private var win:Boolean = false;
+		private var cd:int = 4;
 		
 		override public function create():void
 		{
@@ -250,12 +253,18 @@ package
 			instructions = new FlxText(15,15,120,"Arrow keys to move \nPress E to open doors \nPress R to reset");
 			if (level==0) {
 				add(instructions);
-			} else if (level==5) {
-				add(new FlxText(130,50,100,"If you zombify a nurse you get disguised for 5 seconds!"))
+			} else if (level==1) {
+				add(new FlxText(100,15,110,"You can zombify humans by running into them"))
 			} else if (level==2) {
 				add(new FlxText(110,15,120,"BEWARE If a human sees you, it will go after you!"))
+			} else if (level==3) {
+				add(new FlxText(130,50,120,"Humans can kill zombies...but not without getting stunned!"))
 			} else if (level==4) {
 				add(new FlxText(130,50,120,"BEWARE Janitors see everything...And they also have keys"))
+			} else if (level==5) {
+				add(new FlxText(130,50,100,"If you zombify a nurse you get disguised for 5 seconds!"))
+			} else if (level==6) {
+				add(new FlxText(130,50,100,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
 	
 		}
@@ -399,7 +408,7 @@ package
 				x = int(lineArray[1]);
 				y = int(lineArray[2]);
 				if(type=="H"){
-					h=new Human(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					h=new Doctor(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
 					humans.push(h);
 				}
 				if(type=="J"){
@@ -483,6 +492,10 @@ package
 			for each(var hum:Human in humans){
 				FlxG.collide(hum,pSyringe, touchedH);
 			}
+			FlxG.collide(collisionMap, dSyringe,touchedZ);
+			for each(var zom:Zombie in zombies){
+				FlxG.collide(zom,dSyringe, touchedZ);
+			}
 			
 			//FlxG.collide(infected, collisionMap);
 			
@@ -524,7 +537,22 @@ package
 						}
 						
 						if(zombies[j].alive && type[i].alive){
+							cd++;
 							if(detect(type[i],zombies[j])){
+								if(type[i] is Doctor && cd >=1000 ){
+									/*var t:FlxText;
+									var a:int = FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
+									t = new FlxText(20,0,40, a.toString());
+									t.size = 15;
+									add(t);*/
+									(Doctor(type[i])).stopFollowingPath();
+									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2)), type[i].x, type[i].y);
+									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
+									add(dSyringe);
+									dSyringe.updatePos(500);
+									(Doctor(type[i])).goBack(collisionMap);
+									cd = 0;
+								}
 								(Human(type[i])).alerted.x=(Human(type[i])).x;
 								(Human(type[i])).alerted.y=(Human(type[i])).y-(Human(type[i])).height;
 								if(!(Human(type[i])).alertAdded){
@@ -572,12 +600,13 @@ package
 				
 			}
 			else if(obj1 is Zombie){
-				syr.explode();//might be a problem
+				//syr.explode();//might be a problem
 				zom = Zombie(obj1);
 				syr = Syringe(obj2);
 				remove(zom, true);
 				remove(syr, true);
 				zom.exists = false;
+				zom.alive = false;
 				syr.exists = false;
 				syr.destory();
 			}
@@ -595,8 +624,14 @@ package
 			}
 			else if(obj1 is Human){
 				man = Human(obj1);
+				remove(man.alerted);
 				syr = Syringe(obj2);
 				remove(man, true);
+				if(man is Janitor){
+					var jan:Janitor = man as Janitor;
+					jan.alive=false;
+					jan.die();
+				}
 				remove(syr, true);
 				man.exists = false;
 				man.alive = false;
@@ -799,9 +834,17 @@ package
 				player.angle = 180;
 				player.acceleration.y += player.drag.y;
 			}
-			else if(FlxG.keys.SPACE){
+			if(FlxG.keys.SPACE){
 				if(throwable){
-					pSyringe = new Syringe(player.angle, player.x, player.y);
+					/*if(player.angle == 0 || player.angle == 180){
+						pSyringe = new Syringe(player.angle, player.x+2, player.y);
+					}
+					else if(player.angle == 90 || player.angle == -90){
+						pSyringe = new Syringe(player.angle, player.x, player.y+7);
+					}*/
+					
+					pSyringe = new Syringe(player.angle, player.x, player.y)
+					pSyringe.angle = player.angle-90;
 					add(pSyringe);
 					pSyringe.updatePos(100);
 					throwable = false;
@@ -812,7 +855,7 @@ package
 					
 				}
 			}
-			else if(FlxG.keys.ALT){
+			if(FlxG.keys.ALT){
 				throwable = true;
 			}
 			if(FlxG.keys.justPressed("R")){
