@@ -131,7 +131,7 @@ package
 		private var exitX:Number;
 		private var exitY:Number;
 		private var win:Boolean = false;
-		private var cd:int = 90;
+		private var cd:int = 4;
 		
 		override public function create():void
 		{
@@ -536,8 +536,9 @@ package
 						}
 						
 						if(zombies[j].alive && type[i].alive){
+							cd++;
 							if(detect(type[i],zombies[j])){
-								if(type[i] is Doctor && cd >=90 ){
+								if(type[i] is Doctor && cd >=1000 ){
 									/*var t:FlxText;
 									var a:int = FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
 									t = new FlxText(20,0,40, a.toString());
@@ -604,6 +605,7 @@ package
 				remove(zom, true);
 				remove(syr, true);
 				zom.exists = false;
+				zom.alive = false;
 				syr.exists = false;
 				syr.destory();
 			}
