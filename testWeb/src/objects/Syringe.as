@@ -4,18 +4,18 @@ package objects
 
 	public class Syringe extends FlxSprite
 	{
-		private const TILE_WIDTH:uint = 16;
-		private const TILE_HEIGHT:uint = 16;
+		private const TILE_WIDTH:uint = 100;
+		private const TILE_HEIGHT:uint =100;
 		private var angle1:int;
 		[Embed(source="spaceman.png")] private static var ImgSpaceman:Class;
 		
 		public function Syringe(direction:int, xPos:int, yPos:int)
 		{
 			super(xPos,yPos);
-			super.loadGraphic(ImgSpaceman, true, true, 16);
+			super.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH,TILE_HEIGHT);
 			//bounding box tweaks
-			super.width = 14;
-			super.height = 14;
+			super.width = TILE_WIDTH*7/8;
+			super.height = TILE_HEIGHT*7/8;
 			super.offset.x = 1;
 			super.offset.y = 1;
 			

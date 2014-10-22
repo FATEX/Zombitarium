@@ -12,14 +12,14 @@ package objects
 	
 	public class Doctor extends Human
 	{
-		private const TILE_WIDTH:uint = 16;
-		private const TILE_HEIGHT:uint = 16;
+		private const TILE_WIDTH:uint = 100;
+		private const TILE_HEIGHT:uint = 100;
 		[Embed(source="doctor_front_1.png")] private static var ImgSpaceman:Class;
 		
 		public function Doctor(originX:Number, originY:Number)
 		{
 			super(originX, originY);
-			super.loadGraphic(ImgSpaceman, true, true, 16);
+			super.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH,TILE_HEIGHT);
 		}
 		
 		public function throwSyringe(dPosx:int, dPosy:int, tPosx:int, tPosy:int):Boolean{

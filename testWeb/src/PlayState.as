@@ -15,6 +15,7 @@ package
 	import org.flixel.FlxObject;
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
+	import org.flixel.FlxRect;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
@@ -24,7 +25,7 @@ package
 	public class PlayState extends FlxState
 	{
 		// Tileset that works with AUTO mode (best for thin walls)
-		[Embed(source = 'auto_tiles.png')]private static var auto_tiles:Class;
+		[Embed(source = 'auto_tiles_100.png')]private static var auto_tiles:Class;
 		
 		// Tileset that works with ALT mode (best for thicker walls)
 		[Embed(source = 'alt_tiles.png')]private static var alt_tiles:Class;
@@ -61,15 +62,15 @@ package
 		[Embed(source = 'level_hard.txt', mimeType = 'application/octet-stream')]private static var default_hard:Class;
 
 
-		[Embed(source="walk_zombie_front.png")] private static var ImgSpaceman:Class;
-		[Embed(source="blackScreen.png")] private static var BlackTile:Class;
-		[Embed(source="key.png")] private static var ImgKey:Class;
-		[Embed(source="door.png")] private static var ImgDoor:Class;
-		[Embed(source="doorOpen.png")] private static var ImgDoorOpen:Class;
+		[Embed(source="walk_zombie_front_100.png")] private static var ImgSpaceman:Class;
+		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
+		[Embed(source="key_100.png")] private static var ImgKey:Class;
+		[Embed(source="door_100.png")] private static var ImgDoor:Class;
+		[Embed(source="doorOpen_100.png")] private static var ImgDoorOpen:Class;
 		
 		// Some static constants for the size of the tilemap tiles
-		private const TILE_WIDTH:uint = 16;
-		private const TILE_HEIGHT:uint = 16;
+		public const TILE_WIDTH:uint = 100;
+		public const TILE_HEIGHT:uint = 100;
 		
 		// The FlxTilemap we're using
 		private var collisionMap:FlxTilemap;
@@ -121,7 +122,7 @@ package
 		private var blankTiles:Array;
 		
 		//constants For detection
-		private var distanceCanSee:int = 50;
+		private var distanceCanSee:int = 50/16*TILE_WIDTH;
 		private var coneWidth:Number = 45;
 		private var throwable:Boolean = true;
 		private var pSyringe: Syringe;
@@ -132,7 +133,7 @@ package
 		
 		override public function create():void
 		{
-			
+			FlxG.worldBounds = new FlxRect(0,0,TILE_WIDTH*100,TILE_HEIGHT*100);
 			FlxG.framerate = 50;
 			FlxG.flashFramerate = 50;
 			//Load _datamap to _map and add to PlayState
@@ -228,13 +229,13 @@ package
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
 					if(collisionMap.getTile(i,j)==0 && this.darkRooms){
 						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH,j*TILE_HEIGHT);
-						blankScreenTile.loadGraphic(BlackTile,false,false,16,16);
+						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH,TILE_HEIGHT);
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
 					}
 					else{
 						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH,j*TILE_HEIGHT);
-						blankScreenTile.loadGraphic(BlackTile,false,false,16,16);
+						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH,TILE_HEIGHT);
 						//blankScreenTile.visible=false;
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
@@ -324,7 +325,7 @@ package
 				FlxG.removeCamera(camNextLevel,false);
 			}
 			else{
-				cam = new FlxCamera(0,0, FlxG.width/4, FlxG.height/4, 4); // we put the first one in the top left corner
+				cam = new FlxCamera(0,0, FlxG.width, FlxG.height, 1); // we put the first one in the top left corner
 				camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
 				//camReset = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
 				camNextLevel = new FlxCamera(2, 42, nextLevelBtn.width, nextLevelBtn.height);
@@ -435,7 +436,7 @@ package
 					
 				}
 				if(type=="LDOOR"){
-					door = new Door(x*TILE_WIDTH-door.width/2,y*TILE_HEIGHT-door.height/8);
+					door = new Door(x*TILE_WIDTH-door.width/4,y*TILE_HEIGHT-door.height/4);
 					doors.push(door);
 				}
 				if(type=="KEY"){
@@ -444,7 +445,7 @@ package
 					keys.push(key);
 				}
 				if(type=="UDOOR"){
-					unlockedDoor = new UnlockedDoor(x*TILE_WIDTH-unlockedDoor.width/2,y*TILE_HEIGHT-unlockedDoor.height/8);
+					unlockedDoor = new UnlockedDoor(x*TILE_WIDTH-door.width/4,y*TILE_HEIGHT-door.height/4);
 					unlockedDoors.push(unlockedDoor);
 				}
 				if(type=="EXIT"){
@@ -722,20 +723,20 @@ package
 			
 			//zombie.addRoutePoints(new FlxPoint(24*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
 			//zombie.addRoutePoints(new FlxPoint(zombie.x,zombie.y));
-			player = new Zombie(20, 20,14,14,640,640,80,80);
-			player.loadGraphic(ImgSpaceman, true, true, 16);
+			player = new Zombie(20, 20,TILE_WIDTH*7/8,TILE_HEIGHT*7/8,640/16*TILE_WIDTH,640/16*TILE_WIDTH,80/16*TILE_WIDTH,80/16*TILE_WIDTH);
+			player.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH,TILE_HEIGHT);
 			//bounding box tweaks
-			player.width = 14;
-			player.height = 14;
+			player.width = TILE_WIDTH*7/8;
+			player.height = TILE_HEIGHT*7/8;
 			player.offset.x = 1;
 			player.offset.y = 1;
 			
 			//basic player physics
-			player.drag.x = 640;
-			player.drag.y = 640;
+			player.drag.x = 640/16*TILE_WIDTH;
+			player.drag.y = 640/16*TILE_HEIGHT;
 			//player.acceleration.y = 420;
-			player.maxVelocity.x = 80;
-			player.maxVelocity.y = 80;
+			player.maxVelocity.x = 80/16*TILE_WIDTH;
+			player.maxVelocity.y = 80/16*TILE_HEIGHT;
 			
 			//animations
 			player.addAnimation("idle", [0]);
@@ -748,7 +749,7 @@ package
 
 		private function updatePlayer():void
 		{
-			wrap(player);
+			//wrap(player);
 
 			if (player.alive == false) {
 				//losePic.loadGraphic(loseImg,false, false);
@@ -756,13 +757,13 @@ package
 			}
 			
 			for (var i:Number=0;i<doors.length;i++){
-				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/2)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/8)/TILE_HEIGHT),zombies,this);
+				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/4)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/4)/TILE_HEIGHT),zombies,this);
 				doors[i].updateDoor();
 			}
 			
 			for each(var ud:UnlockedDoor in unlockedDoors){
-				//trace(Math.abs((ud.y+ud.height/4)/TILE_HEIGHT));
-				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/2)/TILE_WIDTH), Math.round((ud.y+ud.height/8)/TILE_HEIGHT),zombies,player,this);
+				//trace(Math.abs((ud.y)/TILE_HEIGHT));
+				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/4)/TILE_WIDTH), Math.round((ud.y+ud.height/4)/TILE_HEIGHT),zombies,player,this);
 				ud.updateDoor();
 			}
 
@@ -828,7 +829,7 @@ package
 				player.play("run");
 			}
 			 
-			if (Math.abs(player.x- (exitX))<=2 && Math.abs(player.y - (exitY))<=2) {
+			if (Math.abs(player.x- (exitX))<=TILE_WIDTH/8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/8) {
 				win == true;
 				level++;
 				level = level%10;

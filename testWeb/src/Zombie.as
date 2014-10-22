@@ -13,10 +13,12 @@ package
 	
 	public class Zombie extends FlxSprite
 	{
+		private const TILE_WIDTH:uint = 100;
+		private const TILE_HEIGHT:uint =100;
 
-		[Embed(source="walk_nurse_front_dead.png")] private static var ImgSpaceman:Class;
-		[Embed(source="walk_zombie_front.png")] private static var ImgPlayer:Class;
-		[Embed(source="walk_nurse_front.png")] private static var ImgNurse:Class;
+		[Embed(source="walk_nurse_front_dead_100.png")] private static var ImgSpaceman:Class;
+		[Embed(source="walk_zombie_front_100.png")] private static var ImgPlayer:Class;
+		[Embed(source="walk_nurse_front_100.png")] private static var ImgNurse:Class;
 
 		public var xPos:int = 0;
 		public var yPos:int = 0;
@@ -34,7 +36,7 @@ package
  		public function Zombie(xPos:int, yPos:int, width:int, height:int, xDrag:int, yDrag:int, xMaxVelocity:int, yMaxVelocity:int)
 		{
 			super(xPos,yPos);
-			this.loadGraphic(ImgSpaceman, true, true, 16,16);
+			this.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH,TILE_HEIGHT);
 			//this.loadGraphic();
 			this.xPos = xPos;
 			this.yPos = yPos;
@@ -82,7 +84,7 @@ package
 		
 		public function attackNearestHuman(collisionMap:FlxTilemap, path:FlxPath):void{
 			if(path!=null){
-				this.followPath(path,50, PATH_FORWARD, true);
+				this.followPath(path,50/16*TILE_WIDTH, PATH_FORWARD, true);
 			}
 		}
 		public function checkPath(collisionMap:FlxTilemap):void{
@@ -149,7 +151,7 @@ package
 		}
 		
 		public function setImage(image:Class):void{
-			this.loadGraphic(image, true, true, 16);
+			this.loadGraphic(image, true, true, TILE_WIDTH,TILE_HEIGHT);
 		}
 		
 		public function dieAnimation():void{
@@ -159,12 +161,12 @@ package
 		public function disguiseOFF():void{
 			if(isDisguised){
 				isDisguised=false;
-				this.loadGraphic(ImgPlayer, true, true, 16,16);
+				this.loadGraphic(ImgPlayer, true, true, TILE_WIDTH,TILE_HEIGHT);
 			}
 		}
 		
 		public function disguiseON():void{
-			super.loadGraphic(ImgNurse, true, true, 16);
+			super.loadGraphic(ImgNurse, true, true, TILE_WIDTH,TILE_HEIGHT);
 			this.isDisguised = true;
 			var t:Timer = new Timer(5000);
 			t.addEventListener(TimerEvent.TIMER, onDelay);

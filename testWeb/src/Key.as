@@ -11,15 +11,17 @@ package
 		public var collectable:Boolean = false;
 		private var collisionMap:FlxTilemap;
 		
-		[Embed(source="key.png")] private static var ImgKey:Class;
+		[Embed(source="key_100.png")] private static var ImgKey:Class;
 		
+		private const TILE_WIDTH:uint = 100;
+		private const TILE_HEIGHT:uint =100;
 	
 		
 		public function Key(c, d:Door, p:FlxSprite, tx, ty) {
 
 		
 			super(tx,ty);
-			this.loadGraphic(ImgKey, false, false, 16);
+			this.loadGraphic(ImgKey, false, false, TILE_WIDTH, TILE_HEIGHT);
 			this.immovable = true;
 		}
 

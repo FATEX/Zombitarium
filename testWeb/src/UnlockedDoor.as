@@ -9,8 +9,11 @@ package
 		var doorOpenImg:FlxSprite;
 		var pressed:Boolean = true;
 		
-		[Embed(source="door.png")] static var ImgDoorClose:Class;
-		[Embed(source="doorOpen.png")] static var ImgDoorOpen:Class;
+		private const TILE_WIDTH:uint = 100;
+		private const TILE_HEIGHT:uint =100;
+		
+		[Embed(source="door_100.png")] static var ImgDoorClose:Class;
+		[Embed(source="doorOpen_100.png")] static var ImgDoorOpen:Class;
 		
 		public function UnlockedDoor(tx,ty)
 		{
@@ -20,18 +23,18 @@ package
 		public function updateDoor() 
 		{
 			if (doorOpen == false) {
-				this.loadGraphic(ImgDoorClose, false, false, 30, 20); 
+				this.loadGraphic(ImgDoorClose, false, false,  TILE_WIDTH*1.5, TILE_HEIGHT*1.5); 
 				this.immovable = true;
 			} else
 			{
-				this.loadGraphic(ImgDoorOpen, false, false, 30, 20)
+				this.loadGraphic(ImgDoorOpen, false, false,  TILE_WIDTH*1.5, TILE_HEIGHT*1.5)
 				this.immovable = true;
 			}
 		}
 		public function checkCollision(c, p, tx, ty, zombies:Vector.<Zombie>,player:Zombie, state:PlayState) { 
 		
 			if(doorOpen == false){ // if the door hasn't been opened yet
-
+					trace("check collision = "+ FlxG.overlap(p, this));
 					if(FlxG.overlap(p, this) && FlxG.keys.E && pressed){ // check if the door and the player are touching
 						pressed = false;
 						doorOpen = true;

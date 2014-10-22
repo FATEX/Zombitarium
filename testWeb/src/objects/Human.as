@@ -10,10 +10,10 @@ package objects
 
 	public class Human extends FlxSprite
 	{
-		private const TILE_WIDTH:uint = 16;
-		private const TILE_HEIGHT:uint = 16;
-		[Embed(source="walk_nurse_front.png")] private static var ImgSpaceman:Class;
-		[Embed(source="alert_anim.png")] private static var ImgAlert:Class;
+		private const TILE_WIDTH:uint = 100;
+		private const TILE_HEIGHT:uint = 100;
+		[Embed(source="walk_nurse_front_100.png")] private static var ImgSpaceman:Class;
+		[Embed(source="alert_anim_100.png")] private static var ImgAlert:Class;
 		
 		
 		//path array of flxpoints
@@ -41,27 +41,27 @@ package objects
 			super(originX, originY);
 			this.originX=originX;
 			this.originY=originY;
-			super.loadGraphic(ImgSpaceman, true, true, 16);
+			super.loadGraphic(ImgSpaceman, true, true,TILE_WIDTH,TILE_HEIGHT);
 			
 			//bounding box tweaks
-			super.width = 14;
-			super.height = 14;
+			super.width = TILE_WIDTH*7/8;
+			super.height = TILE_HEIGHT*7/8;
 			super.offset.x = 1;
 			super.offset.y = 1;
 			
 			//basic player physics
-			super.drag.x = 640;
-			super.drag.y = 640;
+			super.drag.x = 640/16*TILE_WIDTH;
+			super.drag.y = 640/16*TILE_WIDTH;
 			//player.acceleration.y = 420;
-			super.maxVelocity.x = 80;
-			super.maxVelocity.y = 80;
+			super.maxVelocity.x = 80/16*TILE_WIDTH;
+			super.maxVelocity.y = 80/16*TILE_WIDTH;
 			
 			//animations
 			super.addAnimation("idle", [0]);
 			super.addAnimation("run", [1, 2, 3, 0], 12);
 			super.addAnimation("jump", [4]);
 			alerted = new FlxSprite(originX,originY);
-			alerted.loadGraphic(ImgAlert,true,false,16,16);
+			alerted.loadGraphic(ImgAlert,true,false,TILE_WIDTH,TILE_HEIGHT);
 			alerted.addAnimation("alert",[0,1],12,true);
 		}
 		
@@ -69,9 +69,9 @@ package objects
 		{
 			
 				if(isFollowing && nextPath!=null){
-					super.followPath(nextPath,70,PATH_FORWARD,true);
+					super.followPath(nextPath,70/16*TILE_WIDTH,PATH_FORWARD,true);
 				}else{
-					super.followPath(myroute,50,PATH_LOOP_FORWARD,true);	
+					super.followPath(myroute,50/16*TILE_WIDTH,PATH_LOOP_FORWARD,true);	
 				}
 		}
 		
@@ -108,7 +108,7 @@ package objects
 			
 			var pp:FlxPath = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2),new FlxPoint(this.originX,this.originY));
 			if(pp!=null){
-			super.followPath(pp,50,PATH_FORWARD,true);
+			super.followPath(pp,50/16*TILE_WIDTH,PATH_FORWARD,true);
 			}
 			isFollowing=false;
 			isPathSet=false;
