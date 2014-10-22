@@ -104,7 +104,7 @@ package
 		private var doors:Vector.<Door>;
 		private var unlockedDoors:Vector.<UnlockedDoor>;
 		
-		private static var level:int = 0;
+		public static var level:int = 0;
 		
 		private var infected:Zombie;
 		private var area:FlxSprite;
