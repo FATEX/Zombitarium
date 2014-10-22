@@ -728,7 +728,15 @@ package
 			}
 			else if(FlxG.keys.SPACE){
 				if(throwable){
-					pSyringe = new Syringe(player.angle, player.x, player.y);
+					/*if(player.angle == 0 || player.angle == 180){
+						pSyringe = new Syringe(player.angle, player.x+2, player.y);
+					}
+					else if(player.angle == 90 || player.angle == -90){
+						pSyringe = new Syringe(player.angle, player.x, player.y+7);
+					}*/
+					
+					pSyringe = new Syringe(player.angle, player.x, player.y)
+					pSyringe.angle = player.angle-90;
 					add(pSyringe);
 					pSyringe.updatePos(100);
 					throwable = false;
