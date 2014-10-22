@@ -6,7 +6,7 @@ package objects
 	{
 		private const TILE_WIDTH:uint = 16;
 		private const TILE_HEIGHT:uint = 16;
-		private var angle1:int;
+		private var angle1:Number;
 		[Embed(source="syringe_useSUPERTINY.png")] private static var ImgSpaceman:Class;
 		
 		public function Syringe(direction:int, xPos:int, yPos:int)
@@ -48,7 +48,30 @@ package objects
 		}
 		
 		public function updatePos(rate:int){
-			if(angle1 == 0){
+			//angle1 = angle1 +90;
+			angle1 = angle1*0.0174532925;
+			this.acceleration.x += Math.sin(angle1)*rate;
+			this.acceleration.y -= Math.cos(angle1)*rate;
+			//angle1 = angle1+90;
+			/*if(angle1<0 && angle1 >=-90){
+				this.acceleration.x += rate*Math.sin(angle1);
+				this.acceleration.y -= rate*Math.cos(angle1);
+			}
+			if(angle1<=-90 && angle1 >-180){
+				this.acceleration.x += rate*Math.sin(angle1);
+				this.acceleration.y -= rate*Math.cos(angle1);
+			}
+			if(angle1>=0 && angle1 < 90){
+				this.acceleration.x += rate*Math.sin(angle1);
+				this.acceleration.y -= rate*Math.cos(angle1);
+			}
+			if(angle1>=90 && angle1 < 180){
+				this.acceleration.x += rate*Math.sin(angle1);
+				this.acceleration.y -= rate*Math.cos(angle1);
+			}*/
+			
+			//this.acceleration.y += 100*Math.cos(angle1);
+			/*if(angle1 == 0){
 				this.acceleration.y -= rate;
 			}
 			if(angle1 == 90){
@@ -59,7 +82,7 @@ package objects
 			}
 			if(angle1 == -90){
 				this.acceleration.x -= rate
-			}
+			}*/
 			
 		}
 		
