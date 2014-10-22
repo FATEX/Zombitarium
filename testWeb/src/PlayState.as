@@ -408,7 +408,7 @@ package
 				x = int(lineArray[1]);
 				y = int(lineArray[2]);
 				if(type=="H"){
-					h=new Doctor(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					h=new Human(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
 					humans.push(h);
 				}
 				if(type=="J"){
@@ -549,7 +549,7 @@ package
 									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2)), type[i].x, type[i].y);
 									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
 									add(dSyringe);
-									dSyringe.updatePos(500);
+									dSyringe.updatePos(1000);
 									(Doctor(type[i])).goBack(collisionMap);
 									cd = 0;
 								}
@@ -846,7 +846,7 @@ package
 					pSyringe = new Syringe(player.angle, player.x, player.y)
 					pSyringe.angle = player.angle-90;
 					add(pSyringe);
-					pSyringe.updatePos(100);
+					pSyringe.updatePos(1000);
 					throwable = false;
 					//FlxG.collide(collisionMap, pSyringe, touchedH);
 					/*for(var i1:int = 0; i1<humans.length; i1++){

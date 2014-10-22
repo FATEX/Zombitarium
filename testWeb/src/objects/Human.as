@@ -55,6 +55,8 @@ package objects
 			//player.acceleration.y = 420;
 			super.maxVelocity.x = 80/16*TILE_WIDTH;
 			super.maxVelocity.y = 80/16*TILE_WIDTH;
+			this.x=originX -this.width/2;
+			this.y=originY-this.height/2;
 			
 			//animations
 			super.addAnimation("idle", [0]);

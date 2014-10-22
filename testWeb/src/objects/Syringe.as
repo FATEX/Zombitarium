@@ -8,7 +8,7 @@ package objects
 		private const TILE_WIDTH:uint = 100;
 		private const TILE_HEIGHT:uint = 100;
 		private var angle1:Number;
-		[Embed(source="syringe_useSUPERTINY.png")] private static var ImgSpaceman:Class;
+		[Embed(source="syringe_use.png")] private static var ImgSpaceman:Class;
 		
 		public function Syringe(direction:int, xPos:int, yPos:int)
 		{
@@ -30,7 +30,7 @@ package objects
 				y = y+7;
 			}
 			super(x,y);
-			super.loadGraphic(ImgSpaceman, true, true, 8, 2.5);
+			super.loadGraphic(ImgSpaceman, true, true, 44, 9);
 			//bounding box tweaks
 			super.width = 8;
 			super.height =2.5;
@@ -38,11 +38,11 @@ package objects
 			super.offset.y = 1;
 			
 			//basic player physics
-			super.drag.x = 200;
-			super.drag.y = 200;
+			super.drag.x = 0;
+			super.drag.y = 0;
 			//player.acceleration.y = 420;
-			super.maxVelocity.x = 80;
-			super.maxVelocity.y = 80;
+			super.maxVelocity.x = 800;
+			super.maxVelocity.y = 800;
 			//animations
 			//super.addAnimation("run", [1, 2, 3, 0], 12);
 			angle1 = direction;
