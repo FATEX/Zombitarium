@@ -488,9 +488,12 @@ package
 			// automatically collides each individual tile with the object.
 			FlxG.collide(player, collisionMap);
 			FlxG.collide(collisionMap, pSyringe,touchedH);
-			FlxG.collide(collisionMap, dSyringe,touchedH);
 			for each(var hum:Human in humans){
 				FlxG.collide(hum,pSyringe, touchedH);
+			}
+			FlxG.collide(collisionMap, dSyringe,touchedZ);
+			for each(var zom:Zombie in zombies){
+				FlxG.collide(zom,dSyringe, touchedZ);
 			}
 			
 			//FlxG.collide(infected, collisionMap);
@@ -595,7 +598,7 @@ package
 				
 			}
 			else if(obj1 is Zombie){
-				syr.explode();//might be a problem
+				//syr.explode();//might be a problem
 				zom = Zombie(obj1);
 				syr = Syringe(obj2);
 				remove(zom, true);
