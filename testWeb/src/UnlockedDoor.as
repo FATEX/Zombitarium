@@ -9,8 +9,8 @@ package
 		var doorOpenImg:FlxSprite;
 		var pressed:Boolean = true;
 		
-		private const TILE_WIDTH:uint = 100;
-		private const TILE_HEIGHT:uint =100;
+		private const TILE_WIDTH:uint = 65;
+		private const TILE_HEIGHT:uint = 65;
 		
 		[Embed(source="door_100.png")] static var ImgDoorClose:Class;
 		[Embed(source="doorOpen_100.png")] static var ImgDoorOpen:Class;
