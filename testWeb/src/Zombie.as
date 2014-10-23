@@ -54,12 +54,15 @@ package
 			var path:FlxPath = null;
 			var nearestPath: FlxPath = null;
 			for(var j:int = 0; j<humanP.length;j++){
-				var path2:FlxPath = collisionMap.findPath(zombieP, new FlxPoint(humanP[j].x+humanP[j].width/2, humanP[j].y+humanP[j].height/2), false);
-				if(path2!=null && path2.nodes.length<minLength){
-					path=path2;
-					this.humanFollowing=humanP[j];
-					minLength = path2.nodes.length;
+				if(humanP[i].alive){
+					var path2:FlxPath = collisionMap.findPath(zombieP, new FlxPoint(humanP[j].x+humanP[j].width/2, humanP[j].y+humanP[j].height/2), false);
+					if(path2!=null && path2.nodes.length<minLength){
+						path=path2;
+						this.humanFollowing=humanP[j];
+						minLength = path2.nodes.length;
+					}
 				}
+				
 			}
 			/*
 			//path = collisionMap.findPath(zombieP, new FlxPoint(humanP[1].x, humanP[1].y), false);

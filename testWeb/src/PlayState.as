@@ -603,6 +603,8 @@ package
 				//syr.explode();//might be a problem
 				zom = Zombie(obj1);
 				syr = Syringe(obj2);
+				var pos:int = zombies.indexOf(zom);
+				zombies.splice(pos,1);
 				remove(zom, true);
 				remove(syr, true);
 				zom.exists = false;
@@ -627,20 +629,22 @@ package
 				man = Human(obj1);
 				remove(man.alerted);
 				syr = Syringe(obj2);
-				remove(man, true);
 				if(man is Janitor){
 					var jan:Janitor = man as Janitor;
+					jan.exists=false;
 					jan.alive=false;
 					jan.die();
 				}
+				man.alive = false;
+				var pos:int = humans.indexOf(man);
+				humans.splice(pos,1);
+				remove(man, true);
 				remove(syr, true);
 				man.exists = false;
-				man.alive = false;
+				
 				syr.explode();//might be a problem
 				syr.destory();
 				syr.exists = false;
-				
-				
 			}
 		}
 		
