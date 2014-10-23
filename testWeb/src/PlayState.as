@@ -607,6 +607,7 @@ package
 				remove(syr, true);
 				zom.exists = false;
 				zom.alive = false;
+				trace("happen2")
 				syr.exists = false;
 				syr.destory();
 			}
@@ -698,6 +699,7 @@ package
 					remove(zom,true);
 					man.goBack(collisionMap);
 					zom.alive=false;
+					trace("happen1")
 					man.stunHuman();
 				}
 				man.alerted.x=man.x;
@@ -767,11 +769,11 @@ package
 			player.offset.y = 1;
 			
 			//basic player physics
-			player.drag.x = 640/16*TILE_WIDTH;
-			player.drag.y = 640/16*TILE_HEIGHT;
+			player.drag.x = 640/1*TILE_WIDTH;
+			player.drag.y = 640/1*TILE_HEIGHT;
 			//player.acceleration.y = 420;
-			player.maxVelocity.x = 80/16*TILE_WIDTH;
-			player.maxVelocity.y = 80/16*TILE_HEIGHT;
+			player.maxVelocity.x = 80/20*TILE_WIDTH;
+			player.maxVelocity.y = 80/20*TILE_HEIGHT;
 			
 			//animations
 			player.addAnimation("idle", [0]);
