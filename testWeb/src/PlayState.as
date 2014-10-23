@@ -26,14 +26,8 @@ package
 	public class PlayState extends FlxState
 	{
 		// Tileset that works with AUTO mode (best for thin walls)
-		[Embed(source = 'auto_tiles_65.png')]private static var auto_tiles:Class;
-		
-		// Tileset that works with ALT mode (best for thicker walls)
-		[Embed(source = 'alt_tiles.png')]private static var alt_tiles:Class;
-		
-		// Tileset that works with OFF mode (do what you want mode)
-		[Embed(source = 'empty_tiles.png')]private static var empty_tiles:Class;
-		
+		[Embed(source = 'wall_USE.png')]private static var auto_tiles:Class;
+				
 		// Default character loading texts		
 		// [Embed(source = 'default_alt.txt', mimeType = 'application/octet-stream')]private static var default_alt:Class;
 		// f[Embed(source = 'default_empty.txt', mimeType = 'application/octet-stream')]private static var default_empty:Class;
