@@ -228,7 +228,7 @@ package
 			add(quitBtn);
 			
 			
-			t = new FlxButton(-1, 30, "LEVEL " + (level+1));
+			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
 			add(t);
 			
 			addCam();
