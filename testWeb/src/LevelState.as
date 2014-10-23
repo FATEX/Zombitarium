@@ -25,10 +25,6 @@ package
 			t.size = 64
 			t.alignment = "center";
 			add(t);
-			t = new FlxText((FlxG.width/2-100),(FlxG.height-100),250,"Or click to play first level");
-			t.size = 24;
-			t.alignment = "center";
-			add(t);
 			
 			level_0 = new FlxButton(300, 200, "1", function():void
 			{
