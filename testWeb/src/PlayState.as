@@ -57,6 +57,7 @@ package
 
 		[Embed(source="zombie_combined.png")] private static var ImgSpaceman:Class;
 		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
+		[Embed(source="basic_floor_tile_USE_65.png")] private static var FloorTile:Class;
 
 		
 		
@@ -192,6 +193,15 @@ package
 			}
 			
 			add(collisionMap);
+			for(var i:int =0;i<collisionMap.widthInTiles;i++){
+				for(var j:int=0;j<collisionMap.heightInTiles;j++){
+					if(collisionMap.getTile(i,j)==0){
+						var floorScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH,j*TILE_HEIGHT);
+						floorScreenTile.loadGraphic(FloorTile,false,false,TILE_WIDTH,TILE_HEIGHT);
+						add(floorScreenTile);
+					}
+				}
+			}
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
 			destination = new FlxPoint(0,0);
 			setupPlayer();

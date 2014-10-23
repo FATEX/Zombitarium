@@ -11,10 +11,10 @@ package
 		public var collectable:Boolean = false;
 		private var collisionMap:FlxTilemap;
 		
-		[Embed(source="key.png")] private static var ImgKey:Class;
+		[Embed(source="key_100.png")] private static var ImgKey:Class;
 		
-		private const TILE_WIDTH:uint = 25;
-		private const TILE_HEIGHT:uint = 20;
+		private const TILE_WIDTH:uint = 65;
+		private const TILE_HEIGHT:uint = 65;
 	
 		
 		public function Key(c, d:Door, p:FlxSprite, tx, ty) {
