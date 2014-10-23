@@ -61,9 +61,9 @@ package
 		[Embed(source = 'level_hard.txt', mimeType = 'application/octet-stream')]private static var default_hard:Class;
 
 
-		[Embed(source="walk_zombie_front_100.png")] private static var ImgSpaceman:Class;
+		[Embed(source="zombie_combined.png")] private static var ImgSpaceman:Class;
 		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
-		[Embed(source="key_100.png")] private static var ImgKey:Class;
+
 		
 		
 		// Some static constants for the size of the tilemap tiles
@@ -253,10 +253,7 @@ package
 					
 				}
 			}
-			revealBoard();
-			//helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
-			//add(helperTxt);
-			
+			revealBoard();			
 
 			instructions = new FlxText(1*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys to move \nPress E to open doors \nPress R to reset");
 
@@ -361,9 +358,6 @@ package
 			
 			camQuit.follow(quitBtn);
 			FlxG.addCamera(camQuit);
-
-			//camReset.follow(resetBtn);
-			//FlxG.addCamera(camReset);
 			
 			camNextLevel.follow(nextLevelBtn);
 			FlxG.addCamera(camNextLevel);
@@ -831,8 +825,7 @@ package
 			//wrap(player);
 
 			if (player.alive == false) {
-				//losePic.loadGraphic(loseImg,false, false);
-				//add(losePic);
+				//resetGame();
 			}
 			
 			for (var i:Number=0;i<doors.length;i++){

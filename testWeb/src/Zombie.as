@@ -16,8 +16,8 @@ package
 		private const TILE_WIDTH:uint = 65;
 		private const TILE_HEIGHT:uint = 65;
 
-		[Embed(source="walk_nurse_front_dead_100.png")] private static var ImgSpaceman:Class;
-		[Embed(source="walk_zombie_front_100.png")] private static var ImgPlayer:Class;
+		[Embed(source="nurse_dead.png")] private static var ImgSpaceman:Class;
+		[Embed(source="zombie_combined.png")] private static var ImgPlayer:Class;
 		[Embed(source="walk_nurse_front_100.png")] private static var ImgNurse:Class;
 
 		public var xPos:int = 0;
