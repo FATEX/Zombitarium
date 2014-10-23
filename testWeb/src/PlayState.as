@@ -258,8 +258,10 @@ package
 			//helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
 			//add(helperTxt);
 			
-			instructions = new FlxText(100,100,120,"Arrow keys to move \nPress E to open doors \nPress R to reset");
+			
 			if (level==0) {
+				instructions = new FlxText(100,100,120,"Arrow keys to move \nPress E to open doors \nPress R to reset");
+				instructions.size = 16;
 				add(instructions);
 			} else if (level==1) {
 				add(new FlxText(100,15,110,"You can zombify humans by running into them"))
