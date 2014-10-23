@@ -24,11 +24,11 @@ package objects
 			}
 			else if (direction == 90){
 				x = x+TILE_WIDTH*7/8;
-				y = y+(TILE_WIDTH*7/8)/4;
+				y = y+(TILE_WIDTH*7/8)/8;
 			}
 			else if(direction == -90){
 				x = x-(TILE_WIDTH*7/8)/2;
-				y = y+(TILE_WIDTH*7/8)/4;
+				y = y+(TILE_WIDTH*7/8)/8;
 			}
 			super(x,y);
 			super.loadGraphic(ImgSpaceman, true, true, 44, 9);
@@ -47,8 +47,10 @@ package objects
 			this.acceleration.x=0;
 			this.acceleration.y=0;
 			if(xVect!=0 && yVect!=0){
-				this.velocity.x=xVect;
-				this.velocity.y=yVect;
+				var len:Number = Math.sqrt(xVect*xVect+yVect*yVect);
+				this.velocity.x=(xVect/len)*500;
+				this.velocity.y=(yVect/len)*500;
+				this.playerThrowing=false;
 			}
 			else{
 				this.playerThrowing=true;
