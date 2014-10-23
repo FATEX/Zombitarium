@@ -7,7 +7,7 @@ package objects
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxTilemap;
-
+	import org.flixel.FlxObject;
 	public class Human extends FlxSprite
 	{
 		private const TILE_WIDTH:uint = 65;
@@ -36,9 +36,9 @@ package objects
 		public var restingAngle:Number=0;
 		public var alerted:FlxSprite;
 		public var alertAdded:Boolean = false;
-		private var facting:int =0;
+		private var facingToward:int =0;
 		
-		public function Human(originX:Number, originY:Number)
+		public function Human(originX:Number, originY:Number, overLoad:Boolean)
 		{
 			super(originX, originY);
 			this.originX=originX;
@@ -61,10 +61,15 @@ package objects
 			this.y=originY-this.height/2;
 			
 			//animations
+			if(overLoad){
 			super.addAnimation("idle", [0]);
 			super.addAnimation("run", [1, 2, 3, 0], 6);
 			super.addAnimation("idleBack", [4]);
 			super.addAnimation("runBack", [5,6,7,4],6);
+			super.addAnimation("right",[8]);
+			super.addAnimation("bottomLeft",[9]);
+			super.addAnimation("topRight",[10]);
+			}
 			alerted = new FlxSprite(originX,originY);
 			alerted.loadGraphic(ImgAlert,true,false,TILE_WIDTH,TILE_HEIGHT);
 			alerted.addAnimation("alert",[0,1],12,true);
@@ -73,12 +78,13 @@ package objects
 		private function follow():void
 		{
 			if(isFollowing && nextPath!=null){
-				if(onRoute == false) this.pauseHuman(); 
-				super.followPath(nextPath,70/16*TILE_WIDTH,PATH_FORWARD,true);
+				if(onRoute == false)
+					this.pauseHuman(); 
+				super.followPath(nextPath,70/16*TILE_WIDTH,PATH_FORWARD,false);
 				onRoute = true;
 			}else{
 				//onRoute = true;
-				super.followPath(myroute,50/16*TILE_WIDTH,PATH_LOOP_FORWARD,true);
+				super.followPath(myroute,50/16*TILE_WIDTH,PATH_LOOP_FORWARD,false);
 			}
 		}
 		
@@ -126,7 +132,7 @@ package objects
 			
 			var pp:FlxPath = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2),new FlxPoint(this.originX,this.originY));
 			if(pp!=null){
-			super.followPath(pp,50/16*TILE_WIDTH,PATH_FORWARD,true);
+			super.followPath(pp,50/16*TILE_WIDTH,PATH_FORWARD,false);
 			}
 			isFollowing=false;
 			isPathSet=false;
@@ -157,23 +163,135 @@ package objects
 					this.isPathSet=true;
 				}
 			}
-			if(this.pathAngle <90 && this.pathAngle>-90){
+			if(this.pathSpeed==0){
+				this.pathAngle=this.restingAngle;
+				if(this.restingAngle <22 && this.restingAngle>=-22){
+					this.play("idleBack");
+					this.facing=FlxObject.RIGHT;
+					facingToward=1;
+				}
+				else if(this.restingAngle <67 && this.restingAngle>=22){
+					this.play("topRight");
+					this.facing=FlxObject.RIGHT;
+					facingToward=2;
+				}
+				else if(this.restingAngle <112 && this.restingAngle>=67){
+					this.play("right");
+					facingToward=4;
+					this.facing=FlxObject.RIGHT;
+				}
+				else if(this.restingAngle <157 && this.restingAngle>=112){
+					this.play("bottomLeft");
+					this.facing=FlxObject.LEFT;
+					facingToward=3;
+				}
+				else if( this.restingAngle>=157){
+					this.play("idle");
+					facingToward=0;
+					this.facing=FlxObject.RIGHT;
+				}
+				else if(this.restingAngle <-22 && this.restingAngle>=-67){
+					this.play("topRight");
+					facingToward=5;
+					this.facing=FlxObject.LEFT;
+				}
+				else if(this.restingAngle <-67 && this.restingAngle>=-112){
+					this.play("right");
+					facingToward=6;
+					this.facing=FlxObject.LEFT;
+				}
+				else if(this.pathAngle <-157 && this.pathAngle>=-112){
+					this.play("bottomLeft");
+					facingToward=7;
+					this.facing=FlxObject.RIGHT;
+				}
+				else{
+					this.play("idle");
+					facingToward=0;
+					this.facing=FlxObject.RIGHT;
+				}
+				//this.angle=this.restingAngle;
+			}
+			if(this.pathAngle <22 && this.pathAngle>=-22){
 				this.play("runBack");
-				facing=1;
+				this.facing=FlxObject.RIGHT;
+				facingToward=1;
+			}
+			else if(this.pathAngle <67 && this.pathAngle>=22){
+				this.play("topRight");
+				this.facing=FlxObject.RIGHT;
+				facingToward=2;
+			}
+			else if(this.pathAngle <112 && this.pathAngle>=67){
+				this.play("right");
+				facingToward=4;
+				this.facing=FlxObject.RIGHT;
+			}
+			else if(this.pathAngle <157 && this.pathAngle>=112){
+				this.play("bottomLeft");
+				this.facing=FlxObject.LEFT;
+				facingToward=3;
+			}
+			else if( this.pathAngle>=157){
+				this.play("run");
+				facingToward=0;
+				this.facing=FlxObject.RIGHT;
+			}
+			else if(this.pathAngle <-22 && this.pathAngle>=-67){
+				this.play("topRight");
+				facingToward=5;
+				this.facing=FlxObject.LEFT;
+			}
+			else if(this.pathAngle <-67 && this.pathAngle>=-112){
+				this.play("right");
+				facingToward=6;
+				this.facing=FlxObject.LEFT;
+			}
+			else if(this.pathAngle <-157 && this.pathAngle>=-112){
+				this.play("bottomLeft");
+				facingToward=7;
+				this.facing=FlxObject.RIGHT;
 			}
 			else{
 				this.play("run");
-				facing=0;
+				facingToward=0;
+				this.facing=FlxObject.RIGHT;
 			}
+
 			if(this.pathSpeed==0){
-				if(facing==0){
+				if(facingToward==0){
 					this.play("idle");
+					this.facing=FlxObject.RIGHT;
+				}
+				else if(facingToward==1){
+					this.play("idleBack");
+					this.facing=FlxObject.RIGHT;
+				}
+				else if(facingToward==2){
+					this.play("topRight");
+					this.facing=FlxObject.RIGHT;
+				}
+				else if(facingToward==3){
+					this.play("bottomLeft");
+					this.facing=FlxObject.LEFT;
+				}
+				else if(facingToward==4){
+					this.play("right");
+					this.facing=FlxObject.RIGHT;
+				}
+				else if(facingToward==5){
+					this.play("topRight");
+					this.facing=FlxObject.LEFT;
+				}
+				else if(facingToward==6){
+					this.play("right");
+					this.facing=FlxObject.LEFT;
 				}
 				else{
-					this.play("idleBack");
+					this.play("bottomLeft");
+					this.facing=FlxObject.RIGHT;
 				}
-				this.pathAngle=this.restingAngle;
-				this.angle=this.restingAngle;
+				
 			}
 			
 		}

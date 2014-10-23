@@ -10,7 +10,7 @@ package objects
 		
 		public function Janitor(originX:Number, originY:Number)
 		{
-			super(originX, originY);
+			super(originX, originY,true);
 
 			
 			//key = new Key(c, d, p, this.x, this.y+50);

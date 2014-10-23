@@ -21,8 +21,15 @@ package objects
 		
 		public function Doctor(originX:Number, originY:Number)
 		{
-			super(originX, originY);
+			super(originX, originY,false);
 			super.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH,TILE_HEIGHT);
+			super.addAnimation("idle", [0]);
+			super.addAnimation("run", [0]);
+			super.addAnimation("idleBack", [1]);
+			super.addAnimation("runBack", [1]);
+			super.addAnimation("right",[2]);
+			super.addAnimation("bottomLeft",[3]);
+			super.addAnimation("topRight",[4]);
 		}
 		
 		public function throwSyringe(dPosx:int, dPosy:int, tPosx:int, tPosy:int):Boolean{

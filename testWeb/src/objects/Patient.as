@@ -10,7 +10,7 @@ package objects
 
 		public function Patient(originX:Number, originY:Number)
 		{
-			super(originX, originY);
+			super(originX, originY,true);
 			super.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH,TILE_HEIGHT);
 			//super.isStunned = true;
 		}

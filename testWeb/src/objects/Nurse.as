@@ -11,7 +11,7 @@ package objects
 		
 		public function Nurse(originX:Number, originY:Number)
 		{
-			super(originX, originY);
+			super(originX, originY,true);
 			super.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH, TILE_HEIGHT);
 		}
 		

@@ -402,7 +402,7 @@ package
 			var y:int;
 			var type:String;
 			var lineArray:Array;
-			var h:Human=new Human(0,0);
+			var h:Human=new Human(0,0,true);
 			//var d:Door = new Door(10, 10);
 			var j:Janitor=new Janitor(0,0);
 			var door:Door = new Door(0,0);
@@ -419,7 +419,7 @@ package
 				x = int(lineArray[1]);
 				y = int(lineArray[2]);
 				if(type=="H"){
-					h=new Human(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					h=new Human(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2,true);
 					humans.push(h);
 				}
 				if(type=="J"){
@@ -542,6 +542,7 @@ package
 		}
 		var dis:Boolean = false;
 		public function collideCheck(type):void {
+			cd++;
 			for(var i:int=0; i<type.length;i++){
 				for (var j:int=0;j<zombies.length;j++){
 					try{
@@ -558,9 +559,8 @@ package
 						}
 						
 						if(zombies[j].alive && type[i].alive){
-							cd++;
+							
 							if(detect(type[i],zombies[j])){
-								//if(type[i].isPathSet) 
 								if(type[i] is Doctor && cd >=50 ){
 									/*var t:FlxText;
 									var a:int = FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
@@ -824,6 +824,9 @@ package
 			player.addAnimation("run", [0, 1, 2, 3], 12);
 			player.addAnimation("idleBack",[4]);
 			player.addAnimation("runBack",[5,6,7,4],12);
+			player.addAnimation("topRight",[10]);
+			player.addAnimation("right",[8]);
+			player.addAnimation("bottomLeft",[9]);
 			zombies.push(player);
 
 
@@ -860,22 +863,22 @@ package
 			player.acceleration.y = 0;
 			if(FlxG.keys.LEFT)
 			{
-				player.facing = FlxObject.LEFT;
+				//player.facing = FlxObject.LEFT;
 				player.acceleration.x -= player.drag.x;
 			}
 			else if(FlxG.keys.RIGHT)
 			{
-				player.facing = FlxObject.RIGHT;
+				//player.facing = FlxObject.RIGHT;
 				player.acceleration.x += player.drag.x;
 			}
 			if(FlxG.keys.UP)
 			{
-				player.facing = FlxObject.UP;
+				//player.facing = FlxObject.UP;
 				player.acceleration.y -= player.drag.y;
 			}
 			else if(FlxG.keys.DOWN)
 			{
-				player.facing = FlxObject.DOWN;
+				//player.facing = FlxObject.DOWN;
 				player.acceleration.y += player.drag.y;
 			}
 			if(FlxG.keys.SPACE){
@@ -939,32 +942,74 @@ package
 			}
 			
 			//ANIMATION
-			 if(player.velocity.x == 0 && player.velocity.y == 0)
-			{
-				 if(this.facingDirection==0){
-					player.play("idle");
-				 }
-				 else if(this.facingDirection==1){
-					 player.play("idleBack");
-				 }
+			if(player.velocity.x>0 && player.velocity.y==0){
+				player.play("right");
+				player.facing=FlxObject.RIGHT;
+				this.facingDirection=2;
 			}
-			else
-			{
-				if(player.velocity.y>0){
-					player.play("run");
-					this.facingDirection=0;
+			else if(player.velocity.x>0 && player.velocity.y>0){
+				player.play("bottomLeft");
+				player.facing=FlxObject.LEFT;
+				this.facingDirection=4;
+			}
+			else if(player.velocity.x>0 && player.velocity.y<0){
+				player.play("topRight");
+				player.facing=FlxObject.RIGHT;
+				this.facingDirection=3;
+			}
+			else if(player.velocity.x==0 && player.velocity.y>0){
+				player.play("run");
+				player.facing=FlxObject.RIGHT;
+				this.facingDirection=0;
+			}
+			else if(player.velocity.x<0 && player.velocity.y>0){
+				player.play("bottomLeft");
+				player.facing=FlxObject.RIGHT;
+				this.facingDirection=6;
+			}
+			else if(player.velocity.x<0 && player.velocity.y==0){
+				player.play("right");
+				player.facing=FlxObject.LEFT;
+				this.facingDirection=5;
+			}
+			else if(player.velocity.x<0 && player.velocity.y<0){
+				player.play("topRight");
+				player.facing=FlxObject.RIGHT;
+				this.facingDirection=7;
+			}
+			else if(player.velocity.x==0 && player.velocity.y<0){
+				
+				player.play("runBack");
+				player.facing=FlxObject.RIGHT;
+				this.facingDirection=1;
+			}
+			else{
+				if(this.facingDirection==0){
+					player.play("idle");
 				}
-				else if(player.velocity.y<0){
-					player.play("runBack");
-					this.facingDirection=1;
+				else if(this.facingDirection==1){
+					player.play("idleBack");
+				}
+				else if(this.facingDirection==2){
+					player.play("right");
+				}
+				else if(this.facingDirection==3){
+					player.play("topRight");
+				}
+				else if(this.facingDirection==4){
+					player.play("bottomLeft");
+					player.facing=FlxObject.RIGHT;
+				}
+				else if(this.facingDirection==5){
+					player.play("right");
+					player.facing=FlxObject.LEFT;
+				}
+				else if(this.facingDirection==6){
+					player.play("bottomLeft");
 				}
 				else{
-					if(this.facingDirection==0){
-						player.play("run");
-					}
-					else if(this.facingDirection==1){
-						player.play("runBack");
-					}
+					player.play("topRight");
+					player.facing=FlxObject.RIGHT;
 				}
 			}
 			 

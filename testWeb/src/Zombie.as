@@ -6,6 +6,7 @@ package
 	import objects.Human;
 	
 	import org.flixel.FlxGame;
+	import org.flixel.FlxObject;
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
@@ -46,6 +47,13 @@ package
 			this.yDrag = yDrag;
 			this.xMaxVelocity = xMaxVelocity;
 			this.yMaxVelocity = yMaxVelocity;
+			super.addAnimation("idle", [0]);
+			super.addAnimation("run", [1, 2, 3, 0], 6);
+			super.addAnimation("idleBack", [4]);
+			super.addAnimation("runBack", [5,6,7,4],6);
+			super.addAnimation("right",[8]);
+			super.addAnimation("bottomLeft",[9]);
+			super.addAnimation("topRight",[10]);
 		}
 		
 		public function findNearestHuman(collisionMap:FlxTilemap, humanP:Vector.<Human>, zombieP:FlxPoint):FlxPath{
@@ -87,7 +95,7 @@ package
 		
 		public function attackNearestHuman(collisionMap:FlxTilemap, path:FlxPath):void{
 			if(path!=null){
-				this.followPath(path,50/16*TILE_WIDTH, PATH_FORWARD, true);
+				this.followPath(path,50/16*TILE_WIDTH, PATH_FORWARD, false);
 			}
 		}
 		public function checkPath(collisionMap:FlxTilemap):void{
@@ -137,6 +145,45 @@ package
 				else{
 					this.checkAgain=false;
 				}
+			}
+			if(this.pathAngle <22 && this.pathAngle>=-22){
+				this.play("runBack");
+				this.facing=FlxObject.RIGHT;
+			}
+			else if(this.pathAngle <67 && this.pathAngle>=22){
+				this.play("topRight");
+				this.facing=FlxObject.RIGHT;
+			}
+			else if(this.pathAngle <112 && this.pathAngle>=67){
+				this.play("right");
+				this.facing=FlxObject.RIGHT;
+			}
+			else if(this.pathAngle <157 && this.pathAngle>=112){
+				this.play("bottomLeft");
+				this.facing=FlxObject.LEFT;
+			}
+			else if( this.pathAngle>=157){
+				this.play("run");
+				this.facing=FlxObject.RIGHT;
+			}
+			else if(this.pathAngle <-22 && this.pathAngle>=-67){
+				this.play("topRight");
+				this.facing=FlxObject.LEFT;
+			}
+			else if(this.pathAngle <-67 && this.pathAngle>=-112){
+				this.play("right");
+				this.facing=FlxObject.LEFT;
+			}
+			else if(this.pathAngle <-157 && this.pathAngle>=-112){
+				this.play("bottomLeft");
+				this.facing=FlxObject.RIGHT;
+			}
+			else{
+				this.play("run");
+				this.facing=FlxObject.RIGHT;
+			}
+			if(this.pathSpeed==0){
+				this.play("idle");
 			}
 			
 			/*if(this.humanFollowing!=null && collisionMap.findPath(zombieP,new FlxPoint(this.humanFollowing.x+this.humanFollowing.width/2,this.humanFollowing.y+this.humanFollowing.height/2))==null){
