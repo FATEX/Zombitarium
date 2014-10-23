@@ -566,7 +566,7 @@ package
 								if(!(type[i] is Doctor)){
 									type[i].setPath(new FlxPoint(zombies[j].x + zombies[j].width / 2, zombies[j].y + zombies[j].height / 2),collisionMap);
 								}
-								type[i].color=0xFFD700;
+								//type[i].color=0xFFD700;
 							}
 							else if(type[i].pathSpeed==0){
 								type[i].goBack(collisionMap);

@@ -34,7 +34,7 @@ package objects
 		public var restingAngle:Number=0;
 		public var alerted:FlxSprite;
 		public var alertAdded:Boolean = false;
-
+		private var facting:int =0;
 		
 		public function Human(originX:Number, originY:Number)
 		{
@@ -60,8 +60,9 @@ package objects
 			
 			//animations
 			super.addAnimation("idle", [0]);
-			super.addAnimation("run", [1, 2, 3, 0], 12);
-			super.addAnimation("jump", [4]);
+			super.addAnimation("run", [1, 2, 3, 0], 6);
+			super.addAnimation("idleBack", [4]);
+			super.addAnimation("runBack", [5,6,7,4],6);
 			alerted = new FlxSprite(originX,originY);
 			alerted.loadGraphic(ImgAlert,true,false,TILE_WIDTH,TILE_HEIGHT);
 			alerted.addAnimation("alert",[0,1],12,true);
@@ -104,7 +105,7 @@ package objects
 			follow();
 		}
 		public function getAngle():Number{
-			return this.angle;
+			return this.pathAngle;
 		}
 		public function goBack(collisionMap:FlxTilemap):void{
 			
@@ -116,7 +117,7 @@ package objects
 			isPathSet=false;
 		}
 		public function setAngle(ang:Number):void{
-			this.angle=ang;
+			this.pathAngle=ang;
 			this.restingAngle=ang;
 		}
 		public function humanUpdate(collisionMap:FlxTilemap):void{
@@ -138,9 +139,25 @@ package objects
 					this.isPathSet=true;
 				}
 			}
+			if(this.pathAngle <90 && this.pathAngle>-90){
+				this.play("runBack");
+				facing=1;
+			}
+			else{
+				this.play("run");
+				facing=0;
+			}
 			if(this.pathSpeed==0){
+				if(facing==0){
+					this.play("idle");
+				}
+				else{
+					this.play("idleBack");
+				}
+				this.pathAngle=this.restingAngle;
 				this.angle=this.restingAngle;
 			}
+			
 		}
 		
 		public function addRoutePoints(p:FlxPoint):void{

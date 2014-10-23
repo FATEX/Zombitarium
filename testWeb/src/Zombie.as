@@ -155,6 +155,9 @@ package
 		
 		public function setImage(image:Class):void{
 			this.loadGraphic(image, true, true, TILE_WIDTH,TILE_HEIGHT);
+			this.width = TILE_WIDTH*7/8;
+			this.height = TILE_HEIGHT*7/8;
+			
 		}
 		
 		public function dieAnimation():void{
@@ -166,12 +169,16 @@ package
 				isDisguised=false;
 				this.velocity=new FlxPoint(0,0);
 				this.loadGraphic(ImgPlayer, true, true, TILE_WIDTH,TILE_HEIGHT);
+				this.width = TILE_WIDTH*7/8;
+				this.height = TILE_HEIGHT*7/8;
 			}
 		}
 		
 		public function disguiseON():void{
 			this.velocity=new FlxPoint(0,0);
 			super.loadGraphic(ImgNurse, true, true, TILE_WIDTH,TILE_HEIGHT);
+			this.width = TILE_WIDTH*7/8;
+			this.height = TILE_HEIGHT*7/8;
 			this.isDisguised = true;
 			var t:Timer = new Timer(5000);
 			t.addEventListener(TimerEvent.TIMER, onDelay);
