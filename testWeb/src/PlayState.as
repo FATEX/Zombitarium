@@ -253,22 +253,23 @@ package
 			//helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
 			//add(helperTxt);
 			
-			instructions = new FlxText(15,15,120,"Arrow keys to move \nPress E to open doors \nPress R to reset");
+			instructions = new FlxText(1*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys to move \nPress E to open doors \nPress R to reset");
 			if (level==0) {
 				add(instructions);
 			} else if (level==1) {
-				add(new FlxText(100,15,110,"You can zombify humans by running into them"))
+				add(instructions = new FlxText(4*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"You can zombify humans by running into them"))
 			} else if (level==2) {
-				add(new FlxText(110,15,120,"BEWARE If a human sees you, it will go after you!"))
+				add(instructions = new FlxText(3*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE If a human sees you, it will go after you!"))
 			} else if (level==3) {
-				add(new FlxText(130,50,120,"Humans can kill zombies...but not without getting stunned!"))
+				add(instructions = new FlxText(4*TILE_WIDTH,1*TILE_HEIGHT,3*TILE_WIDTH,"Humans can kill zombies...but not without getting stunned!"))
 			} else if (level==4) {
-				add(new FlxText(130,50,120,"BEWARE Janitors see everything...And they also have keys"))
+				add(instructions = new FlxText(10*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
 			} else if (level==5) {
-				add(new FlxText(130,50,100,"If you zombify a nurse you get disguised for 5 seconds!"))
+				add(instructions = new FlxText(4*TILE_WIDTH,1*TILE_HEIGHT,5*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
 			} else if (level==6) {
-				add(new FlxText(130,50,100,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
+				add(instructions = new FlxText(4*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
+			instructions.setFormat(null,30/100*TILE_WIDTH);
 	
 		}
 		

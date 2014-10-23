@@ -163,19 +163,22 @@ package
 		
 		public function disguiseOFF():void{
 			if(isDisguised){
+				//this.x=this.x-this.x%TILE_WIDTH;
+				//this.y=this.y-this.y%TILE_HEIGHT;
 				isDisguised=false;
-				this.velocity=new FlxPoint(0,0);
 				this.loadGraphic(ImgPlayer, true, true, TILE_WIDTH,TILE_HEIGHT);
 			}
 		}
 		
 		public function disguiseON():void{
-			this.velocity=new FlxPoint(0,0);
+			this.x=this.x-this.x%TILE_WIDTH;
+			this.y=this.y-this.y%TILE_HEIGHT;
 			super.loadGraphic(ImgNurse, true, true, TILE_WIDTH,TILE_HEIGHT);
 			this.isDisguised = true;
 			var t:Timer = new Timer(5000);
 			t.addEventListener(TimerEvent.TIMER, onDelay);
-			t.start()
+			t.start();
+			
 		}
 		
 		private function onDelay(te:TimerEvent):void {
