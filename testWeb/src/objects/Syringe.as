@@ -23,11 +23,11 @@ package objects
 			}
 			else if (direction == 90){
 				x = x+TILE_WIDTH*7/8;
-				y = y+(TILE_WIDTH*7/8)/4;
+				y = y+(TILE_WIDTH*7/8)/8;
 			}
 			else if(direction == -90){
 				x = x-(TILE_WIDTH*7/8)/2;
-				y = y+(TILE_WIDTH*7/8)/4;
+				y = y+(TILE_WIDTH*7/8)/8;
 			}
 			super(x,y);
 			super.loadGraphic(ImgSpaceman, true, true, 44, 9);

@@ -31,6 +31,7 @@ package objects
 		public var originX:Number;
 		public var originY:Number;
 		public var isStunned:Boolean = false;
+		private var isPaused:Boolean = false;
 		public var restingAngle:Number=0;
 		public var alerted:FlxSprite;
 		public var alertAdded:Boolean = false;
@@ -69,27 +70,38 @@ package objects
 		
 		private function follow():void
 		{
-			
-				if(isFollowing && nextPath!=null){
-					super.followPath(nextPath,70/16*TILE_WIDTH,PATH_FORWARD,true);
-				}else{
-					super.followPath(myroute,50/16*TILE_WIDTH,PATH_LOOP_FORWARD,true);	
-				}
+			if(isFollowing && nextPath!=null){
+				this.pauseHuman();
+				super.followPath(nextPath,70/16*TILE_WIDTH,PATH_FORWARD,true);
+			}else{
+				super.followPath(myroute,50/16*TILE_WIDTH,PATH_LOOP_FORWARD,true);
+			}
 		}
 		
 		public function stunHuman():void{
 			this.isStunned=true;
 			var t:Timer = new Timer(1000);
 			t.addEventListener(TimerEvent.TIMER, onDelay);
-			t.start()
-			
-			
+			t.start();
 		}
 		private function onDelay(te:TimerEvent):void {
 			doCall();
 		}
 		private function doCall():void {
 			this.isStunned=false;
+		}
+		
+		private function pauseHuman():void{
+			this.isPaused = true;
+			var t:Timer = new Timer(1000);
+			t.addEventListener(TimerEvent.TIMER, onPause);
+			t.start();
+		}
+		private function onPause(t:TimerEvent):void{
+			onResume();
+		}
+		private function onResume():void{
+			this.isPaused = false;
 		}
 		public function setPath(p:FlxPoint, collisionMap:FlxTilemap):void{
 				  this.isFollowing=true;
@@ -120,7 +132,7 @@ package objects
 			this.restingAngle=ang;
 		}
 		public function humanUpdate(collisionMap:FlxTilemap):void{
-			if(this.isStunned){
+			if(this.isStunned || this.isPaused){
 				this.moves=false;
 			}else{
 				this.moves=true;
@@ -128,6 +140,7 @@ package objects
 				if(!this.isPathSet && this.pathSpeed==0 && this.isFollowing==false && routePoints.length>0){
 					pathBeingMade = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2), routePoints[0]);
 					var i:Number;
+					var j:int;
 					//pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath(routePoints[0], routePoints[1]));
 					//pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath(routePoints[1], routePoints[2]));
 					for(i=1; i<routePoints.length;i++){
