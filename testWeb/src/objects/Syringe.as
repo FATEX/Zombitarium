@@ -15,19 +15,19 @@ package objects
 			var x:int = xPos;
 			var y:int = yPos;
 			if(direction == 0){
-				x = x+(TILE_WIDTH*7/8)/4;
+				x = x - (TILE_WIDTH*7/8)/4;
 			}
 			else if(direction == 180){
-				x = x+(TILE_WIDTH*7/8)/4;
+				x = x - (TILE_WIDTH*7/8)/4;
 				y = y+(TILE_WIDTH*7/8);
 			}
 			else if (direction == 90){
 				x = x+TILE_WIDTH*7/8;
-				y = y+(TILE_WIDTH*7/8)/2;
+				y = y+(TILE_WIDTH*7/8)/4;
 			}
 			else if(direction == -90){
 				x = x-(TILE_WIDTH*7/8)/2;
-				y = y+(TILE_WIDTH*7/8)/2;
+				y = y+(TILE_WIDTH*7/8)/4;
 			}
 			super(x,y);
 			super.loadGraphic(ImgSpaceman, true, true, 44, 9);
