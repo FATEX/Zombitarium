@@ -76,6 +76,8 @@ package
 		// The FlxTilemap we're using
 		private var collisionMap:FlxTilemap;
 		
+		private var facingDirection:int =0;
+		
 		// Box to show the user where they're placing stuff
 		private var highlightBox:FlxObject;
 		
@@ -778,6 +780,8 @@ package
 			//animations
 			player.addAnimation("idle", [0]);
 			player.addAnimation("run", [0, 1, 2, 3], 12);
+			player.addAnimation("idleBack",[4]);
+			player.addAnimation("runBack",[5,6,7,4],12);
 			zombies.push(player);
 
 
@@ -815,25 +819,21 @@ package
 			if(FlxG.keys.LEFT)
 			{
 				player.facing = FlxObject.LEFT;
-				player.angle = -90;
 				player.acceleration.x -= player.drag.x;
 			}
 			else if(FlxG.keys.RIGHT)
 			{
 				player.facing = FlxObject.RIGHT;
-				player.angle = 90;
 				player.acceleration.x += player.drag.x;
 			}
 			if(FlxG.keys.UP)
 			{
 				player.facing = FlxObject.UP;
-				player.angle = 0;
 				player.acceleration.y -= player.drag.y;
 			}
 			else if(FlxG.keys.DOWN)
 			{
 				player.facing = FlxObject.DOWN;
-				player.angle = 180;
 				player.acceleration.y += player.drag.y;
 			}
 			if(FlxG.keys.SPACE){
@@ -844,9 +844,34 @@ package
 					else if(player.angle == 90 || player.angle == -90){
 						pSyringe = new Syringe(player.angle, player.x, player.y+7);
 					}*/
+					var angleToThrow:Number;
+					if(player.velocity.x>0 && player.velocity.y==0){
+						angleToThrow=90;
+					}
+					else if(player.velocity.x>0 && player.velocity.y>0){
+						angleToThrow=135;
+					}
+					else if(player.velocity.x>0 && player.velocity.y<0){
+						angleToThrow=45;
+					}
+					else if(player.velocity.x==0 && player.velocity.y>0){
+						angleToThrow=180;
+					}
+					else if(player.velocity.x<0 && player.velocity.y>0){
+						angleToThrow=-135;
+					}
+					else if(player.velocity.x<0 && player.velocity.y==0){
+						angleToThrow=-90;
+					}
+					else if(player.velocity.x<0 && player.velocity.y<0){
+						angleToThrow=-45;
+					}
+					else if(player.velocity.x==0 && player.velocity.y<0){
+						angleToThrow=0;
+					}
 					
-					pSyringe = new Syringe(player.angle, player.x, player.y)
-					pSyringe.angle = player.angle-90;
+					pSyringe = new Syringe(angleToThrow, player.x, player.y)
+					pSyringe.angle = angleToThrow-90;
 					add(pSyringe);
 					pSyringe.updatePos(1000);
 					throwable = false;
@@ -867,11 +892,31 @@ package
 			//ANIMATION
 			 if(player.velocity.x == 0 && player.velocity.y == 0)
 			{
-				player.play("idle");
+				 if(this.facingDirection==0){
+					player.play("idle");
+				 }
+				 else if(this.facingDirection==1){
+					 player.play("idleBack");
+				 }
 			}
 			else
 			{
-				player.play("run");
+				if(player.velocity.y>0){
+					player.play("run");
+					this.facingDirection=0;
+				}
+				else if(player.velocity.y<0){
+					player.play("runBack");
+					this.facingDirection=1;
+				}
+				else{
+					if(this.facingDirection==0){
+						player.play("run");
+					}
+					else if(this.facingDirection==1){
+						player.play("runBack");
+					}
+				}
 			}
 			 
 			if (Math.abs(player.x- (exitX))<=TILE_WIDTH/8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/8) {
