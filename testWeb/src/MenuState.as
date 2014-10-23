@@ -24,7 +24,7 @@ package
 			super.update();
 
 			if(FlxG.mouse.justPressed())
-				FlxG.switchState(new PlayState());
+				FlxG.switchState(new LevelState());
 		}
 	}
 }
