@@ -12,8 +12,8 @@ package objects
 	
 	public class Doctor extends Human
 	{
-		private const TILE_WIDTH:uint = 100;
-		private const TILE_HEIGHT:uint = 100;
+		private const TILE_WIDTH:uint = 65;
+		private const TILE_HEIGHT:uint = 65;
 		[Embed(source="doctor_front_1SUPERTINY.png")] private static var ImgSpaceman:Class;
 		[Embed(source="alert_anim.png")] private static var ImgAlert:Class;
 		
