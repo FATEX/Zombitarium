@@ -126,7 +126,7 @@ package
 		private var distanceCanSee:int = 50/16*TILE_WIDTH;
 		private var coneWidth:Number = 45;
 		private var killWidth:Number = 90;
-		private var throwable:Boolean = true;
+		private var throwable:Boolean = false;
 		private var pSyringe: Syringe;
 		private var dSyringe: Syringe;
 		
@@ -779,6 +779,10 @@ package
 						zom.disguiseON();
 					}
 				}
+				if(man is Doctor){
+					throwable = true;
+				}
+				
 				man.alerted.x=man.x;
 				man.alerted.y=man.y-man.height;
 				if(man.alertAdded){
