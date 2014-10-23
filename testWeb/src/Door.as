@@ -9,11 +9,11 @@ package
 		var doorOpenImg:FlxSprite;
 		var pressed:Boolean = true;
 		
-		private const TILE_WIDTH:uint = 100;
-		private const TILE_HEIGHT:uint =100;
+		private const TILE_WIDTH:uint = 65;
+		private const TILE_HEIGHT:uint = 65;
 		
-		[Embed(source="door_100.png")] static var ImgDoorClose:Class;
-		[Embed(source="doorOpen_100.png")] static var ImgDoorOpen:Class;
+		[Embed(source="doorL_100.png")] static var ImgDoorClose:Class;
+		[Embed(source="doorOpenL_100.png")] static var ImgDoorOpen:Class;
 		
 		public function Door(tx,ty)
 		{
@@ -22,7 +22,7 @@ package
 			this.width=TILE_WIDTH;
 		
 		}
-		public function updateDoor() 
+		public function updateDoor():void 
 		{
 			if (doorOpen == false) {
 				this.loadGraphic(ImgDoorClose, false, false, TILE_WIDTH*1.5, TILE_HEIGHT*1.5); 

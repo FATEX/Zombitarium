@@ -10,8 +10,8 @@ package objects
 
 	public class Human extends FlxSprite
 	{
-		private const TILE_WIDTH:uint = 100;
-		private const TILE_HEIGHT:uint = 100;
+		private const TILE_WIDTH:uint = 65;
+		private const TILE_HEIGHT:uint = 65;
 		[Embed(source="walk_nurse_front_100.png")] private static var ImgSpaceman:Class;
 		[Embed(source="alert_anim_100.png")] private static var ImgAlert:Class;
 		

@@ -13,8 +13,8 @@ package
 		
 		[Embed(source="key_100.png")] private static var ImgKey:Class;
 		
-		private const TILE_WIDTH:uint = 100;
-		private const TILE_HEIGHT:uint =100;
+		private const TILE_WIDTH:uint = 65;
+		private const TILE_HEIGHT:uint = 65;
 	
 		
 		public function Key(c, d:Door, p:FlxSprite, tx, ty) {
