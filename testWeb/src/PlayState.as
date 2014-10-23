@@ -566,7 +566,7 @@ package
 						if(zombies[j].alive && type[i].alive){
 							cd++;
 							if(detect(type[i],zombies[j])){
-								if(!dis)	type[i].onRoute = false;
+								//if(type[i].isPathSet) 
 								if(type[i] is Doctor && cd >=50 ){
 									/*var t:FlxText;
 									var a:int = FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
@@ -589,18 +589,21 @@ package
 								}
 								(Human(type[i])).alerted.play("alert");
 								if(!(type[i] is Doctor)){
+									if(!type[i].isFollowing)type[i].onRoute = false;
 									type[i].setPath(new FlxPoint(zombies[j].x + zombies[j].width / 2, zombies[j].y + zombies[j].height / 2),collisionMap);
+																	
 								}
 								//type[i].color=0xFFD700;
 							}
 							else if(type[i].pathSpeed==0){
 								type[i].goBack(collisionMap);
-								type[i].onRoute = false;
+								type[i].onRoute = true;
 								dis = true;
 								type[i].color=0xFFFFFF;
 							}
 							else if(type[i].isFollowing){
 								dis = true;
+								type[i].onRoute = true;
 								(Human(type[i])).alerted.x=(Human(type[i])).x;
 								(Human(type[i])).alerted.y=(Human(type[i])).y-(Human(type[i])).height;
 								if(FlxG.collide(type[i],collisionMap)){
@@ -609,8 +612,11 @@ package
 									type[i].goBack(collisionMap);
 									type[i].color=0xFFFFFF;
 								}
+								dis = false;
 							}
 							else{
+								type[i].onRoute = true;
+								dis = false;
 								type[i].color=0xFFFFFF;
 							}
 						}
