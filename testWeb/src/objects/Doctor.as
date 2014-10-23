@@ -15,7 +15,7 @@ package objects
 
 		private const TILE_WIDTH:uint = 65;
 		private const TILE_HEIGHT:uint = 65;
-		[Embed(source="doctor_front_1.png")] private static var ImgSpaceman:Class;
+		[Embed(source="doctor_rough_combined.png")] private static var ImgSpaceman:Class;
 
 		[Embed(source="alert_anim_100.png")] private static var ImgAlert:Class;
 		
