@@ -540,7 +540,7 @@ package
 			
 			super.update();
 		}
-		var dis:Boolean = false;
+		//var dis:Boolean = false;
 		public function collideCheck(type):void {
 			for(var i:int=0; i<type.length;i++){
 				for (var j:int=0;j<zombies.length;j++){
@@ -591,13 +591,13 @@ package
 							}
 							else if(type[i].pathSpeed==0){
 								type[i].goBack(collisionMap);
-								type[i].onRoute = true;
-								dis = true;
+								//type[i].onRoute = true;
+								//dis = true;
 								type[i].color=0xFFFFFF;
 							}
 							else if(type[i].isFollowing){
-								dis = true;
-								type[i].onRoute = true;
+								//dis = true;
+								//type[i].onRoute = true;
 								(Human(type[i])).alerted.x=(Human(type[i])).x;
 								(Human(type[i])).alerted.y=(Human(type[i])).y-(Human(type[i])).height;
 								if(FlxG.collide(type[i],collisionMap)){
@@ -606,11 +606,11 @@ package
 									type[i].goBack(collisionMap);
 									type[i].color=0xFFFFFF;
 								}
-								dis = false;
+								//dis = false;
 							}
 							else{
-								type[i].onRoute = true;
-								dis = false;
+								//type[i].onRoute = true;
+								//dis = false;
 								type[i].color=0xFFFFFF;
 							}
 						}
