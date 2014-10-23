@@ -133,7 +133,7 @@ package
 		private var exitX:Number;
 		private var exitY:Number;
 		private var win:Boolean = false;
-		private var cd:int = 100;
+		private var cd:int = 50;
 		
 		private var t;
 		
@@ -540,7 +540,7 @@ package
 			
 			super.update();
 		}
-		
+		var dis:Boolean = false;
 		public function collideCheck(type):void {
 			for(var i:int=0; i<type.length;i++){
 				for (var j:int=0;j<zombies.length;j++){
@@ -560,15 +560,16 @@ package
 						if(zombies[j].alive && type[i].alive){
 							cd++;
 							if(detect(type[i],zombies[j])){
-								if(type[i] is Doctor && cd >=100 ){
+								//if(type[i].isPathSet) 
+								if(type[i] is Doctor && cd >=50 ){
 									/*var t:FlxText;
 									var a:int = FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
 									t = new FlxText(20,0,40, a.toString());
 									t.size = 15;
 									add(t);*/
 									(Doctor(type[i])).stopFollowingPath();
-									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[i].x-type[i].x,zombies[i].y-type[i].y);
-									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
+									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[j].x-type[i].x,zombies[j].y-type[i].y);
+									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2));
 									add(dSyringe);
 									dSyringe.updatePos(10000);
 									(Doctor(type[i])).goBack(collisionMap);
@@ -582,15 +583,21 @@ package
 								}
 								(Human(type[i])).alerted.play("alert");
 								if(!(type[i] is Doctor)){
+									if(!type[i].isFollowing)type[i].onRoute = false;
 									type[i].setPath(new FlxPoint(zombies[j].x + zombies[j].width / 2, zombies[j].y + zombies[j].height / 2),collisionMap);
+																	
 								}
-								type[i].color=0xFFD700;
+								//type[i].color=0xFFD700;
 							}
 							else if(type[i].pathSpeed==0){
 								type[i].goBack(collisionMap);
+								type[i].onRoute = true;
+								dis = true;
 								type[i].color=0xFFFFFF;
 							}
 							else if(type[i].isFollowing){
+								dis = true;
+								type[i].onRoute = true;
 								(Human(type[i])).alerted.x=(Human(type[i])).x;
 								(Human(type[i])).alerted.y=(Human(type[i])).y-(Human(type[i])).height;
 								if(FlxG.collide(type[i],collisionMap)){
@@ -599,8 +606,11 @@ package
 									type[i].goBack(collisionMap);
 									type[i].color=0xFFFFFF;
 								}
+								dis = false;
 							}
 							else{
+								type[i].onRoute = true;
+								dis = false;
 								type[i].color=0xFFFFFF;
 							}
 						}
