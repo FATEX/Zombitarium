@@ -64,8 +64,7 @@ package
 		[Embed(source="walk_zombie_front_100.png")] private static var ImgSpaceman:Class;
 		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
 		[Embed(source="key_100.png")] private static var ImgKey:Class;
-		[Embed(source="doorWin_100.png")] private static var ImgDoor:Class;
-		[Embed(source="doorOpenWin_100.png")] private static var ImgDoorOpen:Class;
+		
 		
 		// Some static constants for the size of the tilemap tiles
 		public const TILE_WIDTH:uint = 65;
@@ -415,6 +414,7 @@ package
 			var door:Door = new Door(0,0);
 			var key:Key = new Key(collisionMap, door, player,0,0);
 			var unlockedDoor:UnlockedDoor = new UnlockedDoor(0,0);
+			var nextIsWinDoor:Boolean = false;
 			for each (var singleLine:String in arLines)
 			{
 				lineArray = singleLine.split(",");
@@ -463,6 +463,10 @@ package
 				}
 				if(type=="LDOOR"){
 					door = new Door(x*TILE_WIDTH-door.width/4,y*TILE_HEIGHT-door.height/4);
+					if(nextIsWinDoor){
+						door.isWin = true;
+						nextIsWinDoor = false;
+					}
 					doors.push(door);
 				}
 				if(type=="KEY"){
@@ -472,12 +476,17 @@ package
 				}
 				if(type=="UDOOR"){
 					unlockedDoor = new UnlockedDoor(x*TILE_WIDTH-door.width/4,y*TILE_HEIGHT-door.height/4);
+					if(nextIsWinDoor){
+						unlockedDoor.isWin = true;
+						nextIsWinDoor = false;
+					}
 					unlockedDoors.push(unlockedDoor);
 					
 				}
 				if(type=="EXIT"){
 					exitX = x*TILE_WIDTH;
 					exitY = y*TILE_HEIGHT;
+					nextIsWinDoor = true;
 				}
 			}
 			for each(var g:Door in doors){
@@ -836,14 +845,6 @@ package
 				//trace(Math.abs((ud.y)/TILE_HEIGHT));
 				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/4)/TILE_WIDTH), Math.round((ud.y+ud.height/4)/TILE_HEIGHT),zombies,player,this);
 				ud.updateDoor();
-				var dWin = unlockedDoors[unlockedDoors.length-1];
-				//unlockedDoors[unlockedDoors.length-1].loadGraphic(ImgDoor, false, false, TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
-				if (dWin.doorOpen == false) {
-					dWin.loadGraphic(ImgDoor, false, false, TILE_WIDTH*1.5, TILE_HEIGHT*1.5); 
-				} else
-				{
-					dWin.loadGraphic(ImgDoorOpen, false, false,  TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
-				}
 			}
 
 //			for (var t:Number=0;t<janitors.length;t++) {
