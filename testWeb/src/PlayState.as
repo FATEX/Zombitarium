@@ -64,8 +64,7 @@ package
 		[Embed(source="walk_zombie_front_100.png")] private static var ImgSpaceman:Class;
 		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
 		[Embed(source="key_100.png")] private static var ImgKey:Class;
-		[Embed(source="doorWin_100.png")] private static var ImgDoor:Class;
-		[Embed(source="doorOpenWin_100.png")] private static var ImgDoorOpen:Class;
+		
 		
 		// Some static constants for the size of the tilemap tiles
 		public const TILE_WIDTH:uint = 65;
@@ -134,7 +133,7 @@ package
 		private var exitX:Number;
 		private var exitY:Number;
 		private var win:Boolean = false;
-		private var cd:int = 100;
+		private var cd:int = 50;
 		
 		private var t;
 		
@@ -258,7 +257,9 @@ package
 			//helperTxt = new FlxText(FlxG.width/2 - resetBtn.width, 55, 150/2, "Arrow keys to move\nPress E to open doors");
 			//add(helperTxt);
 			
+
 			instructions = new FlxText(1*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys to move \nPress E to open doors \nPress R to reset");
+
 
 			if (level==0) {
 				add(instructions);
@@ -413,6 +414,7 @@ package
 			var door:Door = new Door(0,0);
 			var key:Key = new Key(collisionMap, door, player,0,0);
 			var unlockedDoor:UnlockedDoor = new UnlockedDoor(0,0);
+			var nextIsWinDoor:Boolean = false;
 			for each (var singleLine:String in arLines)
 			{
 				lineArray = singleLine.split(",");
@@ -461,6 +463,10 @@ package
 				}
 				if(type=="LDOOR"){
 					door = new Door(x*TILE_WIDTH-door.width/4,y*TILE_HEIGHT-door.height/4);
+					if(nextIsWinDoor){
+						door.isWin = true;
+						nextIsWinDoor = false;
+					}
 					doors.push(door);
 				}
 				if(type=="KEY"){
@@ -470,12 +476,17 @@ package
 				}
 				if(type=="UDOOR"){
 					unlockedDoor = new UnlockedDoor(x*TILE_WIDTH-door.width/4,y*TILE_HEIGHT-door.height/4);
+					if(nextIsWinDoor){
+						unlockedDoor.isWin = true;
+						nextIsWinDoor = false;
+					}
 					unlockedDoors.push(unlockedDoor);
 					
 				}
 				if(type=="EXIT"){
 					exitX = x*TILE_WIDTH;
 					exitY = y*TILE_HEIGHT;
+					nextIsWinDoor = true;
 				}
 			}
 			for each(var g:Door in doors){
@@ -556,15 +567,15 @@ package
 							cd++;
 							if(detect(type[i],zombies[j])){
 								if(!dis)	type[i].onRoute = false;
-								if(type[i] is Doctor && cd >=100 ){
+								if(type[i] is Doctor && cd >=50 ){
 									/*var t:FlxText;
 									var a:int = FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
 									t = new FlxText(20,0,40, a.toString());
 									t.size = 15;
 									add(t);*/
 									(Doctor(type[i])).stopFollowingPath();
-									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[i].x-type[i].x,zombies[i].y-type[i].y);
-									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
+									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[j].x-type[i].x,zombies[j].y-type[i].y);
+									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2));
 									add(dSyringe);
 									dSyringe.updatePos(10000);
 									(Doctor(type[i])).goBack(collisionMap);
@@ -580,7 +591,7 @@ package
 								if(!(type[i] is Doctor)){
 									type[i].setPath(new FlxPoint(zombies[j].x + zombies[j].width / 2, zombies[j].y + zombies[j].height / 2),collisionMap);
 								}
-								type[i].color=0xFFD700;
+								//type[i].color=0xFFD700;
 							}
 							else if(type[i].pathSpeed==0){
 								type[i].goBack(collisionMap);
@@ -838,14 +849,6 @@ package
 				//trace(Math.abs((ud.y)/TILE_HEIGHT));
 				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/4)/TILE_WIDTH), Math.round((ud.y+ud.height/4)/TILE_HEIGHT),zombies,player,this);
 				ud.updateDoor();
-				var dWin = unlockedDoors[unlockedDoors.length-1];
-				//unlockedDoors[unlockedDoors.length-1].loadGraphic(ImgDoor, false, false, TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
-				if (dWin.doorOpen == false) {
-					dWin.loadGraphic(ImgDoor, false, false, TILE_WIDTH*1.5, TILE_HEIGHT*1.5); 
-				} else
-				{
-					dWin.loadGraphic(ImgDoorOpen, false, false,  TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
-				}
 			}
 
 //			for (var t:Number=0;t<janitors.length;t++) {
