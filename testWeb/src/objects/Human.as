@@ -3,17 +3,18 @@ package objects
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
+	import org.flixel.FlxObject;
 	import org.flixel.FlxPath;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxTilemap;
-	import org.flixel.FlxObject;
 	public class Human extends FlxSprite
 	{
 		private const TILE_WIDTH:uint = 65;
 		private const TILE_HEIGHT:uint = 65;
 		[Embed(source="walk_human_100.png")] private static var ImgSpaceman:Class;
 		[Embed(source="alert_anim_100.png")] private static var ImgAlert:Class;
+		[Embed(source="janitor_live.png")] private static var ImgJanitor:Class;
 		
 		
 		//path array of flxpoints
@@ -43,6 +44,9 @@ package objects
 			super(originX, originY);
 			this.originX=originX;
 			this.originY=originY;
+			if (this is Janitor) {
+				super.loadGraphic(ImgJanitor, true, true,TILE_WIDTH,TILE_HEIGHT);
+			} else
 			super.loadGraphic(ImgSpaceman, true, true,TILE_WIDTH,TILE_HEIGHT);
 			
 			//bounding box tweaks
