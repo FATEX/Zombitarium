@@ -1,5 +1,8 @@
 package
 {
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
+	
 	import objects.Human;
 	
 	import org.flixel.FlxGame;
@@ -7,9 +10,6 @@ package
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxTilemap;
-	
-	import flash.utils.Timer;
-	import flash.events.TimerEvent;
 	
 	public class Zombie extends FlxSprite
 	{
@@ -164,11 +164,13 @@ package
 		public function disguiseOFF():void{
 			if(isDisguised){
 				isDisguised=false;
+				this.velocity=new FlxPoint(0,0);
 				this.loadGraphic(ImgPlayer, true, true, TILE_WIDTH,TILE_HEIGHT);
 			}
 		}
 		
 		public function disguiseON():void{
+			this.velocity=new FlxPoint(0,0);
 			super.loadGraphic(ImgNurse, true, true, TILE_WIDTH,TILE_HEIGHT);
 			this.isDisguised = true;
 			var t:Timer = new Timer(5000);

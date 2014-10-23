@@ -76,6 +76,8 @@ package
 		// The FlxTilemap we're using
 		private var collisionMap:FlxTilemap;
 		
+		private var facingDirection:int =0;
+		
 		// Box to show the user where they're placing stuff
 		private var highlightBox:FlxObject;
 		
@@ -125,6 +127,7 @@ package
 		//constants For detection
 		private var distanceCanSee:int = 50/16*TILE_WIDTH;
 		private var coneWidth:Number = 45;
+		private var killWidth:Number = 90;
 		private var throwable:Boolean = true;
 		private var pSyringe: Syringe;
 		private var dSyringe: Syringe;
@@ -546,10 +549,10 @@ package
 									t.size = 15;
 									add(t);*/
 									(Doctor(type[i])).stopFollowingPath();
-									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2)), type[i].x, type[i].y);
+									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2)), type[i].x-type[i].width/2, type[i].y-type[i].height/2);
 									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
 									add(dSyringe);
-									dSyringe.updatePos(1000);
+									dSyringe.updatePos(10000);
 									(Doctor(type[i])).goBack(collisionMap);
 									cd = 0;
 								}
@@ -609,7 +612,6 @@ package
 				remove(syr, true);
 				zom.exists = false;
 				zom.alive = false;
-				trace("happen2")
 				syr.exists = false;
 				syr.destory();
 			}
@@ -627,6 +629,13 @@ package
 			}
 			else if(obj1 is Human){
 				man = Human(obj1);
+				infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+				var pos:int = humans.indexOf(man);
+				humans.splice(pos,1);
+				add(infected);
+				var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+				infected.attackNearestHuman(collisionMap, path);
+				zombies.push(infected);
 				remove(man.alerted);
 				syr = Syringe(obj2);
 				if(man is Janitor){
@@ -670,7 +679,7 @@ package
 			}else{
 				return;
 			}
-			if(this.detect(man,zom)){
+			if(this.canKill(man,zom)){
 				if(man.isStunned || man is Patient){
 					zom.disguiseOFF();
 					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
@@ -706,7 +715,6 @@ package
 					remove(zom,true);
 					man.goBack(collisionMap);
 					zom.alive=false;
-					trace("happen1")
 					man.stunHuman();
 				}
 				man.alerted.x=man.x;
@@ -785,6 +793,8 @@ package
 			//animations
 			player.addAnimation("idle", [0]);
 			player.addAnimation("run", [0, 1, 2, 3], 12);
+			player.addAnimation("idleBack",[4]);
+			player.addAnimation("runBack",[5,6,7,4],12);
 			zombies.push(player);
 
 
@@ -822,25 +832,21 @@ package
 			if(FlxG.keys.LEFT)
 			{
 				player.facing = FlxObject.LEFT;
-				player.angle = -90;
 				player.acceleration.x -= player.drag.x;
 			}
 			else if(FlxG.keys.RIGHT)
 			{
 				player.facing = FlxObject.RIGHT;
-				player.angle = 90;
 				player.acceleration.x += player.drag.x;
 			}
 			if(FlxG.keys.UP)
 			{
 				player.facing = FlxObject.UP;
-				player.angle = 0;
 				player.acceleration.y -= player.drag.y;
 			}
 			else if(FlxG.keys.DOWN)
 			{
 				player.facing = FlxObject.DOWN;
-				player.angle = 180;
 				player.acceleration.y += player.drag.y;
 			}
 			if(FlxG.keys.SPACE){
@@ -851,11 +857,43 @@ package
 					else if(player.angle == 90 || player.angle == -90){
 						pSyringe = new Syringe(player.angle, player.x, player.y+7);
 					}*/
-					
-					pSyringe = new Syringe(player.angle, player.x, player.y)
-					pSyringe.angle = player.angle-90;
+					var angleToThrow:Number;
+					if(player.velocity.x>0 && player.velocity.y==0){
+						angleToThrow=90;
+					}
+					else if(player.velocity.x>0 && player.velocity.y>0){
+						angleToThrow=135;
+					}
+					else if(player.velocity.x>0 && player.velocity.y<0){
+						angleToThrow=45;
+					}
+					else if(player.velocity.x==0 && player.velocity.y>0){
+						angleToThrow=180;
+					}
+					else if(player.velocity.x<0 && player.velocity.y>0){
+						angleToThrow=-135;
+					}
+					else if(player.velocity.x<0 && player.velocity.y==0){
+						angleToThrow=-90;
+					}
+					else if(player.velocity.x<0 && player.velocity.y<0){
+						angleToThrow=-45;
+					}
+					else if(player.velocity.x==0 && player.velocity.y<0){
+						angleToThrow=0;
+					}
+					else{
+						if(this.facingDirection==0){
+							angleToThrow=180;
+						}
+						else{
+							angleToThrow=0;
+						}
+					}
+					pSyringe = new Syringe(angleToThrow, player.x+player.width/2, player.y+player.height/2);
+					pSyringe.angle = angleToThrow-90;
 					add(pSyringe);
-					pSyringe.updatePos(1000);
+					pSyringe.updatePos(10000);
 					throwable = false;
 					//FlxG.collide(collisionMap, pSyringe, touchedH);
 					/*for(var i1:int = 0; i1<humans.length; i1++){
@@ -874,11 +912,31 @@ package
 			//ANIMATION
 			 if(player.velocity.x == 0 && player.velocity.y == 0)
 			{
-				player.play("idle");
+				 if(this.facingDirection==0){
+					player.play("idle");
+				 }
+				 else if(this.facingDirection==1){
+					 player.play("idleBack");
+				 }
 			}
 			else
 			{
-				player.play("run");
+				if(player.velocity.y>0){
+					player.play("run");
+					this.facingDirection=0;
+				}
+				else if(player.velocity.y<0){
+					player.play("runBack");
+					this.facingDirection=1;
+				}
+				else{
+					if(this.facingDirection==0){
+						player.play("run");
+					}
+					else if(this.facingDirection==1){
+						player.play("runBack");
+					}
+				}
 			}
 			 
 			if (Math.abs(player.x- (exitX))<=TILE_WIDTH/8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/8) {
@@ -912,6 +970,28 @@ package
 				if(FlxU.getDistance(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))<=this.distanceCanSee){
 					var angle:Number = FlxU.getAngle(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2));
 					if(angle>=looker.getAngle()-this.coneWidth && angle<=looker.getAngle()+this.coneWidth){
+						return true;
+					}
+					else if(looker is Janitor){
+						return true;
+					}
+				}
+			}
+			return false;
+			
+		}
+		private function canKill(looker:Human,lookee:FlxObject):Boolean
+		{
+			if(lookee is Zombie){
+				var lookeeZ:Zombie = lookee as Zombie;
+				if(lookeeZ.isDisguised){
+					return false;
+				}
+			}
+			if(collisionMap.ray(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))){
+				if(FlxU.getDistance(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))<=this.distanceCanSee){
+					var angle:Number = FlxU.getAngle(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2));
+					if(angle>=looker.getAngle()-this.killWidth && angle<=looker.getAngle()+this.killWidth){
 						return true;
 					}
 					else if(looker is Janitor){
