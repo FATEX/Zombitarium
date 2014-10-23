@@ -408,7 +408,7 @@ package
 				x = int(lineArray[1]);
 				y = int(lineArray[2]);
 				if(type=="H"){
-					h=new Human(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					h=new Doctor(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
 					humans.push(h);
 				}
 				if(type=="J"){
@@ -695,6 +695,9 @@ package
 						if(zom==player){
 							zom.disguiseON();
 						}
+					}
+					if(man is Doctor){
+						throwable = true;
 					}
 					remove(man,true);
 					man.alive=false;
