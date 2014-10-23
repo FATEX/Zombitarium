@@ -25,6 +25,7 @@ package objects
 		public var myroute:FlxPath = new FlxPath();
 		
 		public var isFollowing:Boolean = false;
+		public var onRoute:Boolean = false;
 		public var isPathSet:Boolean = false;
 		public var nextPath:FlxPath;
 		
@@ -71,9 +72,11 @@ package objects
 		private function follow():void
 		{
 			if(isFollowing && nextPath!=null){
-				this.pauseHuman();
+				if(onRoute == false) this.pauseHuman(); 
 				super.followPath(nextPath,70/16*TILE_WIDTH,PATH_FORWARD,true);
+				onRoute = true;
 			}else{
+				//onRoute = true;
 				super.followPath(myroute,50/16*TILE_WIDTH,PATH_LOOP_FORWARD,true);
 			}
 		}
@@ -132,6 +135,8 @@ package objects
 			this.restingAngle=ang;
 		}
 		public function humanUpdate(collisionMap:FlxTilemap):void{
+			//if(onRoute == false)this.pauseHuman();
+			//onRoute = true;
 			if(this.isStunned || this.isPaused){
 				this.moves=false;
 			}else{

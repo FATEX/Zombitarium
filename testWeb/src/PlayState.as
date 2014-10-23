@@ -535,7 +535,7 @@ package
 			
 			super.update();
 		}
-		
+		var dis:Boolean = false;
 		public function collideCheck(type):void {
 			for(var i:int=0; i<type.length;i++){
 				for (var j:int=0;j<zombies.length;j++){
@@ -555,6 +555,7 @@ package
 						if(zombies[j].alive && type[i].alive){
 							cd++;
 							if(detect(type[i],zombies[j])){
+								if(!dis)	type[i].onRoute = false;
 								if(type[i] is Doctor && cd >=100 ){
 									/*var t:FlxText;
 									var a:int = FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
@@ -583,9 +584,12 @@ package
 							}
 							else if(type[i].pathSpeed==0){
 								type[i].goBack(collisionMap);
+								type[i].onRoute = false;
+								dis = true;
 								type[i].color=0xFFFFFF;
 							}
 							else if(type[i].isFollowing){
+								dis = true;
 								(Human(type[i])).alerted.x=(Human(type[i])).x;
 								(Human(type[i])).alerted.y=(Human(type[i])).y-(Human(type[i])).height;
 								if(FlxG.collide(type[i],collisionMap)){
