@@ -815,9 +815,9 @@ package
 			player = new Zombie(20, 20,TILE_WIDTH*7/8,TILE_HEIGHT*7/8,640/16*TILE_WIDTH,640/16*TILE_WIDTH,80/16*TILE_WIDTH,80/16*TILE_WIDTH);
 			player.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH,TILE_HEIGHT);
 			//bounding box tweaks
-			player.width = TILE_WIDTH*7/8;
+			player.width = TILE_WIDTH*5/8;
 			player.height = TILE_HEIGHT*7/8;
-			player.offset.x = 1;
+			player.offset.x = player.width/4;
 			player.offset.y = 1;
 			
 			//basic player physics

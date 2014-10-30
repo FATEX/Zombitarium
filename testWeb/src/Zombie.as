@@ -202,9 +202,10 @@ package
 		
 		public function setImage(image:Class):void{
 			this.loadGraphic(image, true, true, TILE_WIDTH,TILE_HEIGHT);
-			this.width = TILE_WIDTH*7/8;
+			this.width =  TILE_WIDTH*5/8;
 			this.height = TILE_HEIGHT*7/8;
-			
+			this.offset.x = this.width/4;
+			this.offset.y = 1;
 		}
 		
 		public function dieAnimation():void{
@@ -217,8 +218,10 @@ package
 				//this.y=this.y-this.y%TILE_HEIGHT;
 				isDisguised=false;
 				this.loadGraphic(ImgPlayer, true, true, TILE_WIDTH,TILE_HEIGHT);
-				this.width = TILE_WIDTH*7/8;
+				this.width =  TILE_WIDTH*5/8;
 				this.height = TILE_HEIGHT*7/8;
+				this.offset.x = this.width/4;
+				this.offset.y = 1;
 			}
 		}
 		
@@ -226,8 +229,10 @@ package
 			this.x=this.x-this.x%TILE_WIDTH;
 			this.y=this.y-this.y%TILE_HEIGHT;
 			super.loadGraphic(ImgNurse, true, true, TILE_WIDTH,TILE_HEIGHT);
-			this.width = TILE_WIDTH*7/8;
+			this.width =  TILE_WIDTH*5/8;
 			this.height = TILE_HEIGHT*7/8;
+			this.offset.x = this.width/4;
+			this.offset.y = 1;
 			this.isDisguised = true;
 			var t:Timer = new Timer(5000);
 			t.addEventListener(TimerEvent.TIMER, onDelay);
