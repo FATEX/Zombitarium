@@ -23,22 +23,25 @@ package objects
 		//	boolean have detected someone , follow path or follow something else
 		
 		public var routePoints:Vector.<FlxPoint> = new Vector.<FlxPoint>();
+		public var routeDirection:Vector.<FlxPath> = new Vector.<FlxPath>();
 		public var myroute:FlxPath = new FlxPath();
 		
 		public var isFollowing:Boolean = false;
 		public var onRoute:Boolean = false;
-		public var isPathSet:Boolean = false;
+		public var isPathSet:Boolean;
 		public var nextPath:FlxPath;
 		
 		public var originX:Number;
 		public var originY:Number;
 		public var isStunned:Boolean = false;
 		private var isPaused:Boolean = false;
+		private var isPaused2:Boolean = false;
+
 		public var restingAngle:Number=0;
 		public var alerted:FlxSprite;
 		public var alertAdded:Boolean = false;
 		private var facingToward:int =0;
-		
+		private var pos:int=0;
 		public function Human(originX:Number, originY:Number, overLoad:Boolean)
 		{
 			super(originX, originY);
@@ -48,7 +51,7 @@ package objects
 				super.loadGraphic(ImgJanitor, true, true,TILE_WIDTH,TILE_HEIGHT);
 			} else
 			super.loadGraphic(ImgSpaceman, true, true,TILE_WIDTH,TILE_HEIGHT);
-			
+			this.isPathSet=false;
 			//bounding box tweaks
 			super.width = TILE_WIDTH*7/8;
 			super.height = TILE_HEIGHT*7/8;
@@ -88,7 +91,14 @@ package objects
 				onRoute = true;
 			}else{
 				//onRoute = true;
-				super.followPath(myroute,50/16*TILE_WIDTH,PATH_LOOP_FORWARD,false);
+				/*super.followPath(this.routeDirection[0],50/16*TILE_WIDTH,PATH_FORWARD,false);
+				var hold:FlxPath =this.routeDirection[0];
+				this.routeDirection.splice(0,1);
+				this.routeDirection.push(hold);*/
+				if(!this.isPaused2){
+					this.pauseHuman2();
+				}
+				
 			}
 		}
 		
@@ -107,9 +117,27 @@ package objects
 		
 		private function pauseHuman():void{
 			this.isPaused = true;
-			var t:Timer = new Timer(1000);
+			var t:Timer = new Timer(1000,1);
 			t.addEventListener(TimerEvent.TIMER, onPause);
 			t.start();
+		}
+		private function pauseHuman2():void{
+			this.isPaused2 = true;
+			var t:Timer = new Timer(1000,1);
+			t.addEventListener(TimerEvent.TIMER_COMPLETE, onPause2);
+			t.start();
+		}
+		private function onPause2(t:TimerEvent):void{
+			onResume2();
+			
+		}
+		private function onResume2():void{
+			if(this.routeDirection != null && this.routeDirection.length>0 && this.routeDirection[0]!=null){
+				super.followPath(this.routeDirection[pos],50/16*TILE_WIDTH,PATH_FORWARD,false);
+				pos++;
+				pos=pos%this.routeDirection.length;
+			}
+			this.isPaused2 = false;
 		}
 		private function onPause(t:TimerEvent):void{
 			onResume();
@@ -124,9 +152,8 @@ package objects
 				  follow();
 		}
 		
-		private function setRoute(p:FlxPath):void{
+		private function setRoute():void{
 			this.isFollowing=false;
-			this.myroute=p;
 			follow();
 		}
 		public function getAngle():Number{
@@ -148,13 +175,25 @@ package objects
 		public function humanUpdate(collisionMap:FlxTilemap):void{
 			//if(onRoute == false)this.pauseHuman();
 			//onRoute = true;
-			if(this.isStunned || this.isPaused){
+			if(this.isStunned || this.isPaused ||this.isPaused2){
 				this.moves=false;
 			}else{
 				this.moves=true;
 				var pathBeingMade:FlxPath;
 				if(!this.isPathSet && this.pathSpeed==0 && this.isFollowing==false && routePoints.length>0){
-					pathBeingMade = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2), routePoints[0]);
+					for (var j:int=0; j<routePoints.length;j++){
+						//make a vector of paths that will switch between. use route directions
+						if(j==0){
+							pathBeingMade = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2), routePoints[j]);
+						}
+						else{
+							pathBeingMade = collisionMap.findPath(routePoints[j-1], routePoints[j]);
+						}
+						this.routeDirection.push(pathBeingMade);
+					}
+					pathBeingMade = collisionMap.findPath(routePoints[this.routePoints.length-1], new FlxPoint(super.x + super.width / 2, super.y + super.height / 2));
+					this.routeDirection.push(pathBeingMade);
+/*					pathBeingMade = collisionMap.findPath(new FlxPoint(super.x + super.width / 2, super.y + super.height / 2), routePoints[0]);
 					var i:Number;
 					var j:int;
 					//pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath(routePoints[0], routePoints[1]));
@@ -163,11 +202,18 @@ package objects
 						pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath((routePoints[i-1]),routePoints[i]).nodes);
 					}
 					pathBeingMade.nodes = pathBeingMade.nodes.concat(collisionMap.findPath((routePoints[i-1]),new FlxPoint(super.x + super.width / 2, super.y + super.height / 2)).nodes);
-					setRoute(pathBeingMade);
+					*/
+					setRoute();
 					this.isPathSet=true;
 				}
+				
 			}
-			if(this.pathSpeed==0){
+			if(this.isPathSet){
+				if(this.pathSpeed==0  && !this.isPaused2){
+					pauseHuman2();
+				}
+			}
+			if(this.pathSpeed==0  && !this.isPaused2){
 				this.pathAngle=this.restingAngle;
 				if(this.restingAngle <22 && this.restingAngle>=-22){
 					this.play("idleBack");

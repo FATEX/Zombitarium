@@ -593,7 +593,7 @@ package
 								}
 								//type[i].color=0xFFD700;
 							}
-							else if(type[i].pathSpeed==0){
+							else if(type[i].pathSpeed==0 && (Human(type[i])).isFollowing){
 								type[i].goBack(collisionMap);
 								//type[i].onRoute = true;
 								//dis = true;
