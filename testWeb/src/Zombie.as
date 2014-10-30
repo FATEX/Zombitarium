@@ -31,7 +31,8 @@ package
 		private var yMaxVelocity: int = 0;
 		private var humanFollowing:Human;
 		private var checkAgain:Boolean = true;
-		
+		private var xTile:int=0;
+		private var yTile:int=0;
 		public var isDisguised:Boolean = false;
 		//private var color: int = 0;
  		public function Zombie(xPos:int, yPos:int, width:int, height:int, xDrag:int, yDrag:int, xMaxVelocity:int, yMaxVelocity:int)
@@ -54,6 +55,8 @@ package
 			super.addAnimation("right",[8]);
 			super.addAnimation("bottomLeft",[9]);
 			super.addAnimation("topRight",[10]);
+			this.xTile = xPos/TILE_WIDTH;
+			this.yTile = yPos/TILE_HEIGHT;
 		}
 		
 		public function findNearestHuman(collisionMap:FlxTilemap, humanP:Vector.<Human>, zombieP:FlxPoint):FlxPath{
@@ -125,12 +128,14 @@ package
 				this.humanFollowing=null;
 				this.attackNearestHuman(collisionMap,this.findNearestHuman(collisionMap,humanP,zombieP));
 			}
-			if(this.humanFollowing!=null && humanP!=null && humanP.indexOf(this.humanFollowing)!=-1){
+			if(this.humanFollowing!=null && humanP!=null && humanP.indexOf(this.humanFollowing)!=-1 && this.x/TILE_WIDTH != this.xTile && this.y/TILE_HEIGHT != this.yTile){
 				this.stopFollowingPath(true);
 				this.pathSpeed=0;
 				this.velocity=new FlxPoint(0,0);
 				path = collisionMap.findPath(zombieP, new FlxPoint(humanFollowing.x+humanFollowing.width/2, humanFollowing.y+humanFollowing.height/2), false);
 				this.attackNearestHuman(collisionMap,path);
+				this.xTile=this.x/TILE_WIDTH;
+				this.yTile = this.y/TILE_HEIGHT;
 			}
 			if(this.checkAgain){
 				this.stopFollowingPath(true);
