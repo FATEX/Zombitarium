@@ -131,6 +131,7 @@ package
 		private var cd:int = 50;
 		private var youLoseScreen:FlxText;
 		private var t;
+		private var youWinScreen:FlxText;
 		
 		override public function create():void
 		{
@@ -265,17 +266,17 @@ package
 			if (level==0) {
 				add(instructions);
 			} else if (level==1) {
-				add(instructions = new FlxText(4*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"You can zombify humans by running into them"))
+				add(instructions = new FlxText(4*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"You can zombify humans by running into them from behind."))
 			} else if (level==2) {
-				add(instructions = new FlxText(3*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE If a human sees you, it will go after you!"))
+				add(instructions = new FlxText(7*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE If a human sees you, it will go after you!"))
 			} else if (level==3) {
-				add(instructions = new FlxText(4*TILE_WIDTH,1*TILE_HEIGHT,3*TILE_WIDTH,"Humans can kill zombies...but not without getting stunned!"))
+				add(instructions = new FlxText(7*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"Humans can kill zombies...but not without getting stunned!"))
 			} else if (level==4) {
 				add(instructions = new FlxText(10*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
 			} else if (level==5) {
-				add(instructions = new FlxText(4*TILE_WIDTH,1*TILE_HEIGHT,5*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
+				add(instructions = new FlxText(8*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
 			} else if (level==6) {
-				add(instructions = new FlxText(4*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
+				add(instructions = new FlxText(8*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
 	
@@ -859,6 +860,7 @@ package
 				}
 			}
 			
+			
 			for (var i:Number=0;i<doors.length;i++){
 				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/4)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/4)/TILE_HEIGHT),zombies,this);
 				doors[i].updateDoor();
@@ -1051,9 +1053,21 @@ package
 			 
 			if (Math.abs(player.x- (exitX))<=TILE_WIDTH/8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/8) {
 				win == true;
-				level++;
-				level = level%10;
-				resetGame();
+				
+				
+				if(this.youWinScreen ==null){
+					this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor");
+					this.youWinScreen.size=39;
+					add(this.youWinScreen);
+					var camRev:FlxCamera = new FlxCamera(50, 300, this.youWinScreen.width, this.youWinScreen.height);
+					camRev.follow(this.youWinScreen);
+					FlxG.addCamera(camRev);
+					level++;
+					//level = level%10;
+					//resetGame();
+				
+					
+				}
 			}
 		
 		}
