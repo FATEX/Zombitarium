@@ -1044,6 +1044,7 @@ package
 					var camRev:FlxCamera = new FlxCamera(50, 300, this.youWinScreen.width, this.youWinScreen.height);
 					camRev.follow(this.youWinScreen);
 					FlxG.addCamera(camRev);
+					remove(player);
 					level++;
 					//level = level%10;
 					//resetGame();
