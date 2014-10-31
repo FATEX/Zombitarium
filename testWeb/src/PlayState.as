@@ -129,7 +129,7 @@ package
 		private var exitY:Number;
 		private var win:Boolean = false;
 		private var cd:int = 50;
-		
+		private var youLoseScreen:FlxText;
 		private var t;
 		
 		override public function create():void
@@ -846,7 +846,14 @@ package
 			//wrap(player);
 
 			if (player.alive == false) {
-				//resetGame();
+				if(this.youLoseScreen ==null){
+					this.youLoseScreen = new FlxText(-100000,0,820,"YOU LOSE TRY NOT TO GET CURED  Press R to restart");
+					this.youLoseScreen.size=39;
+					add(this.youLoseScreen);
+					var camRe:FlxCamera = new FlxCamera(50, 300, this.youLoseScreen.width, this.youLoseScreen.height);
+					camRe.follow(this.youLoseScreen);
+					FlxG.addCamera(camRe);
+				}
 			}
 			
 			for (var i:Number=0;i<doors.length;i++){
