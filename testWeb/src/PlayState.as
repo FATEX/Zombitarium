@@ -931,10 +931,28 @@ package
 					}
 					else{
 						if(this.facingDirection==0){
-							angleToThrow=180;
+							angleToThrow = 180;
+						}
+						else if(this.facingDirection==1){
+							angleToThrow=0;
+						}
+						else if(this.facingDirection==2){
+							angleToThrow=90;
+						}
+						else if(this.facingDirection==3){
+							angleToThrow=45;
+						}
+						else if(this.facingDirection==4){
+							angleToThrow=-135;
+						}
+						else if(this.facingDirection==5){
+							angleToThrow=-90;
+						}
+						else if(this.facingDirection==6){
+							angleToThrow=135;
 						}
 						else{
-							angleToThrow=0;
+							angleToThrow=-45;
 						}
 					}
 					pSyringe = new Syringe(angleToThrow, player.x+player.width/2, player.y+player.height/2, 0,0);
