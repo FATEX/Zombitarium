@@ -739,7 +739,10 @@ package
 						}
 					}
 					if(man is Doctor){
-						throwable = true;
+						if(zom == player){
+							throwable = true;
+						}
+						
 					}
 					remove(man,true);
 					man.alive=false;
@@ -783,7 +786,7 @@ package
 						zom.disguiseON();
 					}
 				}
-				if(man is Doctor){
+				if((man is Doctor) && zom == player){
 					throwable = true;
 				}
 				
