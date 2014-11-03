@@ -54,7 +54,6 @@ package
 		[Embed(source = 'level_middle.txt', mimeType = 'application/octet-stream')]private static var default_middle:Class;
 		[Embed(source = 'level_hard.txt', mimeType = 'application/octet-stream')]private static var default_hard:Class;
 
-
 		[Embed(source="zombie_combined.png")] private static var ImgSpaceman:Class;
 		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
 		[Embed(source="basic_floor_tile_USE_65.png")] private static var FloorTile:Class;
@@ -294,7 +293,7 @@ package
 					//}
 				}
 			}
-			var toVisit:Array = new Array();
+			var toVisit:Array = new Array(); 
 			var playerTileX:int=player.x/TILE_WIDTH;
 			var playerTileY:int=player.y/TILE_HEIGHT;
 			toVisit.push([playerTileX,playerTileY]);
@@ -557,7 +556,7 @@ package
 							FlxG.collide(zombies[j],type[i],collided);
 							(Human(type[i])).alerted.x=(Human(type[i])).x;
 							(Human(type[i])).alerted.y=(Human(type[i])).y-(Human(type[i])).height;
-							if((Human(type[i])).alertAdded){
+							if((Human(type[i])).alertAdded && !(Human(type[i])).alertedOfEnemy){
 								remove((Human(type[i])).alerted);
 								(Human(type[i])).alertAdded=false;
 							}
@@ -585,6 +584,7 @@ package
 								if(!(Human(type[i])).alertAdded){
 									add((Human(type[i])).alerted);
 									(Human(type[i])).alertAdded = true;
+									(Human(type[i])).alertedOfEnemy=true;
 								}
 								(Human(type[i])).alerted.play("alert");
 								if(!(type[i] is Doctor)){
@@ -611,12 +611,14 @@ package
 									type[i].goBack(collisionMap);
 									type[i].color=0xFFFFFF;
 								}
+								(Human(type[i])).alertedOfEnemy=true;
 								//dis = false;
 							}
 							else{
 								//type[i].onRoute = true;
 								//dis = false;
 								type[i].color=0xFFFFFF;
+								(Human(type[i])).alertedOfEnemy=false;
 							}
 						}
 					}catch(e:Error){
@@ -737,6 +739,33 @@ package
 					if(man is Nurse){
 						if(zom==player){
 							zom.disguiseON();
+							if(this.facingDirection==0){
+								player.play("idle",true);
+							}
+							else if(this.facingDirection==1){
+								player.play("idleBack",true);
+							}
+							else if(this.facingDirection==2){
+								player.play("right",true);
+							}
+							else if(this.facingDirection==3){
+								player.play("topRight",true);
+							}
+							else if(this.facingDirection==4){
+								player.play("bottomLeft",true);
+								player.facing=FlxObject.RIGHT;
+							}
+							else if(this.facingDirection==5){
+								player.play("right",true);
+								player.facing=FlxObject.LEFT;
+							}
+							else if(this.facingDirection==6){
+								player.play("bottomLeft",true);
+							}
+							else{
+								player.play("topRight",true);
+								player.facing=FlxObject.RIGHT;
+							}
 						}
 					}
 					if(man is Doctor){
@@ -785,6 +814,34 @@ package
 				if(man is Nurse){
 					if(zom==player){
 						zom.disguiseON();
+						if(this.facingDirection==0){
+							player.play("idle",true);
+						}
+						else if(this.facingDirection==1){
+							player.play("idleBack",true);
+						}
+						else if(this.facingDirection==2){
+							player.play("right",true);
+						}
+						else if(this.facingDirection==3){
+							player.play("topRight",true);
+						}
+						else if(this.facingDirection==4){
+							player.play("bottomLeft",true);
+							player.facing=FlxObject.RIGHT;
+						}
+						else if(this.facingDirection==5){
+							player.play("right",true);
+							player.facing=FlxObject.LEFT;
+						}
+						else if(this.facingDirection==6){
+							player.play("bottomLeft",true);
+						}
+						else{
+							player.play("topRight",true);
+							player.facing=FlxObject.RIGHT;
+						}
+						
 					}
 				}
 				if((man is Doctor) && zom == player){
