@@ -219,12 +219,18 @@ package
 		
 		public function disguiseOFF():void{
 			if(isDisguised){
+				try{
 				isDisguised=false;
 				this.loadGraphic(ImgPlayer, true, true, TILE_WIDTH,TILE_HEIGHT);
+				
 				this.width =  TILE_WIDTH*5/8;
 				this.height = TILE_HEIGHT*7/8;
 				this.offset.x = this.width/4;
 				this.offset.y = 1;
+				}
+				catch(error:Error){
+					
+				}
 			}
 		}
 		
