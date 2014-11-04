@@ -1096,7 +1096,7 @@ package
 				if(this.youLoseScreen ==null){
 					logger.recordEvent(level+1,101,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" ends");
 					logger.recordLevelEnd();
-					this.youLoseScreen = new FlxText(-100000,0,820,"YOU LOSE TRY NOT TO GET CURED  Press R to restart");
+					this.youLoseScreen = new FlxText(-100000,0,820,"YOU LOSE TRY NOT TO GET CURED  \nPress R to restart");
 					this.youLoseScreen.size=39;
 					add(this.youLoseScreen);
 					var camRe:FlxCamera = new FlxCamera(50, 300, this.youLoseScreen.width, this.youLoseScreen.height);
@@ -1316,14 +1316,14 @@ package
 					logger.recordLevelEnd();
 
 					if (level==9) {
-						this.youWinScreen = new FlxText(-200000,0,820,"YOU HAVE ZOMBIFIED THE ENTIRE HOSPITAL! Use the Quit Button to return to menu.");
+						this.youWinScreen = new FlxText(-200000,0,820,"YOU HAVE ZOMBIFIED THE ENTIRE HOSPITAL! \nUse the Quit Button to return to menu.");
 
 					} else {
-					this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor"); 
+					this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! \nPress R to continue to next floor"); 
 					level++; 
 					level = level%10;
 					}
-					
+					this.youWinScreen.size=20;
 					//this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor");
 					this.youWinScreen.size=39;
 					add(this.youWinScreen);
@@ -1362,7 +1362,14 @@ package
 			if(collisionMap.ray(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))){
 				if(FlxU.getDistance(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))<=this.distanceCanSee){
 					var angle:Number = FlxU.getAngle(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2));
-					if(angle>=looker.getAngle()-this.coneWidth && angle<=looker.getAngle()+this.coneWidth){
+					var holdLooker:Number = looker.getAngle();
+					if(holdLooker>180){
+						holdLooker=360-holdLooker;
+					}
+					if(holdLooker<-180){
+						holdLooker=360+holdLooker;
+					}
+					if(angle>=holdLooker-this.coneWidth && angle<=holdLooker+this.coneWidth){
 						return true;
 					}
 					else if(looker is Janitor){
