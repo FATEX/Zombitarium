@@ -133,12 +133,16 @@ package objects
 			
 		}
 		private function onResume2():void{
-			if(this.routeDirection != null && this.routeDirection.length>0 && this.routeDirection[0]!=null){
-				super.followPath(this.routeDirection[pos],50/16*TILE_WIDTH,PATH_FORWARD,false);
-				pos++;
-				pos=pos%this.routeDirection.length;
+			try{
+				if(this.routeDirection != null && this.routeDirection.length>0 && this.routeDirection[0]!=null){
+					super.followPath(this.routeDirection[pos],50/16*TILE_WIDTH,PATH_FORWARD,false);
+					pos++;
+					pos=pos%this.routeDirection.length;
+				}
+				this.isPaused2 = false;
+			}catch(e:Error){
+				return;
 			}
-			this.isPaused2 = false;
 		}
 		private function onPause(t:TimerEvent):void{
 			onResume();

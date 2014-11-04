@@ -65,7 +65,7 @@ package
 		//logger
 		private var playertime:Number = new Date().time;
 		private var versionID:Number = 1;
-		public var logger:Logging = new Logging(200,versionID,true);
+		public var logger:Logging = new Logging(200,versionID,false);
 		
 		// Some static constants for the size of the tilemap tiles
 		public const TILE_WIDTH:uint = 65;
