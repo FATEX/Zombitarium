@@ -287,7 +287,7 @@ package
 			instructions.setFormat(null,30/100*TILE_WIDTH);
 	
 			logger.recordLevelStart(level+1,"start level "+(level+1));
-			logger.recordEvent(level+1,100,"level "+(level+1)+" starts");
+			//logger.recordEvent(level+1,100,"level starts");
 		}
 		
 		public function revealBoard():void{
@@ -649,6 +649,11 @@ package
 				zom = Zombie(obj1);
 				syr = Syringe(obj2);
 				var pos:int = zombies.indexOf(zom);
+				if(zom==player){
+					logger.recordEvent(level+1,36,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:killed by syringe");
+				}else{
+					logger.recordEvent(level+1,37,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by syringe");
+				}
 				zombies.splice(pos,1);
 				remove(zom, true);
 				remove(syr, true);
@@ -681,6 +686,17 @@ package
 				} else {
 					infected.setImage(ImgHumanDead);
 				}
+				if(man is Janitor){
+					logger.recordEvent(level+1,31,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill janitor");
+				}else if(man is Nurse){
+					logger.recordEvent(level+1,32,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill nurse");
+				}else if(man is Doctor){
+					logger.recordEvent(level+1,33,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill doctor");
+				}else if(man is Patient){
+					logger.recordEvent(level+1,34,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill patient");							
+				}else{
+					logger.recordEvent(level+1,35,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill human");
+				}
 				var pos:int = humans.indexOf(man);
 				humans.splice(pos,1);
 				remove(player);
@@ -698,7 +714,6 @@ package
 					jan.die();
 				}
 				man.alive = false;
-
 				remove(man, true);
 				remove(syr, true);
 				man.exists = false;

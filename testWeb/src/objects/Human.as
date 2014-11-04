@@ -190,44 +190,48 @@ package objects
 			this.rot2();
 		}
 		private function rot2():void{
-			var ang:Number = FlxU.getAngle(new FlxPoint(this.x+this.width/2,this.y+this.height/2),this.routeDirection[pos].nodes[1]);
-			if(ang>=0 && this.pathAngle>=0){
-				if(ang>this.pathAngle){
-					this.pathAngle = this.pathAngle + this.amountToTurn;
+			try{
+				var ang:Number = FlxU.getAngle(new FlxPoint(this.x+this.width/2,this.y+this.height/2),this.routeDirection[pos].nodes[1]);
+				if(ang>=0 && this.pathAngle>=0){
+					if(ang>this.pathAngle){
+						this.pathAngle = this.pathAngle + this.amountToTurn;
+					}
+					else{
+						this.pathAngle = this.pathAngle - this.amountToTurn;
+					}
 				}
-				else{
-					this.pathAngle = this.pathAngle - this.amountToTurn;
-				}
-			}
-			else if(ang<=0 && this.pathAngle<=0){
-				if(ang<this.pathAngle){
-					this.pathAngle = this.pathAngle - this.amountToTurn;
-				}
-				else{
-					this.pathAngle = this.pathAngle + this.amountToTurn;
-				}
-			}
-			else if(ang<=0 && this.pathAngle>=0){
-				if(ang>=-90 && this.pathAngle<=90){
-					this.pathAngle = this.pathAngle - this.amountToTurn;
-				}
-				else{
-					this.pathAngle = this.pathAngle + this.amountToTurn;
-				}
-			}
-			else if(ang>=0 && this.pathAngle<=0){
-				if(ang<=90 && this.pathAngle>=-90){
-					this.pathAngle = this.pathAngle + this.amountToTurn;
-				}
-				else{
-					if(this.amountToTurn>0){
+				else if(ang<=0 && this.pathAngle<=0){
+					if(ang<this.pathAngle){
 						this.pathAngle = this.pathAngle - this.amountToTurn;
 					}
 					else{
 						this.pathAngle = this.pathAngle + this.amountToTurn;
-
 					}
 				}
+				else if(ang<=0 && this.pathAngle>=0){
+					if(ang>=-90 && this.pathAngle<=90){
+						this.pathAngle = this.pathAngle - this.amountToTurn;
+					}
+					else{
+						this.pathAngle = this.pathAngle + this.amountToTurn;
+					}
+				}
+				else if(ang>=0 && this.pathAngle<=0){
+					if(ang<=90 && this.pathAngle>=-90){
+						this.pathAngle = this.pathAngle + this.amountToTurn;
+					}
+					else{
+						if(this.amountToTurn>0){
+							this.pathAngle = this.pathAngle - this.amountToTurn;
+						}
+						else{
+							this.pathAngle = this.pathAngle + this.amountToTurn;
+	
+						}
+					}
+				}
+			}catch(e:Error){
+				return;
 			}
 			
 		}
