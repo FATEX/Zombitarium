@@ -16,7 +16,8 @@ package objects
 		[Embed(source="walk_human_100.png")] private static var ImgSpaceman:Class;
 		[Embed(source="alert_anim_100.png")] private static var ImgAlert:Class;
 		[Embed(source="janitor_live.png")] private static var ImgJanitor:Class;
-		
+		[Embed(source="stunned_anim.png")] private static var StunnedAnim:Class;
+
 		
 		//path array of flxpoints
 		//detect() super type
@@ -41,6 +42,8 @@ package objects
 		public var restingAngle:Number=0;
 		public var alerted:FlxSprite;
 		public var alertAdded:Boolean = false;
+		public var stunAn:FlxSprite;
+		public var stunAdded:Boolean = false;
 		public var alertedOfEnemy:Boolean = false;
 		private var facingToward:int =0;
 		private var pos:int=0;
@@ -82,6 +85,10 @@ package objects
 			alerted = new FlxSprite(originX,originY);
 			alerted.loadGraphic(ImgAlert,true,false,TILE_WIDTH,TILE_HEIGHT);
 			alerted.addAnimation("alert",[0,1],12,true);
+			this.stunAdded=false;
+			this.stunAn = new FlxSprite(originX,originY);
+			this.stunAn.loadGraphic(StunnedAnim,true,false,50,50);
+			this.stunAn.addAnimation("stun",[0,1,2,3],6,true);
 		}
 		
 		private function follow():void
