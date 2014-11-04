@@ -8,6 +8,7 @@ package objects
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxTilemap;
+	import org.flixel.FlxU;
 	public class Human extends FlxSprite
 	{
 		private const TILE_WIDTH:uint = 65;
@@ -36,7 +37,7 @@ package objects
 		public var isStunned:Boolean = false;
 		private var isPaused:Boolean = false;
 		private var isPaused2:Boolean = false;
-
+		private var amountToTurn:Number;
 		public var restingAngle:Number=0;
 		public var alerted:FlxSprite;
 		public var alertAdded:Boolean = false;
@@ -124,9 +125,49 @@ package objects
 		}
 		private function pauseHuman2():void{
 			this.isPaused2 = true;
+			var j:Timer = new Timer(20,50);
+			j.addEventListener(TimerEvent.TIMER,rotate2);
 			var t:Timer = new Timer(1000,1);
 			t.addEventListener(TimerEvent.TIMER_COMPLETE, onPause2);
 			t.start();
+			var ang:Number = FlxU.getAngle(new FlxPoint(this.x+this.width/2,this.y+this.height/2),this.routeDirection[pos].nodes[1]);
+			
+			if(ang>=0 && this.pathAngle>=0){
+				if(ang>this.pathAngle){
+					this.amountToTurn = (ang-this.pathAngle)/50;
+				}
+				else{
+					this.amountToTurn = (this.pathAngle-ang)/50;
+				}
+			}
+			else if(ang<=0 && this.pathAngle<=0){
+				if(ang<this.pathAngle){
+					this.amountToTurn = (ang-this.pathAngle)/50;
+				}
+				else{
+					this.amountToTurn = (this.pathAngle-ang)/50;
+				}
+			}
+			else if(ang<=0 && this.pathAngle>=0){
+				if(ang>=-90 && this.pathAngle<=90){
+					this.amountToTurn = (this.pathAngle-ang)/50;
+				}
+				else{
+					this.amountToTurn = (-ang-this.pathAngle)/50;
+				}
+			}
+			else if(ang>=0 && this.pathAngle<=0){
+				if(ang<=90 && this.pathAngle>=-90){
+					this.amountToTurn = (ang-this.pathAngle)/50;
+				}
+				else{
+					this.amountToTurn = (-this.pathAngle-ang)/50;
+				}
+			}
+			
+			
+			j.start();
+
 		}
 		private function onPause2(t:TimerEvent):void{
 			onResume2();
@@ -139,6 +180,52 @@ package objects
 				pos=pos%this.routeDirection.length;
 			}
 			this.isPaused2 = false;
+		}
+		
+		private function rotate2(t:TimerEvent):void{
+			this.rot2();
+		}
+		private function rot2():void{
+			var ang:Number = FlxU.getAngle(new FlxPoint(this.x+this.width/2,this.y+this.height/2),this.routeDirection[pos].nodes[1]);
+			if(ang>=0 && this.pathAngle>=0){
+				if(ang>this.pathAngle){
+					this.pathAngle = this.pathAngle + this.amountToTurn;
+				}
+				else{
+					this.pathAngle = this.pathAngle - this.amountToTurn;
+				}
+			}
+			else if(ang<=0 && this.pathAngle<=0){
+				if(ang<this.pathAngle){
+					this.pathAngle = this.pathAngle - this.amountToTurn;
+				}
+				else{
+					this.pathAngle = this.pathAngle + this.amountToTurn;
+				}
+			}
+			else if(ang<=0 && this.pathAngle>=0){
+				if(ang>=-90 && this.pathAngle<=90){
+					this.pathAngle = this.pathAngle - this.amountToTurn;
+				}
+				else{
+					this.pathAngle = this.pathAngle + this.amountToTurn;
+				}
+			}
+			else if(ang>=0 && this.pathAngle<=0){
+				if(ang<=90 && this.pathAngle>=-90){
+					this.pathAngle = this.pathAngle + this.amountToTurn;
+				}
+				else{
+					if(this.amountToTurn>0){
+						this.pathAngle = this.pathAngle - this.amountToTurn;
+					}
+					else{
+						this.pathAngle = this.pathAngle + this.amountToTurn;
+
+					}
+				}
+			}
+			
 		}
 		private function onPause(t:TimerEvent):void{
 			onResume();
@@ -251,7 +338,7 @@ package objects
 					facingToward=6;
 					this.facing=FlxObject.LEFT;
 				}
-				else if(this.pathAngle <-157 && this.pathAngle>=-112){
+				else if(this.restingAngle <-157 && this.restingAngle>=-112){
 					this.play("bottomLeft");
 					facingToward=7;
 					this.facing=FlxObject.RIGHT;
@@ -263,42 +350,42 @@ package objects
 				}
 				//this.angle=this.restingAngle;
 			}
-			if(this.pathAngle <22 && this.pathAngle>=-22){
+			if(this.pathAngle <22 && (this.pathAngle>=-22 ||this.pathAngle>=338)){
 				this.play("runBack");
 				this.facing=FlxObject.RIGHT;
 				facingToward=1;
 			}
-			else if(this.pathAngle <67 && this.pathAngle>=22){
+			else if((this.pathAngle <67 && this.pathAngle>=22) ||(this.pathAngle <-293 && this.pathAngle>=338) ){
 				this.play("topRight");
 				this.facing=FlxObject.RIGHT;
 				facingToward=2;
 			}
-			else if(this.pathAngle <112 && this.pathAngle>=67){
+			else if((this.pathAngle <112 && this.pathAngle>=67) ||(this.pathAngle <-248 && this.pathAngle>=-293)){
 				this.play("right");
 				facingToward=4;
 				this.facing=FlxObject.RIGHT;
 			}
-			else if(this.pathAngle <157 && this.pathAngle>=112){
+			else if((this.pathAngle <157 && this.pathAngle>=112) || (this.pathAngle <-203 && this.pathAngle>=-248)){
 				this.play("bottomLeft");
 				this.facing=FlxObject.LEFT;
 				facingToward=3;
 			}
-			else if( this.pathAngle>=157){
+			else if(( this.pathAngle>=157 && this.pathAngle<=180)||( this.pathAngle>=-203 && this.pathAngle<=-180)){
 				this.play("run");
 				facingToward=0;
 				this.facing=FlxObject.RIGHT;
 			}
-			else if(this.pathAngle <-22 && this.pathAngle>=-67){
+			else if((this.pathAngle <-22 && this.pathAngle>=-67) || (this.pathAngle <338 && this.pathAngle>=298)){
 				this.play("topRight");
 				facingToward=5;
 				this.facing=FlxObject.LEFT;
 			}
-			else if(this.pathAngle <-67 && this.pathAngle>=-112){
+			else if((this.pathAngle <-67 && this.pathAngle>=-112) || (this.pathAngle <298 && this.pathAngle>=248)){
 				this.play("right");
 				facingToward=6;
 				this.facing=FlxObject.LEFT;
 			}
-			else if(this.pathAngle <-157 && this.pathAngle>=-112){
+			else if((this.pathAngle <-112 && this.pathAngle>=-157)|| (this.pathAngle <248 && this.pathAngle>=207)){
 				this.play("bottomLeft");
 				facingToward=7;
 				this.facing=FlxObject.RIGHT;
