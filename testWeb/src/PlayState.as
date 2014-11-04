@@ -658,13 +658,32 @@ package
 				}else{
 					logger.recordEvent(level+1,37,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by syringe");
 				}
-				zombies.splice(pos,1);
+				if(obj1 == player && player.isDisguised){
+					syr = Syringe(obj2);
+					remove(syr, true);
+					syr.destroy();
+					syr.exists = false;
+				}
+				else{
+					//syr.explode();//might be a problem
+					zom = Zombie(obj1);
+					syr = Syringe(obj2);
+					var pos:int = zombies.indexOf(zom);
+					zombies.splice(pos,1);
+					remove(zom, true);
+					remove(syr, true);
+					zom.exists = false;
+					zom.alive = false;
+					syr.exists = false;
+					syr.destory();
+				}
+				/*zombies.splice(pos,1);
 				remove(zom, true);
 				remove(syr, true);
 				zom.exists = false;
 				zom.alive = false;
 				syr.exists = false;
-				syr.destory();
+				syr.destory();*/
 			}
 		}
 		
