@@ -49,6 +49,7 @@ package
 					if(FlxG.overlap(p, this) && FlxG.keys.E && pressed){ // check if the door and the player are touching
 						pressed = false;
 						doorOpen = true;
+						state.logger.recordEvent(PlayState.level+1,13,"pos=("+(int)(p.x/TILE_WIDTH)+","+(int)(p.y/TILE_HEIGHT)+")|action:open unlocked door");
 						c.setTile(tx, ty, 0);
 						c.setTile(tx, ty, 0);
 						state.revealBoard();
@@ -67,6 +68,7 @@ package
 				if (FlxG.keys.E && pressed && FlxG.overlap(p, this)) {
 					pressed = false;
 					doorOpen = false;
+					state.logger.recordEvent(PlayState.level+1,14,"pos=("+(int)(p.x/TILE_WIDTH)+","+(int)(p.y/TILE_HEIGHT)+")|action:close unlocked door");
 					c.setTile(tx, ty, 1);
 					state.revealBoard();
 					for(var j:int =0; j<zombies.length;j++){
