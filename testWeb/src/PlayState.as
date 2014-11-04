@@ -62,6 +62,7 @@ package
 		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
 		[Embed(source="basic_floor_tile_USE_65.png")] private static var FloorTile:Class;
 
+		
 		//logger
 		private var playertime:Number = new Date().time;
 		private var versionID:Number = 1;
@@ -556,7 +557,10 @@ package
 				for (var j:int=0;j<zombies.length;j++){
 					try{
 						type[i].humanUpdate(collisionMap);
-						
+						if(!(Human(type[i])).isStunned && (Human(type[i])).stunAdded){
+							(Human(type[i])).stunAdded=false;
+							remove((Human(type[i])).stunAn,true);
+						}
 						if(zombies[j].alive && type[i].alive){
 							FlxG.collide(zombies[j],type[i],collided);
 							(Human(type[i])).alerted.x=(Human(type[i])).x;
@@ -690,6 +694,10 @@ package
 				infected.attackNearestHuman(collisionMap, path);
 				zombies.push(infected);
 				remove(man.alerted);
+				if(!man.isStunned && man.stunAdded){
+					man.stunAdded=false;
+					remove(man.stunAn,true);
+				}
 				syr = Syringe(obj2);
 				if(man is Janitor){
 					var jan:Janitor = man as Janitor;
@@ -698,7 +706,10 @@ package
 					jan.die();
 				}
 				man.alive = false;
-
+				if(!man.isStunned && man.stunAdded){
+					man.stunAdded=false;
+					remove(man.stunAn,true);
+				}
 				remove(man, true);
 				remove(syr, true);
 				man.exists = false;
@@ -731,10 +742,18 @@ package
 			}else{
 				return;
 			}
+			if(!man.isStunned && man.stunAdded){
+				man.stunAdded=false;
+				remove(man.stunAn,true);
+			}
 			if(this.canKill(man,zom)){
 				if(man.isStunned || man is Patient){
 					zom.disguiseOFF();
 					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+					if(man.stunAdded){
+						man.stunAdded=false;
+						remove(man.stunAn,true);
+					}
 					//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
 					//FlxG.collide(infected, collisionMap);
 					if (man is Doctor) {
@@ -826,6 +845,10 @@ package
 						}
 						
 					}
+					if(!man.isStunned && man.stunAdded){
+						man.stunAdded=false;
+						remove(man.stunAn,true);
+					}
 					remove(man,true);
 					man.alive=false;
 					
@@ -834,6 +857,11 @@ package
 					man.goBack(collisionMap);
 					zom.alive=false;
 					man.stunHuman();
+					man.stunAn.x=man.x;
+					man.stunAn.y=man.y-man.height;
+					add(man.stunAn);
+					man.stunAn.play("stun");
+					man.stunAdded=true;
 					if(zom==player){
 						logger.recordEvent(level+1,6,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by human");
 					}else{
@@ -845,6 +873,10 @@ package
 				if(man.alertAdded){
 					remove(man.alerted);
 					man.alertAdded=false;
+				}
+				if(!man.isStunned && man.stunAdded){
+					man.stunAdded=false;
+					remove(man.stunAn,true);
 				}
 			}
 			else{
@@ -947,8 +979,13 @@ package
 					remove(man.alerted);
 					man.alertAdded=false;
 				}
+				if(!man.isStunned && man.stunAdded){
+					man.stunAdded=false;
+					remove(man.stunAn,true);
+				}
 				remove(man,true);
 				man.alive=false;
+				
 		}
 			
 		}
