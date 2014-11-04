@@ -760,7 +760,8 @@ package
 					remove(man.alerted);
 					man.alertAdded=false;
 				}
-			}else{
+			}
+			else{
 				zom.disguiseOFF();
 				var t:FlxText;
 			
@@ -799,9 +800,6 @@ package
 				}
 				remove(man,true);
 				man.alive=false;
-			
-			
-			
 		}
 			
 		}
@@ -813,7 +811,6 @@ package
 		
 		private function setupPlayer():void
 		{
-			
 			//zombie.addRoutePoints(new FlxPoint(24*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
 			//zombie.addRoutePoints(new FlxPoint(zombie.x,zombie.y));
 			player = new Zombie(20, 20,TILE_WIDTH*7/8,TILE_HEIGHT*7/8,640/16*TILE_WIDTH,640/16*TILE_WIDTH,80/16*TILE_WIDTH,80/16*TILE_WIDTH);
@@ -848,18 +845,6 @@ package
 		private function updatePlayer():void
 		{
 			//wrap(player);
-
-			if (player.alive == false) {
-				if(this.youLoseScreen ==null){
-					this.youLoseScreen = new FlxText(-100000,0,820,"YOU LOSE TRY NOT TO GET CURED  Press R to restart");
-					this.youLoseScreen.size=39;
-					add(this.youLoseScreen);
-					var camRe:FlxCamera = new FlxCamera(50, 300, this.youLoseScreen.width, this.youLoseScreen.height);
-					camRe.follow(this.youLoseScreen);
-					FlxG.addCamera(camRe);
-				}
-			}
-			
 			
 			for (var i:Number=0;i<doors.length;i++){
 				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/4)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/4)/TILE_HEIGHT),zombies,this);
@@ -1097,7 +1082,14 @@ package
 			if(collisionMap.ray(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))){
 				if(FlxU.getDistance(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))<=this.distanceCanSee){
 					var angle:Number = FlxU.getAngle(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2));
-					if(angle>=looker.getAngle()-this.killWidth && angle<=looker.getAngle()+this.killWidth){
+					var lAngle:int = looker.getAngle();
+					if(angle < 0){
+						angle = angle+360;
+					}
+					if(lAngle < 0){
+						lAngle = lAngle +360
+					}
+					if(Math.abs(lAngle - angle) <=90 ){
 						return true;
 					}
 					else if(looker is Janitor){
