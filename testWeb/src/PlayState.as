@@ -282,6 +282,8 @@ package
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
 	
+			logger.recordLevelStart(level+1,"start level "+(level+1));
+			logger.recordEvent(level+1,100,"level "+(level+1)+" starts");
 		}
 		
 		public function revealBoard():void{
@@ -509,7 +511,7 @@ package
 //				add(jan);
 //			}
 
-			logger.recordLevelStart(level,"start level "+level);
+			
 		}
 		
 		override public function update():void
@@ -738,13 +740,27 @@ package
 					zombies.push(infected);
 					if(zom==player){
 						if(man is Janitor){
-							logger.recordEvent(level,1,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill janitor");
+							logger.recordEvent(level+1,1,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill janitor");
 						}else if(man is Nurse){
-							logger.recordEvent(level,2,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill nurse");
+							logger.recordEvent(level+1,2,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill nurse");
 						}else if(man is Doctor){
-							logger.recordEvent(level,3,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill doctor");
+							logger.recordEvent(level+1,3,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill doctor");
+						}else if(man is Patient){
+							logger.recordEvent(level+1,4,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill patient");							
 						}else{
-							logger.recordEvent(level,4,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill human");
+							logger.recordEvent(level+1,5,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill human");
+						}
+					}else{
+						if(man is Janitor){
+							logger.recordEvent(level+1,21,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie kill janitor");
+						}else if(man is Nurse){
+							logger.recordEvent(level+1,22,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie kill nurse");
+						}else if(man is Doctor){
+							logger.recordEvent(level+1,23,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie kill doctor");
+						}else if(man is Patient){
+							logger.recordEvent(level+1,24,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie kill patient");
+						}else{
+							logger.recordEvent(level+1,25,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie kill human");
 						}
 					}
 					if(man is Janitor){
@@ -797,7 +813,11 @@ package
 					man.goBack(collisionMap);
 					zom.alive=false;
 					man.stunHuman();
-					logger.recordEvent(level,5,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by human");
+					if(zom==player){
+						logger.recordEvent(level+1,6,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by human");
+					}else{
+						logger.recordEvent(level+1,26,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by human");
+					}
 				}
 				man.alerted.x=man.x;
 				man.alerted.y=man.y-man.height;
@@ -866,13 +886,27 @@ package
 				}
 				if(zom==player){
 					if(man is Janitor){
-						logger.recordEvent(level,1,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill janitor");
+						logger.recordEvent(level+1,1,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill janitor");
 					}else if(man is Nurse){
-						logger.recordEvent(level,2,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill nurse");
+						logger.recordEvent(level+1,2,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill nurse");
 					}else if(man is Doctor){
-						logger.recordEvent(level,3,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill doctor");
+						logger.recordEvent(level+1,3,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill doctor");
+					}else if(man is Patient){
+						logger.recordEvent(level+1,4,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill patient");
 					}else{
-						logger.recordEvent(level,4,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill human");
+						logger.recordEvent(level+1,5,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill human");
+					}
+				}else{
+					if(man is Janitor){
+						logger.recordEvent(level+1,21,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie kill janitor");
+					}else if(man is Nurse){
+						logger.recordEvent(level+1,22,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie kill nurse");
+					}else if(man is Doctor){
+						logger.recordEvent(level+1,23,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie kill doctor");
+					}else if(man is Patient){
+						logger.recordEvent(level+1,24,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie kill patient");
+					}else{
+						logger.recordEvent(level+1,25,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie kill human");
 					}
 				}
 				
@@ -932,6 +966,7 @@ package
 
 			if (player.alive == false) {
 				if(this.youLoseScreen ==null){
+					logger.recordEvent(level+1,101,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" ends");
 					logger.recordLevelEnd();
 					this.youLoseScreen = new FlxText(-100000,0,820,"YOU LOSE TRY NOT TO GET CURED  Press R to restart");
 					this.youLoseScreen.size=39;
@@ -984,7 +1019,7 @@ package
 			}
 			if(FlxG.keys.SPACE){
 				if(throwable){
-					logger.recordEvent(level,8,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:use syringe");
+					logger.recordEvent(level+1,15,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:use syringe");
 					/*if(player.angle == 0 || player.angle == 180){
 						pSyringe = new Syringe(player.angle, player.x+2, player.y);
 					}
@@ -1138,6 +1173,7 @@ package
 				
 				
 				if(this.youWinScreen ==null){
+					logger.recordEvent(level+1,102,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" complete");
 					logger.recordLevelEnd();
 					this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor");
 					this.youWinScreen.size=39;
