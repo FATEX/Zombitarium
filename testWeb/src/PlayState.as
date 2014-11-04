@@ -912,6 +912,7 @@ package
 					remove(zom,true);
 					man.goBack(collisionMap);
 					zom.alive=false;
+					zom.exists=false;
 					man.stunHuman();
 					man.stunAn.x=man.x;
 					man.stunAn.y=man.y-man.height;
