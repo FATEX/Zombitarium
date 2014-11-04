@@ -40,6 +40,7 @@ package objects
 		public var restingAngle:Number=0;
 		public var alerted:FlxSprite;
 		public var alertAdded:Boolean = false;
+		public var alertedOfEnemy:Boolean = false;
 		private var facingToward:int =0;
 		private var pos:int=0;
 		public function Human(originX:Number, originY:Number, overLoad:Boolean)

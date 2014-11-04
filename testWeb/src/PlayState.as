@@ -54,7 +54,6 @@ package
 		[Embed(source = 'level_middle.txt', mimeType = 'application/octet-stream')]private static var default_middle:Class;
 		[Embed(source = 'level_hard.txt', mimeType = 'application/octet-stream')]private static var default_hard:Class;
 
-
 		[Embed(source="zombie_combined.png")] private static var ImgSpaceman:Class;
 		[Embed(source="human_dead.png")] private static var ImgHumanDead:Class;
 		[Embed(source="doctor_dead.png")] private static var ImgDoctorDead:Class;
@@ -63,7 +62,10 @@ package
 		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
 		[Embed(source="basic_floor_tile_USE_65.png")] private static var FloorTile:Class;
 
-		
+		//logger
+		private var playertime:Number = new Date().time;
+		private var versionID:Number = 1;
+		public var logger:Logging = new Logging(200,versionID,true);
 		
 		// Some static constants for the size of the tilemap tiles
 		public const TILE_WIDTH:uint = 65;
@@ -79,7 +81,7 @@ package
 		
 		// Player modified from "Mode" demo
 
-		private var player:Zombie;
+		public var player:Zombie;
 		private var humans:Vector.<Human>;
 		private var janitors:Vector.<Janitor>;
 		private var zombies:Vector.<Zombie>;
@@ -298,7 +300,7 @@ package
 					//}
 				}
 			}
-			var toVisit:Array = new Array();
+			var toVisit:Array = new Array(); 
 			var playerTileX:int=player.x/TILE_WIDTH;
 			var playerTileY:int=player.y/TILE_HEIGHT;
 			toVisit.push([playerTileX,playerTileY]);
@@ -339,7 +341,7 @@ package
 		}
 		
 		private function addCam():void {
-			add(player);
+			//add(player);
 			if(cam !=null){
 				FlxG.removeCamera(cam,false);
 				FlxG.removeCamera(camQuit,false);
@@ -505,7 +507,8 @@ package
 //			for each(var jan:Janitor in janitors){
 //				add(jan);
 //			}
-
+			add(player);
+			logger.recordLevelStart(level,"start level "+level);
 		}
 		
 		override public function update():void
@@ -556,7 +559,7 @@ package
 							FlxG.collide(zombies[j],type[i],collided);
 							(Human(type[i])).alerted.x=(Human(type[i])).x;
 							(Human(type[i])).alerted.y=(Human(type[i])).y-(Human(type[i])).height;
-							if((Human(type[i])).alertAdded){
+							if((Human(type[i])).alertAdded && !(Human(type[i])).alertedOfEnemy){
 								remove((Human(type[i])).alerted);
 								(Human(type[i])).alertAdded=false;
 							}
@@ -584,6 +587,7 @@ package
 								if(!(Human(type[i])).alertAdded){
 									add((Human(type[i])).alerted);
 									(Human(type[i])).alertAdded = true;
+									(Human(type[i])).alertedOfEnemy=true;
 								}
 								(Human(type[i])).alerted.play("alert");
 								if(!(type[i] is Doctor)){
@@ -610,12 +614,14 @@ package
 									type[i].goBack(collisionMap);
 									type[i].color=0xFFFFFF;
 								}
+								(Human(type[i])).alertedOfEnemy=true;
 								//dis = false;
 							}
 							else{
 								//type[i].onRoute = true;
 								//dis = false;
 								type[i].color=0xFFFFFF;
+								(Human(type[i])).alertedOfEnemy=false;
 							}
 						}
 					}catch(e:Error){
@@ -675,7 +681,9 @@ package
 				}
 				var pos:int = humans.indexOf(man);
 				humans.splice(pos,1);
+				remove(player);
 				add(infected);
+				add(player);
 				var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
 				infected.attackNearestHuman(collisionMap, path);
 				zombies.push(infected);
@@ -740,14 +748,26 @@ package
 					var pos2:int = humans.indexOf(man);
 					//humans[pos].x=1000000000;
 					humans.splice(pos2,1);
-					
+					remove(player);
 					add(infected);
+					add(player);
 					var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
 					
 					//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
 					//add(t);
 					infected.attackNearestHuman(collisionMap, path2);
 					zombies.push(infected);
+					if(zom==player){
+						if(man is Janitor){
+							logger.recordEvent(level,1,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill janitor");
+						}else if(man is Nurse){
+							logger.recordEvent(level,2,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill nurse");
+						}else if(man is Doctor){
+							logger.recordEvent(level,3,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill doctor");
+						}else{
+							logger.recordEvent(level,4,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill human");
+						}
+					}
 					if(man is Janitor){
 						var jan:Janitor = man as Janitor;
 						jan.die();
@@ -755,6 +775,33 @@ package
 					if(man is Nurse){
 						if(zom==player){
 							zom.disguiseON();
+							if(this.facingDirection==0){
+								player.play("idle",true);
+							}
+							else if(this.facingDirection==1){
+								player.play("idleBack",true);
+							}
+							else if(this.facingDirection==2){
+								player.play("right",true);
+							}
+							else if(this.facingDirection==3){
+								player.play("topRight",true);
+							}
+							else if(this.facingDirection==4){
+								player.play("bottomLeft",true);
+								player.facing=FlxObject.RIGHT;
+							}
+							else if(this.facingDirection==5){
+								player.play("right",true);
+								player.facing=FlxObject.LEFT;
+							}
+							else if(this.facingDirection==6){
+								player.play("bottomLeft",true);
+							}
+							else{
+								player.play("topRight",true);
+								player.facing=FlxObject.RIGHT;
+							}
 						}
 					}
 					if(man is Doctor){
@@ -771,6 +818,7 @@ package
 					man.goBack(collisionMap);
 					zom.alive=false;
 					man.stunHuman();
+					logger.recordEvent(level,5,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by human");
 				}
 				man.alerted.x=man.x;
 				man.alerted.y=man.y-man.height;
@@ -778,7 +826,8 @@ package
 					remove(man.alerted);
 					man.alertAdded=false;
 				}
-			}else{
+			}
+			else{
 				zom.disguiseOFF();
 				var t:FlxText;
 			
@@ -797,8 +846,9 @@ package
 				var pos:int = humans.indexOf(man);
 				//humans[pos].x=1000000000;
 				humans.splice(pos,1);
-				
+				remove(player);
 				add(infected);
+				add(player);
 				var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
 				
 				//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
@@ -812,10 +862,49 @@ package
 				if(man is Nurse){
 					if(zom==player){
 						zom.disguiseON();
+						if(this.facingDirection==0){
+							player.play("idle",true);
+						}
+						else if(this.facingDirection==1){
+							player.play("idleBack",true);
+						}
+						else if(this.facingDirection==2){
+							player.play("right",true);
+						}
+						else if(this.facingDirection==3){
+							player.play("topRight",true);
+						}
+						else if(this.facingDirection==4){
+							player.play("bottomLeft",true);
+							player.facing=FlxObject.RIGHT;
+						}
+						else if(this.facingDirection==5){
+							player.play("right",true);
+							player.facing=FlxObject.LEFT;
+						}
+						else if(this.facingDirection==6){
+							player.play("bottomLeft",true);
+						}
+						else{
+							player.play("topRight",true);
+							player.facing=FlxObject.RIGHT;
+						}
+						
 					}
 				}
 				if((man is Doctor) && zom == player){
 					throwable = true;
+				}
+				if(zom==player){
+					if(man is Janitor){
+						logger.recordEvent(level,1,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill janitor");
+					}else if(man is Nurse){
+						logger.recordEvent(level,2,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill nurse");
+					}else if(man is Doctor){
+						logger.recordEvent(level,3,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill doctor");
+					}else{
+						logger.recordEvent(level,4,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill human");
+					}
 				}
 				
 				man.alerted.x=man.x;
@@ -826,9 +915,6 @@ package
 				}
 				remove(man,true);
 				man.alive=false;
-			
-			
-			
 		}
 			
 		}
@@ -840,7 +926,6 @@ package
 		
 		private function setupPlayer():void
 		{
-			
 			//zombie.addRoutePoints(new FlxPoint(24*TILE_WIDTH - zombie.width/2, 11*TILE_HEIGHT-zombie.height/2));
 			//zombie.addRoutePoints(new FlxPoint(zombie.x,zombie.y));
 			player = new Zombie(20, 20,TILE_WIDTH*7/8,TILE_HEIGHT*7/8,640/16*TILE_WIDTH,640/16*TILE_WIDTH,80/16*TILE_WIDTH,80/16*TILE_WIDTH);
@@ -878,16 +963,17 @@ package
 
 			if (player.alive == false) {
 				if(this.youLoseScreen ==null){
+					logger.recordLevelEnd();
 					this.youLoseScreen = new FlxText(-100000,0,820,"YOU LOSE TRY NOT TO GET CURED  Press R to restart");
 					this.youLoseScreen.size=39;
 					add(this.youLoseScreen);
 					var camRe:FlxCamera = new FlxCamera(50, 300, this.youLoseScreen.width, this.youLoseScreen.height);
 					camRe.follow(this.youLoseScreen);
 					FlxG.addCamera(camRe);
+					remove(player);
 				}
 			}
-			
-			
+						
 			for (var i:Number=0;i<doors.length;i++){
 				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/4)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/4)/TILE_HEIGHT),zombies,this);
 				doors[i].updateDoor();
@@ -930,6 +1016,7 @@ package
 			}
 			if(FlxG.keys.SPACE){
 				if(throwable){
+					logger.recordEvent(level,8,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:use syringe");
 					/*if(player.angle == 0 || player.angle == 180){
 						pSyringe = new Syringe(player.angle, player.x+2, player.y);
 					}
@@ -963,10 +1050,28 @@ package
 					}
 					else{
 						if(this.facingDirection==0){
-							angleToThrow=180;
+							angleToThrow = 180;
+						}
+						else if(this.facingDirection==1){
+							angleToThrow=0;
+						}
+						else if(this.facingDirection==2){
+							angleToThrow=90;
+						}
+						else if(this.facingDirection==3){
+							angleToThrow=45;
+						}
+						else if(this.facingDirection==4){
+							angleToThrow=-135;
+						}
+						else if(this.facingDirection==5){
+							angleToThrow=-90;
+						}
+						else if(this.facingDirection==6){
+							angleToThrow=135;
 						}
 						else{
-							angleToThrow=0;
+							angleToThrow=-45;
 						}
 					}
 					pSyringe = new Syringe(angleToThrow, player.x+player.width/2, player.y+player.height/2, 0,0);
@@ -1084,6 +1189,8 @@ package
 					level = level%10;
 					}
 					
+					logger.recordLevelEnd();
+					//this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor");
 					this.youWinScreen.size=39;
 					add(this.youWinScreen);
 					var camRev:FlxCamera = new FlxCamera(50, 300, this.youWinScreen.width, this.youWinScreen.height);
@@ -1143,7 +1250,14 @@ package
 			if(collisionMap.ray(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))){
 				if(FlxU.getDistance(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))<=this.distanceCanSee){
 					var angle:Number = FlxU.getAngle(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2));
-					if(angle>=looker.getAngle()-this.killWidth && angle<=looker.getAngle()+this.killWidth){
+					var lAngle:int = looker.getAngle();
+					if(angle < 0){
+						angle = angle+360;
+					}
+					if(lAngle < 0){
+						lAngle = lAngle +360
+					}
+					if(Math.abs(lAngle - angle) <=90 ){
 						return true;
 					}
 					else if(looker is Janitor){

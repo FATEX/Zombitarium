@@ -220,20 +220,23 @@ package
 		
 		public function disguiseOFF():void{
 			if(isDisguised){
-				//this.x=this.x-this.x%TILE_WIDTH;
-				//this.y=this.y-this.y%TILE_HEIGHT;
+				try{
 				isDisguised=false;
 				this.loadGraphic(ImgPlayer, true, true, TILE_WIDTH,TILE_HEIGHT);
+				
 				this.width =  TILE_WIDTH*5/8;
 				this.height = TILE_HEIGHT*7/8;
 				this.offset.x = this.width/4;
 				this.offset.y = 1;
+				}
+				catch(error:Error){
+					
+				}
 			}
 		}
 		
 		public function disguiseON():void{
-			this.x=this.x-this.x%TILE_WIDTH;
-			this.y=this.y-this.y%TILE_HEIGHT;
+			var hold:FlxPoint = new FlxPoint(this.x,this.y);
 			super.loadGraphic(ImgNurse, true, true, TILE_WIDTH,TILE_HEIGHT);
 			this.width =  TILE_WIDTH*5/8;
 			this.height = TILE_HEIGHT*7/8;
@@ -247,7 +250,9 @@ package
 		}
 		
 		private function onDelay(te:TimerEvent):void {
-			disguiseOFF();
+			if(this.alive && this.exists){
+				disguiseOFF();
+			}
 		}
 	}
 }
