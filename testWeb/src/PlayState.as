@@ -138,6 +138,10 @@ package
 		private var youLoseScreen:FlxText;
 		private var t;
 		private var youWinScreen:FlxText;
+		private var powerUpMenu:FlxText;
+		private var nkeys;
+		private var nkeysC = 0;
+		private var powerUp:Boolean = false;
 		
 		override public function create():void
 		{
@@ -240,6 +244,8 @@ package
 			
 			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
 			add(t);
+			
+			
 			
 			addCam();
 			blankTiles = new Array();
@@ -370,6 +376,13 @@ package
 			
 			camLevel.follow(t);
 			FlxG.addCamera(camLevel);
+			
+			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
+			this.powerUpMenu.size=12;
+//			add(this.powerUpMenu);
+//			var camRe:FlxCamera = new FlxCamera(0, 100, this.powerUpMenu.width, this.powerUpMenu.height);
+//			camRe.follow(this.powerUpMenu);
+//			FlxG.addCamera(camRe);
 		}
 		
 		
@@ -487,6 +500,9 @@ package
 					exitX = x*TILE_WIDTH;
 					exitY = y*TILE_HEIGHT;
 					nextIsWinDoor = true;
+				}
+				if(type=="NKEYS") {
+					nkeys = x;
 				}
 			}
 			for each(var g:Door in doors){
@@ -807,6 +823,7 @@ package
 					if(man is Doctor){
 						if(zom == player){
 							throwable = true;
+							powerUp=true;
 						}
 						
 					}

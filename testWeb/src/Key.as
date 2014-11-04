@@ -11,7 +11,7 @@ package
 		public var collectable:Boolean = false;
 		private var collisionMap:FlxTilemap;
 		
-		[Embed(source="key_100.png")] private static var ImgKey:Class;
+		[Embed(source="larger_key.png")] private static var ImgKey:Class;
 		
 		private const TILE_WIDTH:uint = 65;
 		private const TILE_HEIGHT:uint = 65;
