@@ -26,7 +26,7 @@ package
 	public class PlayState extends FlxState
 	{
 		// Tileset that works with AUTO mode (best for thin walls)
-		[Embed(source = 'wall_USE.png')]private static var auto_tiles:Class;
+		[Embed(source = 'wall_USE2.png')]private static var auto_tiles:Class;
 				
 		// Default character loading texts		
 		// [Embed(source = 'default_alt.txt', mimeType = 'application/octet-stream')]private static var default_alt:Class;
@@ -56,6 +56,10 @@ package
 
 
 		[Embed(source="zombie_combined.png")] private static var ImgSpaceman:Class;
+		[Embed(source="human_dead.png")] private static var ImgHumanDead:Class;
+		[Embed(source="doctor_dead.png")] private static var ImgDoctorDead:Class;
+		[Embed(source="human_dead.png")] private static var ImgJanitorDead:Class;
+		[Embed(source="nurse_dead.png")] private static var ImgNurseDead:Class;
 		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
 		[Embed(source="basic_floor_tile_USE_65.png")] private static var FloorTile:Class;
 
@@ -163,34 +167,34 @@ package
 			
 			// Initializes the map using the generated string, the tile images, and the tile size
 			if(level==0){
-				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);	
+				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);	
 			}
 			else if(level==1){
-				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==2){
-				collisionMap.loadMap(new default_level2(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+				collisionMap.loadMap(new default_level2(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==3){
-				collisionMap.loadMap(new default_level3(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+				collisionMap.loadMap(new default_level3(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==4){
-				collisionMap.loadMap(new default_level4(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+				collisionMap.loadMap(new default_level4(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==5){
-				collisionMap.loadMap(new default_level5(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+				collisionMap.loadMap(new default_level5(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==6){
-				collisionMap.loadMap(new default_level6(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+				collisionMap.loadMap(new default_level6(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==7){
-				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==8){
-				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==9){
-				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
+				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			
 			add(collisionMap);
@@ -329,14 +333,9 @@ package
 		}
 		
 		private function resetGame():void{
-			if (win) {
-				var t:FlxText;
-				t = new FlxText(0,(FlxG.height/2-20),(FlxG.width),"Zombify");
-				add(t);
-			} else {
-				FlxG.resetState();
-			}
+			FlxG.resetState();
 			win = false;
+			
 		}
 		
 		private function addCam():void {
@@ -665,6 +664,15 @@ package
 			else if(obj1 is Human){
 				man = Human(obj1);
 				infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+				if (man is Doctor) {
+					infected.setImage(ImgDoctorDead);
+				} else if (man is Nurse) {
+					infected.setImage(ImgNurseDead);
+				} else if (man is Janitor) {
+					infected.setImage(ImgJanitorDead);
+				} else {
+					infected.setImage(ImgHumanDead);
+				}
 				var pos:int = humans.indexOf(man);
 				humans.splice(pos,1);
 				add(infected);
@@ -719,6 +727,16 @@ package
 					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 					//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
 					//FlxG.collide(infected, collisionMap);
+					if (man is Doctor) {
+						infected.setImage(ImgDoctorDead);
+					} else if (man is Nurse) {
+						infected.setImage(ImgNurseDead);
+					} else if (man is Janitor) {
+						infected.setImage(ImgJanitorDead);
+					} else {
+						infected.setImage(ImgHumanDead);
+					}
+					
 					var pos2:int = humans.indexOf(man);
 					//humans[pos].x=1000000000;
 					humans.splice(pos2,1);
@@ -765,6 +783,15 @@ package
 				var t:FlxText;
 			
 				infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+				if (man is Doctor) {
+					infected.setImage(ImgDoctorDead);
+				} else if (man is Nurse) {
+					infected.setImage(ImgNurseDead);
+				} else if (man is Janitor) {
+					infected.setImage(ImgJanitorDead);
+				} else {
+					infected.setImage(ImgHumanDead);
+				}
 				//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
 				//FlxG.collide(infected, collisionMap);
 				var pos:int = humans.indexOf(man);
@@ -958,7 +985,17 @@ package
 				throwable = true;
 			}
 			if(FlxG.keys.justPressed("R")){
+//				if ((level==9) && win) {
+//					win=false;
+//					FlxG.fade(0xff000000, 0.22, function():void { 
+//						level = 0;
+//						FlxG.switchState(new PlayState());
+//					} );
+//				} 
 				resetGame();
+				
+				
+				
 			}
 			
 			//ANIMATION
@@ -1038,17 +1075,25 @@ package
 				
 				
 				if(this.youWinScreen ==null){
-					this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor");
+					if (level==9) {
+						this.youWinScreen = new FlxText(-200000,0,820,"YOU HAVE ZOMBIFIED THE ENTIRE HOSPITAL! Use the Quit Button to return to menu.");
+
+					} else {
+					this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor"); 
+					level++; 
+					level = level%10;
+					}
+					
 					this.youWinScreen.size=39;
 					add(this.youWinScreen);
 					var camRev:FlxCamera = new FlxCamera(50, 300, this.youWinScreen.width, this.youWinScreen.height);
 					camRev.follow(this.youWinScreen);
 					FlxG.addCamera(camRev);
 					remove(player);
-					level++;
+					//level++;
 					//level = level%10;
 					//resetGame();
-				
+					
 					
 				}
 			}

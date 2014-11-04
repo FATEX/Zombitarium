@@ -59,6 +59,7 @@ package
 			this.yTile = yPos/TILE_HEIGHT;
 		}
 		
+		
 		public function findNearestHuman(collisionMap:FlxTilemap, humanP:Vector.<Human>, zombieP:FlxPoint):FlxPath{
 			var i:int = 0;
 			var minLength:int = int.MAX_VALUE;
@@ -209,7 +210,7 @@ package
 			this.loadGraphic(image, true, true, TILE_WIDTH,TILE_HEIGHT);
 			this.width =  TILE_WIDTH*5/8;
 			this.height = TILE_HEIGHT*7/8;
-			this.offset.x = this.width/4;
+			//this.offset.x = this.width/4;
 			this.offset.y = 1;
 		}
 		
