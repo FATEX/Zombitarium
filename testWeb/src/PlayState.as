@@ -716,6 +716,10 @@ package
 			else if(obj1 is Human){
 				man = Human(obj1);
 				infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+				if(man.stunAdded){
+					man.stunAdded=false;
+					remove(man.stunAn,true);
+				}
 				if (man is Doctor) {
 					infected.setImage(ImgDoctorDead);
 				} else if (man is Nurse) {
@@ -936,6 +940,10 @@ package
 				var t:FlxText;
 			
 				infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+				if(man.stunAdded){
+					man.stunAdded=false;
+					remove(man.stunAn,true);
+				}
 				if (man is Doctor) {
 					infected.setImage(ImgDoctorDead);
 				} else if (man is Nurse) {
