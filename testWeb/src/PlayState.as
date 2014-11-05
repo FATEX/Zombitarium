@@ -64,9 +64,10 @@ package
 
 		
 		//logger
+		public static var isPageLoaded:Boolean = false;
 		private var playertime:Number = new Date().time;
-		private var versionID:Number = 1;
-		public var logger:Logging = new Logging(200,versionID,false);
+		private static var versionID:Number = 2;
+		public static var logger:Logging = new Logging(200,versionID,false);
 		
 		// Some static constants for the size of the tilemap tiles
 		public const TILE_WIDTH:uint = 65;
@@ -292,7 +293,7 @@ package
 				add(instructions = new FlxText(8*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
-	
+			
 			logger.recordLevelStart(level+1,"start level "+(level+1));
 			//logger.recordEvent(level+1,100,"level starts");
 		}

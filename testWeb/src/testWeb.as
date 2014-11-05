@@ -12,7 +12,10 @@ package
 		{
 
 			super(900, 600, MenuState, 1, 20, 20);
-
+			if(!PlayState.isPageLoaded){
+				PlayState.logger.recordPageLoad();
+				PlayState.isPageLoaded = true;
+			}
 
 		}
 	}
