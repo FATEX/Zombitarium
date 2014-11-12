@@ -116,6 +116,7 @@ package
 		private var camQuit:FlxCamera;
 		private var camNextLevel:FlxCamera;
 		private var camLevel:FlxCamera;
+		private var zomCount:FlxCamera;
 		
 		private static var resetNumber:int = 0;
 		
@@ -138,12 +139,15 @@ package
 		private var win:Boolean = false;
 		private var cd:int = 50;
 		private var youLoseScreen:FlxText;
+		private var zombieLimited:FlxText;
 		private var t;
 		private var youWinScreen:FlxText;
 		private var powerUpMenu:FlxText;
 		private var nkeys;
 		private var nkeysC = 0;
 		private var powerUp:Boolean = false;
+		private var isABTesting = true;
+		private var numberOfZombies = 0;
 		
 		override public function create():void
 		{
@@ -246,6 +250,10 @@ package
 			
 			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
 			add(t);
+			
+			if(isABTesting){
+				
+			}
 			
 			
 			
@@ -357,6 +365,7 @@ package
 				FlxG.removeCamera(camQuit,false);
 				FlxG.removeCamera(camNextLevel,false);
 				FlxG.removeCamera(camLevel,false);
+				//FlxG.removeCamera(zomCount, false);
 			}
 			else{
 				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); // we put the first one in the top left corner
@@ -366,6 +375,9 @@ package
 				camLevel = new FlxCamera(2,62,t.width, t.height);
 
 			}
+			//if(isABTesting){
+				
+			//}
 			cam.follow(player);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
 			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
@@ -381,8 +393,18 @@ package
 			camLevel.follow(t);
 			FlxG.addCamera(camLevel);
 			
+			//if()
+			zombieLimited = new FlxText(-100000,0,820,"0/3");
+			zombieLimited.size=39;
+			add(zombieLimited);
+			var zomCount:FlxCamera = new FlxCamera(830, 0, zombieLimited.width, zombieLimited.height);
+			zomCount.follow(zombieLimited);
+			FlxG.addCamera(zomCount);
+			
 			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
 			this.powerUpMenu.size=12;
+			
+			
 //			add(this.powerUpMenu);
 //			var camRe:FlxCamera = new FlxCamera(0, 100, this.powerUpMenu.width, this.powerUpMenu.height);
 //			camRe.follow(this.powerUpMenu);
@@ -683,6 +705,8 @@ package
 				}
 				else{
 					//syr.explode();//might be a problem
+					if(zom != player) numberOfZombies--;
+					zombieLimited.text = numberOfZombies + "/2"; 
 					zom = Zombie(obj1);
 					syr = Syringe(obj2);
 					var pos:int = zombies.indexOf(zom);
@@ -716,63 +740,156 @@ package
 			}
 			else if(obj1 is Human){
 				man = Human(obj1);
-				infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-				if(man.stunAdded){
-					man.stunAdded=false;
-					remove(man.stunAn,true);
+				if(isABTesting){
+					if(numberOfZombies < 2){
+						numberOfZombies++;
+						zombieLimited.text = numberOfZombies + "/3"; 
+						infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+						if(man.stunAdded){
+							man.stunAdded=false;
+							remove(man.stunAn,true);
+						}
+						if (man is Doctor) {
+							infected.setImage(ImgDoctorDead);
+						} else if (man is Nurse) {
+							infected.setImage(ImgNurseDead);
+						} else if (man is Janitor) {
+							infected.setImage(ImgJanitorDead);
+						} else {
+							infected.setImage(ImgHumanDead);
+						}
+						if(man is Janitor){
+							logger.recordEvent(level+1,31,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill janitor");
+						}else if(man is Nurse){
+							logger.recordEvent(level+1,32,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill nurse");
+						}else if(man is Doctor){
+							logger.recordEvent(level+1,33,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill doctor");
+						}else if(man is Patient){
+							logger.recordEvent(level+1,34,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill patient");							
+						}else{
+							logger.recordEvent(level+1,35,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill human");
+						}
+						var pos:int = humans.indexOf(man);
+						humans.splice(pos,1);
+						remove(player);
+						add(infected);
+						add(player);
+						var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+						infected.attackNearestHuman(collisionMap, path);
+						zombies.push(infected);
+						remove(man.alerted);
+						if(!man.isStunned && man.stunAdded){
+							man.stunAdded=false;
+							remove(man.stunAn,true);
+						}
+						syr = Syringe(obj2);
+						if(man is Janitor){
+							var jan:Janitor = man as Janitor;
+							jan.exists=false;
+							jan.alive=false;
+							jan.die();
+						}
+						man.alive = false;
+						if(!man.isStunned && man.stunAdded){
+							man.stunAdded=false;
+							remove(man.stunAn,true);
+						}
+						remove(man, true);
+						remove(syr, true);
+						man.exists = false;
+						
+						syr.explode();//might be a problem
+						syr.destory();
+						syr.exists = false;
+					}
+					else{
+						var pos:int = humans.indexOf(man);
+						humans.splice(pos,1);
+						remove(man.alerted);
+						if(!man.isStunned && man.stunAdded){
+							man.stunAdded=false;
+							remove(man.stunAn,true);
+						}
+						syr = Syringe(obj2);
+						if(man is Janitor){
+							var jan:Janitor = man as Janitor;
+							jan.exists=false;
+							jan.alive=false;
+							jan.die();
+						}
+						man.alive = false;
+						if(!man.isStunned && man.stunAdded){
+							man.stunAdded=false;
+							remove(man.stunAn,true);
+						}
+						remove(man, true);
+						remove(syr, true);
+						man.exists = false;
+						
+						syr.explode();//might be a problem
+						syr.destory();
+						syr.exists = false;
+					}
 				}
-				if (man is Doctor) {
-					infected.setImage(ImgDoctorDead);
-				} else if (man is Nurse) {
-					infected.setImage(ImgNurseDead);
-				} else if (man is Janitor) {
-					infected.setImage(ImgJanitorDead);
-				} else {
-					infected.setImage(ImgHumanDead);
+				else{
+					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+					if(man.stunAdded){
+						man.stunAdded=false;
+						remove(man.stunAn,true);
+					}
+					if (man is Doctor) {
+						infected.setImage(ImgDoctorDead);
+					} else if (man is Nurse) {
+						infected.setImage(ImgNurseDead);
+					} else if (man is Janitor) {
+						infected.setImage(ImgJanitorDead);
+					} else {
+						infected.setImage(ImgHumanDead);
+					}
+					if(man is Janitor){
+						logger.recordEvent(level+1,31,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill janitor");
+					}else if(man is Nurse){
+						logger.recordEvent(level+1,32,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill nurse");
+					}else if(man is Doctor){
+						logger.recordEvent(level+1,33,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill doctor");
+					}else if(man is Patient){
+						logger.recordEvent(level+1,34,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill patient");							
+					}else{
+						logger.recordEvent(level+1,35,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill human");
+					}
+					var pos:int = humans.indexOf(man);
+					humans.splice(pos,1);
+					remove(player);
+					add(infected);
+					add(player);
+					var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+					infected.attackNearestHuman(collisionMap, path);
+					zombies.push(infected);
+					remove(man.alerted);
+					if(!man.isStunned && man.stunAdded){
+						man.stunAdded=false;
+						remove(man.stunAn,true);
+					}
+					syr = Syringe(obj2);
+					if(man is Janitor){
+						var jan:Janitor = man as Janitor;
+						jan.exists=false;
+						jan.alive=false;
+						jan.die();
+					}
+					man.alive = false;
+					if(!man.isStunned && man.stunAdded){
+						man.stunAdded=false;
+						remove(man.stunAn,true);
+					}
+					remove(man, true);
+					remove(syr, true);
+					man.exists = false;
+					
+					syr.explode();//might be a problem
+					syr.destory();
+					syr.exists = false;
 				}
-				if(man is Janitor){
-					logger.recordEvent(level+1,31,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill janitor");
-				}else if(man is Nurse){
-					logger.recordEvent(level+1,32,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill nurse");
-				}else if(man is Doctor){
-					logger.recordEvent(level+1,33,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill doctor");
-				}else if(man is Patient){
-					logger.recordEvent(level+1,34,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill patient");							
-				}else{
-					logger.recordEvent(level+1,35,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill human");
-				}
-				var pos:int = humans.indexOf(man);
-				humans.splice(pos,1);
-				remove(player);
-				add(infected);
-				add(player);
-				var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
-				infected.attackNearestHuman(collisionMap, path);
-				zombies.push(infected);
-				remove(man.alerted);
-				if(!man.isStunned && man.stunAdded){
-					man.stunAdded=false;
-					remove(man.stunAn,true);
-				}
-				syr = Syringe(obj2);
-				if(man is Janitor){
-					var jan:Janitor = man as Janitor;
-					jan.exists=false;
-					jan.alive=false;
-					jan.die();
-				}
-				man.alive = false;
-				if(!man.isStunned && man.stunAdded){
-					man.stunAdded=false;
-					remove(man.stunAn,true);
-				}
-				remove(man, true);
-				remove(syr, true);
-				man.exists = false;
-				
-				syr.explode();//might be a problem
-				syr.destory();
-				syr.exists = false;
 			}
 		}
 		
@@ -805,35 +922,79 @@ package
 			if(this.canKill(man,zom)){
 				if(man.isStunned || man is Patient){
 					zom.disguiseOFF();
-					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-					if(man.stunAdded){
-						man.stunAdded=false;
-						remove(man.stunAn,true);
+					if(isABTesting){
+						if(numberOfZombies < 2){
+							numberOfZombies++;
+							zombieLimited.text = numberOfZombies + "/2"; 
+							infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+							if(man.stunAdded){
+								man.stunAdded=false;
+								remove(man.stunAn,true);
+							}
+							//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
+							//FlxG.collide(infected, collisionMap);
+							if (man is Doctor) {
+								infected.setImage(ImgDoctorDead);
+							} else if (man is Nurse) {
+								infected.setImage(ImgNurseDead);
+							} else if (man is Janitor) {
+								infected.setImage(ImgJanitorDead);
+							} else {
+								infected.setImage(ImgHumanDead);
+							}
+							
+							var pos2:int = humans.indexOf(man);
+							//humans[pos].x=1000000000;
+							humans.splice(pos2,1);
+							remove(player);
+							add(infected);
+							add(player);
+							var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+							
+							//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
+							//add(t);
+							infected.attackNearestHuman(collisionMap, path2);
+							zombies.push(infected);
+						}
+						else{
+							var pos2:int = humans.indexOf(man);
+							humans.splice(pos2,1);
+						}
 					}
-					//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
-					//FlxG.collide(infected, collisionMap);
-					if (man is Doctor) {
-						infected.setImage(ImgDoctorDead);
-					} else if (man is Nurse) {
-						infected.setImage(ImgNurseDead);
-					} else if (man is Janitor) {
-						infected.setImage(ImgJanitorDead);
-					} else {
-						infected.setImage(ImgHumanDead);
+					else{
+						numberOfZombies++;
+						zombieLimited.text = numberOfZombies + "/2"; 
+						infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+						if(man.stunAdded){
+							man.stunAdded=false;
+							remove(man.stunAn,true);
+						}
+						//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
+						//FlxG.collide(infected, collisionMap);
+						if (man is Doctor) {
+							infected.setImage(ImgDoctorDead);
+						} else if (man is Nurse) {
+							infected.setImage(ImgNurseDead);
+						} else if (man is Janitor) {
+							infected.setImage(ImgJanitorDead);
+						} else {
+							infected.setImage(ImgHumanDead);
+						}
+						
+						var pos2:int = humans.indexOf(man);
+						//humans[pos].x=1000000000;
+						humans.splice(pos2,1);
+						remove(player);
+						add(infected);
+						add(player);
+						var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+						
+						//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
+						//add(t);
+						infected.attackNearestHuman(collisionMap, path2);
+						zombies.push(infected);
 					}
 					
-					var pos2:int = humans.indexOf(man);
-					//humans[pos].x=1000000000;
-					humans.splice(pos2,1);
-					remove(player);
-					add(infected);
-					add(player);
-					var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
-					
-					//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
-					//add(t);
-					infected.attackNearestHuman(collisionMap, path2);
-					zombies.push(infected);
 					if(zom==player){
 						if(man is Janitor){
 							logger.recordEvent(level+1,1,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill janitor");
@@ -910,6 +1071,8 @@ package
 					man.alive=false;
 					
 				}else{
+					if(zom != player) numberOfZombies--;
+					zombieLimited.text = numberOfZombies + "/2"; 
 					remove(zom,true);
 					man.goBack(collisionMap);
 					zom.alive=false;
@@ -941,34 +1104,78 @@ package
 				zom.disguiseOFF();
 				var t:FlxText;
 			
-				infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-				if(man.stunAdded){
-					man.stunAdded=false;
-					remove(man.stunAn,true);
+				if(isABTesting){
+					if(numberOfZombies < 2){
+						numberOfZombies++;
+						zombieLimited.text = numberOfZombies + "/2"; 
+						infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+						if(man.stunAdded){
+							man.stunAdded=false;
+							remove(man.stunAn,true);
+						}
+						if (man is Doctor) {
+							infected.setImage(ImgDoctorDead);
+						} else if (man is Nurse) {
+							infected.setImage(ImgNurseDead);
+						} else if (man is Janitor) {
+							infected.setImage(ImgJanitorDead);
+						} else {
+							infected.setImage(ImgHumanDead);
+						}
+						//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
+						//FlxG.collide(infected, collisionMap);
+						var pos:int = humans.indexOf(man);
+						//humans[pos].x=1000000000;
+						humans.splice(pos,1);
+						remove(player);
+						add(infected);
+						add(player);
+						var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+						
+						//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
+						//add(t);
+						infected.attackNearestHuman(collisionMap, path);
+						zombies.push(infected);
+					}
+					else{
+						var pos2:int = humans.indexOf(man);
+						humans.splice(pos2,1);
+					}
+					
 				}
-				if (man is Doctor) {
-					infected.setImage(ImgDoctorDead);
-				} else if (man is Nurse) {
-					infected.setImage(ImgNurseDead);
-				} else if (man is Janitor) {
-					infected.setImage(ImgJanitorDead);
-				} else {
-					infected.setImage(ImgHumanDead);
+				else{
+					numberOfZombies++;
+					zombieLimited.text = numberOfZombies + "/2"; 
+					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+					if(man.stunAdded){
+						man.stunAdded=false;
+						remove(man.stunAn,true);
+					}
+					if (man is Doctor) {
+						infected.setImage(ImgDoctorDead);
+					} else if (man is Nurse) {
+						infected.setImage(ImgNurseDead);
+					} else if (man is Janitor) {
+						infected.setImage(ImgJanitorDead);
+					} else {
+						infected.setImage(ImgHumanDead);
+					}
+					//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
+					//FlxG.collide(infected, collisionMap);
+					var pos:int = humans.indexOf(man);
+					//humans[pos].x=1000000000;
+					humans.splice(pos,1);
+					remove(player);
+					add(infected);
+					add(player);
+					var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+					
+					//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
+					//add(t);
+					infected.attackNearestHuman(collisionMap, path);
+					zombies.push(infected);
 				}
-				//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
-				//FlxG.collide(infected, collisionMap);
-				var pos:int = humans.indexOf(man);
-				//humans[pos].x=1000000000;
-				humans.splice(pos,1);
-				remove(player);
-				add(infected);
-				add(player);
-				var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
 				
-				//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
-				//add(t);
-				infected.attackNearestHuman(collisionMap, path);
-				zombies.push(infected);
 				if(man is Janitor){
 					var jan:Janitor = man as Janitor;
 					jan.die();
@@ -1128,6 +1335,16 @@ package
 			//MOVEMENT
 			player.acceleration.x = 0;
 			player.acceleration.y = 0;
+			
+			if(FlxG.keys.ENTER){
+				if(isABTesting){
+					isABTesting = false;
+				}
+				else{
+					isABTesting = true;
+				}
+			}
+			
 			if(FlxG.keys.LEFT)
 			{
 				//player.facing = FlxObject.LEFT;
