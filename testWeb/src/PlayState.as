@@ -116,7 +116,6 @@ package
 		private var camQuit:FlxCamera;
 		private var camNextLevel:FlxCamera;
 		private var camLevel:FlxCamera;
-		private var zomCount:FlxCamera;
 		
 		private static var resetNumber:int = 0;
 		
@@ -251,10 +250,6 @@ package
 			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
 			add(t);
 			
-			if(isABTesting){
-				
-			}
-			
 			
 			
 			addCam();
@@ -365,7 +360,6 @@ package
 				FlxG.removeCamera(camQuit,false);
 				FlxG.removeCamera(camNextLevel,false);
 				FlxG.removeCamera(camLevel,false);
-				//FlxG.removeCamera(zomCount, false);
 			}
 			else{
 				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); // we put the first one in the top left corner
@@ -375,9 +369,6 @@ package
 				camLevel = new FlxCamera(2,62,t.width, t.height);
 
 			}
-			//if(isABTesting){
-				
-			//}
 			cam.follow(player);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
 			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
@@ -393,17 +384,18 @@ package
 			camLevel.follow(t);
 			FlxG.addCamera(camLevel);
 			
-			//if()
-			zombieLimited = new FlxText(-100000,0,820,"0/3");
-			zombieLimited.size=39;
-			add(zombieLimited);
-			var zomCount:FlxCamera = new FlxCamera(830, 0, zombieLimited.width, zombieLimited.height);
-			zomCount.follow(zombieLimited);
-			FlxG.addCamera(zomCount);
-			
 			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
 			this.powerUpMenu.size=12;
 			
+			
+			if(isABTesting){
+				this.zombieLimited = new FlxText(-100000,-100000,820,"0/3");
+				this.zombieLimited.size=39;
+				add(this.zombieLimited);
+				var camRe:FlxCamera = new FlxCamera(830, 0, this.zombieLimited.width, this.zombieLimited.height);
+				camRe.follow(this.zombieLimited);
+				FlxG.addCamera(camRe);
+			}
 			
 //			add(this.powerUpMenu);
 //			var camRe:FlxCamera = new FlxCamera(0, 100, this.powerUpMenu.width, this.powerUpMenu.height);
