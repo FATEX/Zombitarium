@@ -301,6 +301,15 @@ package
 			//logger.recordEvent(level+1,100,"level starts");
 		}
 		
+		public function setABTesting(value:int):void{
+			if(value == 1){
+				isABTesting = true;
+			}
+			else if(value == 2){
+				isABTesting = false;
+			}
+		}
+		
 		public function revealBoard():void{
 			if(this.darkRooms){
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
@@ -389,7 +398,7 @@ package
 			
 			
 			if(isABTesting){
-				this.zombieLimited = new FlxText(-100000,-100000,820,"0/3");
+				this.zombieLimited = new FlxText(-100000,-100000,820,"0/2");
 				this.zombieLimited.size=39;
 				add(this.zombieLimited);
 				var camRe:FlxCamera = new FlxCamera(830, 0, this.zombieLimited.width, this.zombieLimited.height);
@@ -735,7 +744,7 @@ package
 				if(isABTesting){
 					if(numberOfZombies < 2){
 						numberOfZombies++;
-						zombieLimited.text = numberOfZombies + "/3"; 
+						zombieLimited.text = numberOfZombies + "/2"; 
 						infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 						if(man.stunAdded){
 							man.stunAdded=false;
@@ -1328,14 +1337,14 @@ package
 			player.acceleration.x = 0;
 			player.acceleration.y = 0;
 			
-			if(FlxG.keys.ENTER){
+			/*if(FlxG.keys.ENTER){
 				if(isABTesting){
 					isABTesting = false;
 				}
 				else{
 					isABTesting = true;
 				}
-			}
+			}*/
 			
 			if(FlxG.keys.LEFT)
 			{
