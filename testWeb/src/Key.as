@@ -1,5 +1,7 @@
 package
 {
+	import flash.media.Sound;
+	
 	import org.flixel.FlxG;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxTilemap;
@@ -12,6 +14,11 @@ package
 		private var collisionMap:FlxTilemap;
 		
 		[Embed(source="larger_key.png")] private static var ImgKey:Class;
+		[Embed(source = "doorSound.mp3")]private var MySound : Class; 		 
+		private var sound : Sound; // not MySound! 
+		
+		[Embed(source = "keySound.mp3")]private var MySoundk : Class; 		 
+		private var soundk : Sound; // not MySound! 
 		
 		private const TILE_WIDTH:uint = 65;
 		private const TILE_HEIGHT:uint = 65;
@@ -34,6 +41,8 @@ package
 				if(FlxG.collide(p, this)){ // and if the player collides with the key
 					this.visible = false; // hide the key from view
 					keyCollected = true; // set our Boolean to true
+					soundk = (new MySoundk()) as Sound;
+					soundk.play();
 				}
 			}
 		
@@ -45,6 +54,8 @@ package
 						PlayState.logger.recordEvent(PlayState.level+1,11,"pos=("+(int)(p.x/TILE_WIDTH)+","+(int)(p.y/TILE_HEIGHT)+")|action:open locked door");
 						c.setTile(tx, ty, 0);
 						c.setTile(tx, ty, 0);
+						sound = (new MySound()) as Sound;
+						sound.play();
 						state.revealBoard()
 						for(var i:int =0; i<zombies.length;i++){
 							zombies[i].checkPath(c);

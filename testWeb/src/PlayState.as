@@ -1,7 +1,13 @@
 package
 {
+	import flash.media.Sound;
+	import flash.media.SoundChannel;
+	import flash.media.SoundMixer;
+	import flash.media.SoundTransform;
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
+	import flash.utils.*;
+	import flash.events.TimerEvent;
 	
 	import objects.Doctor;
 	import objects.Human;
@@ -27,10 +33,37 @@ package
 	{
 		// Tileset that works with AUTO mode (best for thin walls)
 		[Embed(source = 'wall_USE2.png')]private static var auto_tiles:Class;
+		
+		// Music
+		[Embed(source = "bg.mp3")]private var MySound : Class; 		 
+		private var sound : Sound; // not MySound! 
+		private var myChannel:SoundChannel = new SoundChannel();
+		
+		[Embed(source = "click.mp3")]private var MySoundbtn : Class; 		 
+		private var soundbtn : Sound; // not MySound! 
+		private var myChannelbtn:SoundChannel = new SoundChannel();
+		
+		[Embed(source = "fs.mp3")]private var MySoundmvt : Class; 		 
+		private var soundmvt : Sound; // not MySound! 
+		private var myChannelmvt:SoundChannel = new SoundChannel();
+		
+		[Embed(source = "hdd.mp3")]private var MySoundhdead : Class; 		 
+		private var soundhdead : Sound; // not MySound! 
+		private var myChannelhdead:SoundChannel = new SoundChannel();
+		
+		[Embed(source = "zdead.mp3")]private var MySoundzdead : Class; 		 
+		private var soundzdead : Sound; // not MySound! 
+		private var myChannelzdead:SoundChannel = new SoundChannel();
+		
+		[Embed(source = "costm.mp3")]private var MySoundcostm : Class; 		 
+		private var soundcostm : Sound; // not MySound! 
+		private var myChannelcostm:SoundChannel = new SoundChannel();
+		
+		[Embed(source = "syrg.mp3")]private var MySoundsyrg : Class; 		 
+		private var soundsyrg : Sound; // not MySound! 
+		private var myChannelsyrg:SoundChannel = new SoundChannel();
 				
 		// Default character loading texts		
-		// [Embed(source = 'default_alt.txt', mimeType = 'application/octet-stream')]private static var default_alt:Class;
-		// f[Embed(source = 'default_empty.txt', mimeType = 'application/octet-stream')]private static var default_empty:Class;
 		[Embed(source = 'characters0.txt', mimeType = 'application/octet-stream')]private static var characters0:Class;
 		[Embed(source = 'characters1.txt', mimeType = 'application/octet-stream')]private static var characters1:Class;
 		[Embed(source = 'characters2.txt', mimeType = 'application/octet-stream')]private static var characters2:Class;
@@ -38,6 +71,7 @@ package
 		[Embed(source = 'characters4.txt', mimeType = 'application/octet-stream')]private static var characters4:Class;
 		[Embed(source = 'characters5.txt', mimeType = 'application/octet-stream')]private static var characters5:Class;
 		[Embed(source = 'characters6.txt', mimeType = 'application/octet-stream')]private static var characters6:Class;
+		[Embed(source = 'charactersAlice.txt', mimeType = 'application/octet-stream')]private static var chAlice:Class;
 		[Embed(source = 'default_characters.txt', mimeType = 'application/octet-stream')]private static var default_characters:Class;
 		[Embed(source = 'default_characters_level_middle.txt', mimeType = 'application/octet-stream')]private static var default_characters2:Class;
 		[Embed(source = 'hard_level_characters.txt', mimeType = 'application/octet-stream')]private static var default_chars_hard:Class;
@@ -50,6 +84,7 @@ package
 		[Embed(source = 'level4.txt', mimeType = 'application/octet-stream')]private static var default_level4:Class;
 		[Embed(source = 'level5.txt', mimeType = 'application/octet-stream')]private static var default_level5:Class;
 		[Embed(source = 'level6.txt', mimeType = 'application/octet-stream')]private static var default_level6:Class;
+		[Embed(source = 'levelAlice.txt', mimeType = 'application/octet-stream')]private static var default_levelAlice:Class;
 		[Embed(source = 'default_auto.txt', mimeType = 'application/octet-stream')]private static var default_auto:Class;
 		[Embed(source = 'level_middle.txt', mimeType = 'application/octet-stream')]private static var default_middle:Class;
 		[Embed(source = 'level_hard.txt', mimeType = 'application/octet-stream')]private static var default_hard:Class;
@@ -62,7 +97,6 @@ package
 		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
 		[Embed(source="basic_floor_tile_USE_65.png")] private static var FloorTile:Class;
 
-		
 		//logger
 		public static var isPageLoaded:Boolean = false;
 		private var playertime:Number = new Date().time;
@@ -99,6 +133,7 @@ package
 		private var resetBtn:FlxButton;
 		private var quitBtn:FlxButton;
 		private var nextLevelBtn:FlxButton;
+		
 		private var instructions:FlxText;
 		private var destination:FlxPoint;
 
@@ -116,6 +151,7 @@ package
 		private var camQuit:FlxCamera;
 		private var camNextLevel:FlxCamera;
 		private var camLevel:FlxCamera;
+		private var camSound:FlxCamera;
 		
 		private static var resetNumber:int = 0;
 		
@@ -144,6 +180,8 @@ package
 		private var nkeys;
 		private var nkeysC = 0;
 		private var powerUp:Boolean = false;
+		private var stop_btn;
+		private var soundOn:Boolean = true;
 		
 		override public function create():void
 		{
@@ -204,6 +242,9 @@ package
 			else if(level==9){
 				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
+			else if(level==10){
+				collisionMap.loadMap(new default_levelAlice(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+			}
 			
 			add(collisionMap);
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
@@ -220,25 +261,61 @@ package
 			setupPlayer();
 			characterLoader();
 			
+			
+			var test = setInterval(startbgsounds,500);
+			
+			function startbgsounds():void{
+				if (soundOn) {
+				sound = (new MySound()) as Sound;
+				myChannel = sound.play();
+				clearInterval(test);
+				}
+			}
 
-			/*resetBtn = new FlxButton(-100, 42, "Reset", function():void
+			
+			stop_btn = new FlxButton(-100, -100, "Sound I/O", function():void
 			{
-				resetGame();
+//				if (myChannel)
+//				myChannel.stop();
+//				if (myChannel.soundTransform == new SoundTransform(0)) {
+//					myChannel.soundTransform = new SoundTransform(1);
+//				} else {
+//					myChannel.soundTransform = new SoundTransform(0);
+//				}
+				soundbtn = (new MySoundbtn()) as Sound;
+				myChannelbtn = soundbtn.play();
+				if (soundOn) {
+					soundOn = false;
+					//SoundMixer.stopAll();
+					myChannel.soundTransform = new SoundTransform(0);
+				} else {
+					myChannel.soundTransform = new SoundTransform(1);
+					soundOn = true;
+				}
+				
 			});
-			add(resetBtn);*/
+			add(stop_btn);
 			
 			nextLevelBtn = new FlxButton(-100, 70, "Next Level", function():void
 			{
+				if (soundOn) {
+				soundbtn = (new MySoundbtn()) as Sound;
+				myChannelbtn = soundbtn.play();
+				}
 				level++;
 				level = level%10;
 				resetGame();
 			});
 			add(nextLevelBtn);
 
-			
 			quitBtn = new FlxButton(-1000, 30, "Quit",
 				function():void { FlxG.fade(0xff000000, 0.22, function():void { 
 					level = 0;
+					SoundMixer.stopAll();
+					if (soundOn) {
+					soundbtn = (new MySoundbtn()) as Sound;
+					myChannelbtn = soundbtn.play();
+					}
 					FlxG.resetGame();
 				} ); } );
 			add(quitBtn);
@@ -345,6 +422,7 @@ package
 		}
 		
 		private function resetGame():void{
+			myChannel.stop();
 			FlxG.resetState();
 			win = false;
 			
@@ -357,6 +435,7 @@ package
 				FlxG.removeCamera(camQuit,false);
 				FlxG.removeCamera(camNextLevel,false);
 				FlxG.removeCamera(camLevel,false);
+				FlxG.removeCamera(camSound,false);
 			}
 			else{
 				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); // we put the first one in the top left corner
@@ -364,6 +443,7 @@ package
 				//camReset = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
 				camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
 				camLevel = new FlxCamera(2,62,t.width, t.height);
+				camSound = new FlxCamera(2,92, quitBtn.width, quitBtn.height);
 
 			}
 			cam.follow(player);
@@ -380,6 +460,9 @@ package
 			
 			camLevel.follow(t);
 			FlxG.addCamera(camLevel);
+			
+			camSound.follow(stop_btn);
+			FlxG.addCamera(camSound);
 			
 			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
 			this.powerUpMenu.size=12;
@@ -417,6 +500,8 @@ package
 				btarray = new default_characters2();
 			}else if(level==9){
 				btarray = new default_chars_hard();
+			}else if(level==10){
+				btarray = new chAlice();
 			}
 		
 			var wholeLevel:String = btarray.readMultiByte(btarray.bytesAvailable, btarray.endian);
@@ -716,6 +801,10 @@ package
 			}
 			else if(obj1 is Human){
 				man = Human(obj1);
+				if (soundOn) {
+				soundhdead = (new MySoundhdead()) as Sound;
+				myChannelhdead = soundhdead.play();
+				}
 				infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 				if(man.stunAdded){
 					man.stunAdded=false;
@@ -762,6 +851,8 @@ package
 					jan.die();
 				}
 				man.alive = false;
+				soundzdead = (new MySoundzdead()) as Sound;
+				myChannelzdead = soundzdead.play();
 				if(!man.isStunned && man.stunAdded){
 					man.stunAdded=false;
 					remove(man.stunAn,true);
@@ -805,6 +896,8 @@ package
 			if(this.canKill(man,zom)){
 				if(man.isStunned || man is Patient){
 					zom.disguiseOFF();
+					soundhdead = (new MySoundhdead()) as Sound;
+					myChannelhdead = soundhdead.play();
 					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 					if(man.stunAdded){
 						man.stunAdded=false;
@@ -866,6 +959,10 @@ package
 					if(man is Nurse){
 						if(zom==player){
 							zom.disguiseON();
+							if (soundOn) {
+								soundcostm = (new MySoundcostm()) as Sound;
+								myChannelcostm = soundcostm.play();
+							}
 							if(this.facingDirection==0){
 								player.play("idle",true);
 							}
@@ -911,6 +1008,10 @@ package
 					
 				}else{
 					remove(zom,true);
+					if (soundOn) {
+					soundzdead = (new MySoundzdead()) as Sound;
+					myChannelzdead = soundzdead.play();
+					}
 					man.goBack(collisionMap);
 					zom.alive=false;
 					zom.exists=false;
@@ -942,6 +1043,10 @@ package
 				var t:FlxText;
 			
 				infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+				if (soundOn) {
+				soundhdead = (new MySoundhdead()) as Sound;
+				myChannelhdead = soundhdead.play();
+				}
 				if(man.stunAdded){
 					man.stunAdded=false;
 					remove(man.stunAn,true);
@@ -976,6 +1081,10 @@ package
 				if(man is Nurse){
 					if(zom==player){
 						zom.disguiseON();
+						if (soundOn) {
+							soundcostm = (new MySoundcostm()) as Sound;
+							myChannelcostm = soundcostm.play();
+						}
 						if(this.facingDirection==0){
 							player.play("idle",true);
 						}
@@ -1110,7 +1219,7 @@ package
 						
 			for (var i:Number=0;i<doors.length;i++){
 				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/4)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/4)/TILE_HEIGHT),zombies,this);
-				doors[i].updateDoor();
+				doors[i].updateDoor(player);
 				
 			}
 			
@@ -1132,21 +1241,33 @@ package
 			{
 				//player.facing = FlxObject.LEFT;
 				player.acceleration.x -= player.drag.x;
+				if (soundOn) {
+				soundmvt = (new MySoundmvt()) as Sound;
+				myChannelmvt = soundmvt.play(); }
 			}
 			else if(FlxG.keys.RIGHT)
 			{
 				//player.facing = FlxObject.RIGHT;
 				player.acceleration.x += player.drag.x;
+				if (soundOn) {
+				soundmvt = (new MySoundmvt()) as Sound;
+				myChannelmvt = soundmvt.play(); }
 			}
 			if(FlxG.keys.UP)
 			{
 				//player.facing = FlxObject.UP;
 				player.acceleration.y -= player.drag.y;
+				if (soundOn) {
+				soundmvt = (new MySoundmvt()) as Sound;
+				myChannelmvt = soundmvt.play(); }
 			}
 			else if(FlxG.keys.DOWN)
 			{
 				//player.facing = FlxObject.DOWN;
 				player.acceleration.y += player.drag.y;
+				if (soundOn) { 
+					soundmvt = (new MySoundmvt()) as Sound;
+					myChannelmvt = soundmvt.play(); }
 			}
 			if(FlxG.keys.SPACE){
 				if(throwable){
@@ -1157,6 +1278,10 @@ package
 					else if(player.angle == 90 || player.angle == -90){
 						pSyringe = new Syringe(player.angle, player.x, player.y+7);
 					}*/
+					if (soundOn) {
+						soundsyrg = (new MySoundsyrg()) as Sound;
+						myChannelsyrg = soundsyrg.play();
+					}
 					var angleToThrow:Number;
 					if(player.velocity.x>0 && player.velocity.y==0){
 						angleToThrow=90;

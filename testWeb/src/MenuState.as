@@ -1,9 +1,15 @@
 package
 {
-	import org.flixel.*;
+	import flash.media.Sound;
+	import flash.media.SoundChannel;
+	
+	import org.flixel.FlxG;
+	import org.flixel.FlxState;
+	import org.flixel.FlxText;
 
 	public class MenuState extends FlxState
 	{
+		
 		override public function create():void
 		{
 			var t:FlxText;
@@ -24,6 +30,7 @@ package
 			super.update();
 
 			if(FlxG.mouse.justPressed())
+				
 				FlxG.switchState(new LevelState());
 		}
 	}
