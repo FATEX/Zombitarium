@@ -836,10 +836,10 @@ package
 				}
 				else{
 					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-					if(man.stunAdded){
+					/*if(man.stunAdded){
 						man.stunAdded=false;
 						remove(man.stunAn,true);
-					}
+					}*/
 					if (man is Doctor) {
 						infected.setImage(ImgDoctorDead);
 					} else if (man is Nurse) {
@@ -960,6 +960,10 @@ package
 							zombies.push(infected);
 						}
 						else{
+							if(man.stunAdded){
+								man.stunAdded=false;
+								remove(man.stunAn,true);
+							}
 							var pos2:int = humans.indexOf(man);
 							humans.splice(pos2,1);
 						}
@@ -1141,6 +1145,10 @@ package
 						zombies.push(infected);
 					}
 					else{
+						if(man.stunAdded){
+							man.stunAdded=false;
+							remove(man.stunAn,true);
+						}
 						var pos2:int = humans.indexOf(man);
 						humans.splice(pos2,1);
 					}
