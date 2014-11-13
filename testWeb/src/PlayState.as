@@ -145,7 +145,7 @@ package
 		private var nkeys;
 		private var nkeysC = 0;
 		private var powerUp:Boolean = false;
-		private var isABTesting = true;
+		private var isABTesting = false;
 		private var numberOfZombies = 0;
 		
 		override public function create():void
@@ -706,8 +706,10 @@ package
 				}
 				else{
 					//syr.explode();//might be a problem
-					if(zom != player) numberOfZombies--;
-					zombieLimited.text = numberOfZombies + "/2"; 
+					if(isABTesting){
+						if(zom != player) numberOfZombies--;
+						zombieLimited.text = numberOfZombies + "/2"; 
+					}
 					zom = Zombie(obj1);
 					syr = Syringe(obj2);
 					var pos:int = zombies.indexOf(zom);
@@ -963,8 +965,6 @@ package
 						}
 					}
 					else{
-						numberOfZombies++;
-						zombieLimited.text = numberOfZombies + "/2"; 
 						infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 						if(man.stunAdded){
 							man.stunAdded=false;
@@ -1072,8 +1072,10 @@ package
 					man.alive=false;
 					
 				}else{
-					if(zom != player) numberOfZombies--;
-					zombieLimited.text = numberOfZombies + "/2"; 
+					if(isABTesting){
+						if(zom != player) numberOfZombies--;
+						zombieLimited.text = numberOfZombies + "/2";
+					}
 					remove(zom,true);
 					man.goBack(collisionMap);
 					zom.alive=false;
@@ -1145,8 +1147,6 @@ package
 					
 				}
 				else{
-					numberOfZombies++;
-					zombieLimited.text = numberOfZombies + "/2"; 
 					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 					if(man.stunAdded){
 						man.stunAdded=false;
