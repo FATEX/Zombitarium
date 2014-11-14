@@ -16,11 +16,11 @@ package
 	{
 		private const TILE_WIDTH:uint = 65;
 		private const TILE_HEIGHT:uint = 65;
-
+		
 		[Embed(source="nurse_dead.png")] private static var ImgSpaceman:Class;
 		[Embed(source="zombie_combined.png")] private static var ImgPlayer:Class;
 		[Embed(source="walk_nurse_front_100.png")] private static var ImgNurse:Class;
-
+		
 		public var xPos:int = 0;
 		public var yPos:int = 0;
 		//private var width:int = 0;
@@ -35,7 +35,7 @@ package
 		private var yTile:int=0;
 		public var isDisguised:Boolean = false;
 		//private var color: int = 0;
- 		public function Zombie(xPos:int, yPos:int, width:int, height:int, xDrag:int, yDrag:int, xMaxVelocity:int, yMaxVelocity:int)
+		public function Zombie(xPos:int, yPos:int, width:int, height:int, xDrag:int, yDrag:int, xMaxVelocity:int, yMaxVelocity:int)
 		{
 			super(xPos,yPos);
 			this.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH,TILE_HEIGHT);
@@ -79,22 +79,22 @@ package
 			/*
 			//path = collisionMap.findPath(zombieP, new FlxPoint(humanP[1].x, humanP[1].y), false);
 			while(i < humanP.length){
-				path = collisionMap.findPath(zombieP, new FlxPoint(humanP[i].x+humanP[i].width/2, humanP[i].y+humanP[i].height/2));
-				if(path!=null){
-					nearestPath=path;
-				}
-				//if(path != null && minLength > collisionMap.getPathLength()){
-					//minLength = collisionMap.getPathLength();
-					//nearestPath = path;
-				//}
-				i++;
+			path = collisionMap.findPath(zombieP, new FlxPoint(humanP[i].x+humanP[i].width/2, humanP[i].y+humanP[i].height/2));
+			if(path!=null){
+			nearestPath=path;
+			}
+			//if(path != null && minLength > collisionMap.getPathLength()){
+			//minLength = collisionMap.getPathLength();
+			//nearestPath = path;
+			//}
+			i++;
 			}*/
 			return path;
 		}
 		
 		/*public function attackNearestHuman(collisionMap:FlxTilemap, zombieP:FlxPoint, humanP:FlxPoint):void{
-			//return collisionMap.findPath(zombieP, humanP);
-			this.followPath(collisionMap.findPath(zombieP, humanP),50, PATH_FORWARD, true);
+		//return collisionMap.findPath(zombieP, humanP);
+		this.followPath(collisionMap.findPath(zombieP, humanP),50, PATH_FORWARD, true);
 		}*/
 		
 		public function attackNearestHuman(collisionMap:FlxTilemap, path:FlxPath):void{
@@ -104,21 +104,21 @@ package
 		}
 		public function checkPath(collisionMap:FlxTilemap):void{
 			/*if(this.humanFollowing!=null){
-				var pathChecker:FlxPath =collisionMap.findPath(new FlxPoint(this.x+this.width/2,this.y+this.height/2),new FlxPoint(this.humanFollowing.x+this.humanFollowing.width/2,this.humanFollowing.y+this.humanFollowing.height/2));
-				if(pathChecker==null){
-					this.humanFollowing=null;
-					this.stopFollowingPath(true);
-					this.pathSpeed=0;
-					this.velocity=new FlxPoint(0,0);
-				}
-				if(pathChecker!=null){
-					path = pathChecker;
-					this.stopFollowingPath(true);
-					this.attackNearestHuman(collisionMap,path);
-				}
+			var pathChecker:FlxPath =collisionMap.findPath(new FlxPoint(this.x+this.width/2,this.y+this.height/2),new FlxPoint(this.humanFollowing.x+this.humanFollowing.width/2,this.humanFollowing.y+this.humanFollowing.height/2));
+			if(pathChecker==null){
+			this.humanFollowing=null;
+			this.stopFollowingPath(true);
+			this.pathSpeed=0;
+			this.velocity=new FlxPoint(0,0);
+			}
+			if(pathChecker!=null){
+			path = pathChecker;
+			this.stopFollowingPath(true);
+			this.attackNearestHuman(collisionMap,path);
+			}
 			}*/
 			this.checkAgain=true;
-				
+			
 		}
 		
 		public function zombieUpdate(collisionMap:FlxTilemap, humanP:Vector.<Human>, zombieP:FlxPoint):void{
@@ -193,11 +193,11 @@ package
 			}
 			
 			/*if(this.humanFollowing!=null && collisionMap.findPath(zombieP,new FlxPoint(this.humanFollowing.x+this.humanFollowing.width/2,this.humanFollowing.y+this.humanFollowing.height/2))==null){
-				this.humanFollowing=null;
-				this.stopFollowingPath(true);
-				this.pathSpeed=0;
-				this.velocity=new FlxPoint(0,0);
-				this.attackNearestHuman(collisionMap,this.findNearestHuman(collisionMap,humanP,zombieP));
+			this.humanFollowing=null;
+			this.stopFollowingPath(true);
+			this.pathSpeed=0;
+			this.velocity=new FlxPoint(0,0);
+			this.attackNearestHuman(collisionMap,this.findNearestHuman(collisionMap,humanP,zombieP));
 			}	*/
 			
 		}
@@ -221,13 +221,52 @@ package
 		public function disguiseOFF():void{
 			if(isDisguised){
 				try{
-				isDisguised=false;
-				this.loadGraphic(ImgPlayer, true, true, TILE_WIDTH,TILE_HEIGHT);
-				
-				this.width =  TILE_WIDTH*5/8;
-				this.height = TILE_HEIGHT*7/8;
-				this.offset.x = this.width/4;
-				this.offset.y = 1;
+					isDisguised=false;
+					this.loadGraphic(ImgPlayer, true, true, TILE_WIDTH,TILE_HEIGHT);
+					
+					this.width =  TILE_WIDTH*5/8;
+					this.height = TILE_HEIGHT*7/8;
+					this.offset.x = this.width/4;
+					this.offset.y = 1;
+					if(this.pathAngle <22 && this.pathAngle>=-22){
+						this.play("runBack",true);
+						this.facing=FlxObject.RIGHT;
+					}
+					else if(this.pathAngle <67 && this.pathAngle>=22){
+						this.play("topRight",true);
+						this.facing=FlxObject.RIGHT;
+					}
+					else if(this.pathAngle <112 && this.pathAngle>=67){
+						this.play("right",true);
+						this.facing=FlxObject.RIGHT;
+					}
+					else if(this.pathAngle <157 && this.pathAngle>=112){
+						this.play("bottomLeft",true);
+						this.facing=FlxObject.LEFT;
+					}
+					else if( this.pathAngle>=157){
+						this.play("run",true);
+						this.facing=FlxObject.RIGHT;
+					}
+					else if(this.pathAngle <-22 && this.pathAngle>=-67){
+						this.play("topRight",true);
+						this.facing=FlxObject.LEFT;
+					}
+					else if(this.pathAngle <-67 && this.pathAngle>=-112){
+						this.play("right",true);
+						this.facing=FlxObject.LEFT;
+					}
+					else if(this.pathAngle <-157 && this.pathAngle>=-112){
+						this.play("bottomLeft",true);
+						this.facing=FlxObject.RIGHT;
+					}
+					else{
+						this.play("run",true);
+						this.facing=FlxObject.RIGHT;
+					}
+					if(this.pathSpeed==0){
+						this.play("idle",true);
+					}
 				}
 				catch(error:Error){
 					
