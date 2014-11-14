@@ -1,13 +1,15 @@
 package
 {
+	import flash.display.Shape;
+	import flash.events.TimerEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.media.SoundMixer;
 	import flash.media.SoundTransform;
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
-	import flash.utils.*;
-	import flash.events.TimerEvent;
+	import flash.utils.clearInterval;
+	import flash.utils.setInterval;
 	
 	import objects.Doctor;
 	import objects.Human;
@@ -28,7 +30,7 @@ package
 	import org.flixel.FlxText;
 	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
-	import MenuState;
+
 
 	public class PlayState extends FlxState
 	{
@@ -106,7 +108,7 @@ package
 		public static var isPageLoaded:Boolean = false;
 		private var playertime:Number = new Date().time;
 		private static var versionID:Number = 2;
-		public static var logger:Logging = new Logging(200,versionID,false);
+		public static var logger:Logging = new Logging(200,versionID,true);
 		
 		// Some static constants for the size of the tilemap tiles
 		public const TILE_WIDTH:uint = 65;
@@ -141,7 +143,7 @@ package
 		
 		private var instructions:FlxText;
 		private var destination:FlxPoint;
-
+	
 		private var keys:Vector.<Key>;
 		private var doors:Vector.<Door>;
 		private var unlockedDoors:Vector.<UnlockedDoor>;
@@ -156,6 +158,7 @@ package
 		private var camQuit:FlxCamera;
 		private var camNextLevel:FlxCamera;
 		private var camLevel:FlxCamera;
+		private var drawingCamera:FlxSprite;
 		private var camSound:FlxCamera;
 		
 		private static var resetNumber:int = 0;
@@ -187,8 +190,8 @@ package
 		private var nkeysC = 0;
 		private var powerUp:Boolean = false;
 		private var stop_btn;
-		private var soundOn:Boolean = true;
-		private var isABTesting = false;
+		public static var soundOn:Boolean = true;
+		private var isABTesting = true;
 		private var numberOfZombies = 0;
 		private var pressed = true;
 		
@@ -384,6 +387,9 @@ package
 			
 			logger.recordLevelStart(level+1,"start level "+(level+1));
 			//logger.recordEvent(level+1,100,"level starts");
+			this.drawingCamera = new FlxSprite(0,0);
+			this.drawingCamera.makeGraphic(1000,2000,0xffffff);
+			add(this.drawingCamera);
 		}
 		
 		public function setABTesting(value:int):void{
@@ -548,6 +554,7 @@ package
 			var key:Key = new Key(collisionMap, door, player,0,0);
 			var unlockedDoor:UnlockedDoor = new UnlockedDoor(0,0);
 			var nextIsWinDoor:Boolean = false;
+			var unId:int = 0;
 			for each (var singleLine:String in arLines)
 			{
 				lineArray = singleLine.split(",");
@@ -559,6 +566,8 @@ package
 				y = int(lineArray[2]);
 				if(type=="H"){
 					h=new Human(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2,true);
+					h.ID=unId;
+					unId++;
 					humans.push(h);
 				}
 				if(type=="J"){
@@ -572,14 +581,20 @@ package
 				}
 				if(type=="PATIENT"){
 					h=new Patient(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					h.ID=unId;
+					unId++;
 					humans.push(h);
 				}
 				if(type=="DOCTOR"){
 					h=new Doctor(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					h.ID=unId;
+					unId++;
 					humans.push(h);
 				}
 				if(type=="NURSE"){
 					h=new Nurse(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
+					h.ID=unId;
+					unId++;
 					humans.push(h);
 				}
 				if(type=="R"){
@@ -653,7 +668,47 @@ package
 			// automatically collides each individual tile with the object.
 			FlxG.collide(player, collisionMap);
 			FlxG.collide(collisionMap, pSyringe,touchedH);
+			this.drawingCamera.fill(0x00000000);
 			for each(var hum:Human in humans){
+				if(!FlxSprite(this.blankTiles[int(hum.x/TILE_WIDTH)][int(hum.y/TILE_HEIGHT)]).visible){
+					var triangle:Shape = new Shape(); 
+					var sides:Number = 5;
+					var xP:Vector.<Number> = new Vector.<Number>();
+					var yP:Vector.<Number> = new Vector.<Number>();
+					var startDegree:Number = hum.getAngle()-45;
+					var degrees:Number = 90;
+					if(hum is Janitor){
+						sides=20;
+						degrees=360;
+					}
+					var radius:Number = distanceCanSee;
+					var centerX:Number = -this.cam.width/2-this.cam.scroll.x+hum.x+hum.width/2;
+					var centerY:Number = -this.cam.height/2-this.cam.scroll.y+hum.y+hum.height/2;
+					for(var i:Number =0; i<=sides; i++){
+						xP.push(centerX + (Math.sin((startDegree + (degrees * ( i / sides))) *0.0174532925) * radius));
+						yP.push(centerY - (Math.cos((startDegree + (degrees * ( i /  sides)))*0.0174532925 ) * radius))
+					}
+					for(var j:int=0;j<xP.length-1;j++){
+						if(this.cam.getContainerSprite().getChildByName("tri"+j+hum.ID)!=null){
+							this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+hum.ID));
+						}
+						triangle.graphics.beginFill(0xFF0000); 
+						triangle.graphics.moveTo(centerX, centerY); 
+						triangle.graphics.lineTo(xP[j], yP[j]); 
+						triangle.graphics.lineTo(xP[j+1], yP[j+1]); 
+						triangle.graphics.lineTo(centerX , centerY); 
+						triangle.name="tri"+j+hum.ID;
+						triangle.alpha=.25;
+						this.cam.getContainerSprite().addChild(triangle);
+					}
+				}
+				else{
+					for(var j:int=0;j<20;j++){
+						if(this.cam.getContainerSprite().getChildByName("tri"+j+hum.ID)!=null){
+							this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+hum.ID));
+						}
+					}
+				}
 				FlxG.collide(hum,pSyringe, touchedH);
 			}
 			FlxG.collide(collisionMap, dSyringe,touchedZ);
@@ -843,6 +898,13 @@ package
 				soundhdead = (new MySoundhdead()) as Sound;
 				myChannelhdead = soundhdead.play();
 				}
+				var pos:int = humans.indexOf(man);
+				for(var j:int=0;j<20;j++){
+					if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
+						this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
+					}
+				}
+
 
 				if(isABTesting){
 					if(numberOfZombies < 2){
@@ -898,6 +960,11 @@ package
 							man.stunAdded=false;
 							remove(man.stunAn,true);
 						}
+						for(var j:int=0;j<20;j++){
+							if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
+								this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
+							}
+						}
 						remove(man, true);
 						remove(syr, true);
 						man.exists = false;
@@ -925,6 +992,11 @@ package
 						if(!man.isStunned && man.stunAdded){
 							man.stunAdded=false;
 							remove(man.stunAn,true);
+						}
+						for(var j:int=0;j<20;j++){
+							if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
+								this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
+							}
 						}
 						remove(man, true);
 						remove(syr, true);
@@ -985,6 +1057,11 @@ package
 					if(!man.isStunned && man.stunAdded){
 						man.stunAdded=false;
 						remove(man.stunAn,true);
+					}
+					for(var j:int=0;j<20;j++){
+						if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
+							this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
+						}
 					}
 					remove(man, true);
 					remove(syr, true);
@@ -1107,6 +1184,23 @@ package
 						zombies.push(infected);
 					}
 					
+					var pos2:int = humans.indexOf(man);
+					//humans[pos].x=1000000000;
+					for(var j:int=0;j<20;j++){
+						if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
+							this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
+						}
+					}
+					humans.splice(pos2,1);
+					remove(player);
+					add(infected);
+					add(player);
+					var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+					
+					//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
+					//add(t);
+					infected.attackNearestHuman(collisionMap, path2);
+					zombies.push(infected);
 					if(zom==player){
 						if(man is Janitor){
 							logger.recordEvent(level+1,1,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill janitor");
@@ -1182,6 +1276,11 @@ package
 					if(!man.isStunned && man.stunAdded){
 						man.stunAdded=false;
 						remove(man.stunAn,true);
+					}
+					for(var j:int=0;j<20;j++){
+						if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
+							this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
+						}
 					}
 					remove(man,true);
 					man.alive=false;
@@ -1294,6 +1393,11 @@ package
 					//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
 					//FlxG.collide(infected, collisionMap);
 					var pos:int = humans.indexOf(man);
+					for(var j:int=0;j<20;j++){
+						if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
+							this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
+						}
+					}
 					//humans[pos].x=1000000000;
 					humans.splice(pos,1);
 					remove(player);
@@ -1306,6 +1410,11 @@ package
 					infected.attackNearestHuman(collisionMap, path);
 					zombies.push(infected);
 				}
+				//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
+				//FlxG.collide(infected, collisionMap);
+				//humans[pos].x=1000000000;
+				
+				
 				
 				if(man is Janitor){
 					var jan:Janitor = man as Janitor;
@@ -1386,6 +1495,11 @@ package
 				if(!man.isStunned && man.stunAdded){
 					man.stunAdded=false;
 					remove(man.stunAn,true);
+				}
+				for(var j:int=0;j<20;j++){
+					if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
+						this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
+					}
 				}
 				remove(man,true);
 				man.alive=false;
@@ -1468,9 +1582,9 @@ package
 				if(FlxG.overlap(player, ud) && FlxG.keys.E && pressed){ // check if the door and the player are touching
 					pressed = false;
 					
-					
+					if (soundOn) {
 					sounddr = (new MySounddr()) as Sound;
-					myChanneldr = sounddr.play();
+					myChanneldr = sounddr.play(); }
 					
 					
 				} else if (FlxG.keys.E == false) {
