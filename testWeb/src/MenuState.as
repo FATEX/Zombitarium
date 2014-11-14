@@ -9,6 +9,9 @@ package
 
 	public class MenuState extends FlxState
 	{
+		[Embed(source = "bgm.mp3")]private var MySoundbg : Class; 		 
+		private var soundbg : Sound; // not MySound! 
+		private var myChannelbg:SoundChannel = new SoundChannel();
 		
 		override public function create():void
 		{
@@ -17,21 +20,28 @@ package
 			t.size = 64
 			t.alignment = "center";
 			add(t);
-			t = new FlxText((FlxG.width/2-100),(FlxG.height-50),200,"click to play");
+			t = new FlxText(0,(FlxG.height/2+100),(FlxG.width),"PRESS SPACE TO START");
 			t.size = 24;
 			t.alignment = "center";
 			add(t);
-			
+			soundbg = (new MySoundbg()) as Sound;
+			myChannelbg = soundbg.play();
 			FlxG.mouse.show();
 		}
 
 		override public function update():void
 		{
-			super.update();
+			
 
-			if(FlxG.mouse.justPressed())
-				
-				FlxG.switchState(new LevelState());
+			if(FlxG.keys.pressed("SPACE"))
+				FlxG.fade(0xff000000, 1, on_fade_completed);
+				//FlxG.switchState(new LevelState());
+			super.update();
+		}
+		public function on_fade_completed():void
+		{
+			// playing the game itself
+			FlxG.switchState(new LevelState());
 		}
 	}
 }

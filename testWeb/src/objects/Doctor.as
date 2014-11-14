@@ -19,6 +19,8 @@ package objects
 
 		[Embed(source="alert_anim_100.png")] private static var ImgAlert:Class;
 		
+		
+		
 		public function Doctor(originX:Number, originY:Number)
 		{
 			super(originX, originY,false);

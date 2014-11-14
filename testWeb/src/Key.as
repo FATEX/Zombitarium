@@ -14,8 +14,6 @@ package
 		private var collisionMap:FlxTilemap;
 		
 		[Embed(source="larger_key.png")] private static var ImgKey:Class;
-		[Embed(source = "doorSound.mp3")]private var MySound : Class; 		 
-		private var sound : Sound; // not MySound! 
 		
 		[Embed(source = "keySound.mp3")]private var MySoundk : Class; 		 
 		private var soundk : Sound; // not MySound! 
@@ -45,6 +43,8 @@ package
 					soundk.play();
 				}
 			}
+			
+			
 		
 			if(d.doorOpen == false){ // if the door hasn't been opened yet
 				if(keyCollected == true){ // and if the player has already collected the key
@@ -54,8 +54,8 @@ package
 						PlayState.logger.recordEvent(PlayState.level+1,11,"pos=("+(int)(p.x/TILE_WIDTH)+","+(int)(p.y/TILE_HEIGHT)+")|action:open locked door");
 						c.setTile(tx, ty, 0);
 						c.setTile(tx, ty, 0);
-						sound = (new MySound()) as Sound;
-						sound.play();
+//						sound = (new MySound()) as Sound;
+//						sound.play();
 						state.revealBoard()
 						for(var i:int =0; i<zombies.length;i++){
 							zombies[i].checkPath(c);
@@ -71,6 +71,8 @@ package
 				if (FlxG.keys.E && pressed && FlxG.overlap(p, d)) {
 					pressed = false;
 					d.doorOpen = false;
+//					sound = (new MySound()) as Sound;
+//					sound.play();
 					PlayState.logger.recordEvent(PlayState.level+1,12,"pos=("+(int)(p.x/TILE_WIDTH)+","+(int)(p.y/TILE_HEIGHT)+")|action:close locked door");
 					c.setTile(tx, ty, 1);
 					state.revealBoard();

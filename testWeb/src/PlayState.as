@@ -28,6 +28,7 @@ package
 	import org.flixel.FlxText;
 	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
+	import MenuState;
 
 	public class PlayState extends FlxState
 	{
@@ -38,20 +39,20 @@ package
 		[Embed(source = "bg.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
 		private var myChannel:SoundChannel = new SoundChannel();
-		
+				
 		[Embed(source = "click.mp3")]private var MySoundbtn : Class; 		 
 		private var soundbtn : Sound; // not MySound! 
 		private var myChannelbtn:SoundChannel = new SoundChannel();
 		
-		[Embed(source = "fs.mp3")]private var MySoundmvt : Class; 		 
+		[Embed(source = "fts.mp3")]private var MySoundmvt : Class; 		 
 		private var soundmvt : Sound; // not MySound! 
 		private var myChannelmvt:SoundChannel = new SoundChannel();
 		
-		[Embed(source = "hdd.mp3")]private var MySoundhdead : Class; 		 
+		[Embed(source = "zdead.mp3")]private var MySoundhdead : Class; 		 
 		private var soundhdead : Sound; // not MySound! 
 		private var myChannelhdead:SoundChannel = new SoundChannel();
 		
-		[Embed(source = "zdead.mp3")]private var MySoundzdead : Class; 		 
+		[Embed(source = "zdd.mp3")]private var MySoundzdead : Class; 		 
 		private var soundzdead : Sound; // not MySound! 
 		private var myChannelzdead:SoundChannel = new SoundChannel();
 		
@@ -62,6 +63,10 @@ package
 		[Embed(source = "syrg.mp3")]private var MySoundsyrg : Class; 		 
 		private var soundsyrg : Sound; // not MySound! 
 		private var myChannelsyrg:SoundChannel = new SoundChannel();
+		
+		[Embed(source = "doorIO.mp3")]private var MySounddr : Class; 		 
+		private var sounddr : Sound; // not MySound! 
+		private var myChanneldr:SoundChannel = new SoundChannel();
 				
 		// Default character loading texts		
 		[Embed(source = 'characters0.txt', mimeType = 'application/octet-stream')]private static var characters0:Class;
@@ -185,10 +190,11 @@ package
 		private var soundOn:Boolean = true;
 		private var isABTesting = false;
 		private var numberOfZombies = 0;
-
+		private var pressed = true;
 		
 		override public function create():void
 		{
+			//SoundMixer.stopAll();
 			FlxG.worldBounds = new FlxRect(0,0,TILE_WIDTH*100,TILE_HEIGHT*100);
 			FlxG.framerate = 50;
 			FlxG.flashFramerate = 50;
@@ -266,12 +272,12 @@ package
 			characterLoader();
 			
 			
-			var test = setInterval(startbgsounds,500);
+			var test = setInterval(startbgsounds,0);
 			
 			function startbgsounds():void{
 				if (soundOn) {
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				myChannel = sound.play(0,10);
 				clearInterval(test);
 				}
 			}
@@ -306,6 +312,7 @@ package
 				soundbtn = (new MySoundbtn()) as Sound;
 				myChannelbtn = soundbtn.play();
 				}
+			
 				level++;
 				level = level%10;
 				resetGame();
@@ -710,6 +717,9 @@ package
 									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[j].x-type[i].x,zombies[j].y-type[i].y);
 									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2));
 									add(dSyringe);
+									if (soundOn) {
+									soundsyrg = (new MySoundsyrg()) as Sound;
+									myChannelsyrg = soundsyrg.play(); }
 									dSyringe.updatePos(10000);
 									(Doctor(type[i])).goBack(collisionMap);
 									cd = 0;
@@ -1129,10 +1139,10 @@ package
 					if(man is Nurse){
 						if(zom==player){
 							zom.disguiseON();
-							if (soundOn) {
-								soundcostm = (new MySoundcostm()) as Sound;
-								myChannelcostm = soundcostm.play();
-							}
+//							if (soundOn) {
+//								soundcostm = (new MySoundcostm()) as Sound;
+//								myChannelcostm = soundcostm.play();
+//							}
 							if(this.facingDirection==0){
 								player.play("idle",true);
 							}
@@ -1304,10 +1314,10 @@ package
 				if(man is Nurse){
 					if(zom==player){
 						zom.disguiseON();
-						if (soundOn) {
-							soundcostm = (new MySoundcostm()) as Sound;
-							myChannelcostm = soundcostm.play();
-						}
+//						if (soundOn) {
+//							soundcostm = (new MySoundcostm()) as Sound;
+//							myChannelcostm = soundcostm.play();
+//						}
 						if(this.facingDirection==0){
 							player.play("idle",true);
 						}
@@ -1442,14 +1452,31 @@ package
 						
 			for (var i:Number=0;i<doors.length;i++){
 				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/4)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/4)/TILE_HEIGHT),zombies,this);
-				doors[i].updateDoor(player);
+				doors[i].updateDoor();
+				if (soundOn && FlxG.overlap(player, doors[i])) {
+				doors[i].soundDoor(player,this);
+				}
 				
 			}
+			
 			
 			for each(var ud:UnlockedDoor in unlockedDoors){
 				//trace(Math.abs((ud.y)/TILE_HEIGHT));
 				ud.checkCollision(collisionMap, player, Math.round((ud.x+ud.width/4)/TILE_WIDTH), Math.round((ud.y+ud.height/4)/TILE_HEIGHT),zombies,player,this);
 				ud.updateDoor();
+				
+				if(FlxG.overlap(player, ud) && FlxG.keys.E && pressed){ // check if the door and the player are touching
+					pressed = false;
+					
+					
+					sounddr = (new MySounddr()) as Sound;
+					myChanneldr = sounddr.play();
+					
+					
+				} else if (FlxG.keys.E == false) {
+					pressed = true;
+					
+				}
 			}
 
 //			for (var t:Number=0;t<janitors.length;t++) {
@@ -1474,33 +1501,25 @@ package
 			{
 				//player.facing = FlxObject.LEFT;
 				player.acceleration.x -= player.drag.x;
-				if (soundOn) {
-				soundmvt = (new MySoundmvt()) as Sound;
-				myChannelmvt = soundmvt.play(); }
+				
 			}
 			else if(FlxG.keys.RIGHT)
 			{
 				//player.facing = FlxObject.RIGHT;
 				player.acceleration.x += player.drag.x;
-				if (soundOn) {
-				soundmvt = (new MySoundmvt()) as Sound;
-				myChannelmvt = soundmvt.play(); }
+				
 			}
 			if(FlxG.keys.UP)
 			{
 				//player.facing = FlxObject.UP;
 				player.acceleration.y -= player.drag.y;
-				if (soundOn) {
-				soundmvt = (new MySoundmvt()) as Sound;
-				myChannelmvt = soundmvt.play(); }
+				
 			}
 			else if(FlxG.keys.DOWN)
 			{
 				//player.facing = FlxObject.DOWN;
 				player.acceleration.y += player.drag.y;
-				if (soundOn) { 
-					soundmvt = (new MySoundmvt()) as Sound;
-					myChannelmvt = soundmvt.play(); }
+			
 			}
 			if(FlxG.keys.SPACE){
 				if(throwable){
