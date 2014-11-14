@@ -1,7 +1,10 @@
 package
 {
+	import flash.media.Sound;
+	
 	import org.flixel.FlxG;
 	import org.flixel.FlxSprite;
+	
 
 	public class Door extends FlxSprite
 	{
@@ -17,6 +20,9 @@ package
 		[Embed(source="doorOpenL_100.png")] static var ImgDoorOpen:Class;
 		[Embed(source="doorWin_100.png")] private static var ImgDoorCloseWin:Class;
 		[Embed(source="doorOpenWin_100.png")] private static var ImgDoorOpenWin:Class;
+		[Embed(source = "doorSound.mp3")]private var MySound : Class; 		 
+		private var sound : Sound; // not MySound! 
+		
 		
 		public function Door(tx,ty)
 		{
@@ -25,7 +31,7 @@ package
 			this.width=TILE_WIDTH;
 		
 		}
-		public function updateDoor():void 
+		public function updateDoor(p):void 
 		{
 			if (doorOpen == false) {
 				if(isWin){
@@ -42,7 +48,41 @@ package
 					this.loadGraphic(ImgDoorOpen, false, false,  TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
 				}
 				this.immovable = true;
+				
 			}
+//			if(doorOpen == false){ // if the door hasn't been opened yet
+//					if(FlxG.overlap(p, this) && FlxG.keys.E && pressed){ // check if the door and the player are touching
+//						pressed = false;
+//						doorOpen = true;
+//						sound = (new MySound()) as Sound;
+//						sound.play();
+////						state.revealBoard()
+////						for(var i:int =0; i<zombies.length;i++){
+////							zombies[i].checkPath(c);
+////						}
+//						
+//					} else if (FlxG.keys.E == false) {
+//						pressed = true;
+//					}
+//				
+//			}
+//			else
+//			{
+//				if (FlxG.keys.E && pressed && FlxG.overlap(p, this)) {
+//					pressed = false;
+//					doorOpen = false;
+////					PlayState.logger.recordEvent(PlayState.level+1,12,"pos=("+(int)(p.x/TILE_WIDTH)+","+(int)(p.y/TILE_HEIGHT)+")|action:close locked door");
+////					c.setTile(tx, ty, 1);
+////					state.revealBoard();
+////					for(var j:int =0; j<zombies.length;j++){
+////						zombies[j].checkPath(c);
+////					}
+//				} 
+//				else if (FlxG.keys.E == false) {
+//					pressed = true;
+//				}
+//				
+//			}
 		}
 	}
 }
