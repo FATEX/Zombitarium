@@ -1,14 +1,15 @@
 package
 {
 	import flash.display.Shape;
+	import flash.events.TimerEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.media.SoundMixer;
 	import flash.media.SoundTransform;
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
-	import flash.utils.*;
-	import flash.events.TimerEvent;
+	import flash.utils.clearInterval;
+	import flash.utils.setInterval;
 	
 	import objects.Doctor;
 	import objects.Human;
@@ -669,6 +670,10 @@ package
 					var yP:Vector.<Number> = new Vector.<Number>();
 					var startDegree:Number = hum.getAngle()-45;
 					var degrees:Number = 90;
+					if(hum is Janitor){
+						sides=20;
+						degrees=360;
+					}
 					var radius:Number = distanceCanSee;
 					var centerX:Number = -this.cam.width/2-this.cam.scroll.x+hum.x+hum.width/2;
 					var centerY:Number = -this.cam.height/2-this.cam.scroll.y+hum.y+hum.height/2;
