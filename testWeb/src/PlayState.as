@@ -578,6 +578,8 @@ package
 					keys.push(key);
 					j.key=key;
 					j.key.visible=false;
+					j.ID=unId;
+					unId++;
 				}
 				if(type=="PATIENT"){
 					h=new Patient(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2);
@@ -670,6 +672,7 @@ package
 			FlxG.collide(collisionMap, pSyringe,touchedH);
 			this.drawingCamera.fill(0x00000000);
 			for each(var hum:Human in humans){
+				try{
 				if(!FlxSprite(this.blankTiles[int(hum.x/TILE_WIDTH)][int(hum.y/TILE_HEIGHT)]).visible){
 					var triangle:Shape = new Shape(); 
 					var sides:Number = 5;
@@ -692,14 +695,21 @@ package
 						if(this.cam.getContainerSprite().getChildByName("tri"+j+hum.ID)!=null){
 							this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+hum.ID));
 						}
-						triangle.graphics.beginFill(0xFF0000); 
+						if(player.isDisguised){
+							triangle.graphics.beginFill(0x00FF00); 
+						}
+						else{
+							triangle.graphics.beginFill(0xFF0000); 
+						}
 						triangle.graphics.moveTo(centerX, centerY); 
 						triangle.graphics.lineTo(xP[j], yP[j]); 
 						triangle.graphics.lineTo(xP[j+1], yP[j+1]); 
 						triangle.graphics.lineTo(centerX , centerY); 
 						triangle.name="tri"+j+hum.ID;
 						triangle.alpha=.25;
-						this.cam.getContainerSprite().addChild(triangle);
+						if(!hum.isStunned){
+							this.cam.getContainerSprite().addChild(triangle);
+						}
 					}
 				}
 				else{
@@ -708,6 +718,10 @@ package
 							this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+hum.ID));
 						}
 					}
+				}
+				}
+				catch(e:Error){
+					trace("something");
 				}
 				FlxG.collide(hum,pSyringe, touchedH);
 			}
@@ -1184,23 +1198,6 @@ package
 						zombies.push(infected);
 					}
 					
-					var pos2:int = humans.indexOf(man);
-					//humans[pos].x=1000000000;
-					for(var j:int=0;j<20;j++){
-						if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
-							this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
-						}
-					}
-					humans.splice(pos2,1);
-					remove(player);
-					add(infected);
-					add(player);
-					var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
-					
-					//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
-					//add(t);
-					infected.attackNearestHuman(collisionMap, path2);
-					zombies.push(infected);
 					if(zom==player){
 						if(man is Janitor){
 							logger.recordEvent(level+1,1,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:kill janitor");
@@ -1549,7 +1546,6 @@ package
 		private function updatePlayer():void
 		{
 			//wrap(player);
-
 			if (player.alive == false) {
 				if(this.youLoseScreen ==null){
 					logger.recordEvent(level+1,101,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" ends");
@@ -1814,7 +1810,7 @@ package
 					} else {
 					this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! \nPress R to continue to next floor"); 
 					level++; 
-					level = level%10;
+					level = level%11;
 					}
 					this.youWinScreen.size=20;
 					//this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor");
