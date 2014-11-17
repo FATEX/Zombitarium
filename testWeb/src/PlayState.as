@@ -167,7 +167,7 @@ package
 		
 		private var infected:Zombie;
 		private var area:FlxSprite;
-		
+		private var exitDoor:DoorObject;
 		//Cameras
 		private var cam:FlxCamera;
 		private var camQuit:FlxCamera;
@@ -690,6 +690,7 @@ package
 					if(nextIsWinDoor){
 						door.isWin = true;
 						nextIsWinDoor = false;
+						this.exitDoor=door;
 					}
 					doors.push(door);
 				}
@@ -703,6 +704,7 @@ package
 					if(nextIsWinDoor){
 						unlockedDoor.isWin = true;
 						nextIsWinDoor = false;
+						this.exitDoor=unlockedDoor;
 					}
 					unlockedDoors.push(unlockedDoor);
 					
@@ -1898,7 +1900,7 @@ package
 				}
 			}
 			 
-			if (Math.abs(player.x- (exitX))<=TILE_WIDTH/8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/8) {
+			if (Math.abs(player.x- (exitX))<=TILE_WIDTH*.8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/2 && this.exitDoor.doorOpen) {
 				win == true;
 				
 				
