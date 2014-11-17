@@ -117,7 +117,7 @@ package
 		//logger
 		public static var isPageLoaded:Boolean = false;
 		private var playertime:Number = new Date().time;
-		private static var versionID:Number = 2;
+		private static var versionID:Number = 3;
 		public static var logger:Logging = new Logging(200,versionID,true);		
 		private static var isMuted = false; 
 		

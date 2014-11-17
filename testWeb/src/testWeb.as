@@ -19,10 +19,12 @@ package
 				var myNum:Number = Math.floor(Math.random()*2) + 1;
 				var value:Number = PlayState.logger.recordABTestValue(myNum);
 				if(value == 1){
-					PlayState.isABTesting = true;	
+					PlayState.isABTesting = true;
+					PlayState.logger.recordEvent(0,0,"A - max 2 zombies");
 				}
 				else{
 					PlayState.isABTesting = false;
+					PlayState.logger.recordEvent(0,0,"B - Infinite Zombies");
 				}
 				
 			}
