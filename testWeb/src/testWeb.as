@@ -22,7 +22,7 @@ package
 					PlayState.isABTesting = true;	
 				}
 				else{
-					PlayState.isABTesting = true;
+					PlayState.isABTesting = false;
 				}
 				
 			}
