@@ -112,6 +112,7 @@ package
 				sound = (new MySound()) as Sound;
 				myChannel = sound.play();
 				SoundMixer.stopAll();
+				FlxG.fade(0xff000000, 1, on_fade_completed);
 			});
 			
 			level_8 = new FlxButton(400, 260, "9", function():void
@@ -119,6 +120,7 @@ package
 				PlayState.level = 8;
 				sound = (new MySound()) as Sound;
 				myChannel = sound.play();
+				FlxG.fade(0xff000000, 1, on_fade_completed);
 				SoundMixer.stopAll();
 			});
 			
