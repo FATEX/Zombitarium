@@ -3,9 +3,8 @@ package
 	import org.flixel.FlxG;
 	import org.flixel.FlxSprite;
 	
-	public class UnlockedDoor extends FlxSprite
+	public class UnlockedDoor extends DoorObject
 	{
-		var doorOpen:Boolean = false;
 		var doorOpenImg:FlxSprite;
 		var pressed:Boolean = true;
 		var isWin:Boolean = false;

@@ -167,7 +167,7 @@ package
 		
 		private var infected:Zombie;
 		private var area:FlxSprite;
-		
+		private var exitDoor:DoorObject;
 		//Cameras
 		private var cam:FlxCamera;
 		private var camQuit:FlxCamera;
@@ -414,8 +414,12 @@ package
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
 			
-			
+			if(isABTesting){
 			zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1)+"/2");
+			}
+			else{
+				zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1));
+			}
 			zombieNum.scrollFactor.x=zombieNum.scrollFactor.y=0;
 			add(zombieNum);
 			//TODO: see if the pos fits actual size
@@ -686,6 +690,7 @@ package
 					if(nextIsWinDoor){
 						door.isWin = true;
 						nextIsWinDoor = false;
+						this.exitDoor=door;
 					}
 					doors.push(door);
 				}
@@ -699,6 +704,7 @@ package
 					if(nextIsWinDoor){
 						unlockedDoor.isWin = true;
 						nextIsWinDoor = false;
+						this.exitDoor=unlockedDoor;
 					}
 					unlockedDoors.push(unlockedDoor);
 					
@@ -819,8 +825,12 @@ package
 //			for(var t:int=0; t<janitors.length;t++){
 //				janitors[t].die();
 //			}
-			
-			zombieNum.label.text = "Zombies:"+(zombies.length-1)+"/2";
+			if(isABTesting){
+				zombieNum.label.text = "Zombies:"+(zombies.length-1)+"/2";
+			}
+			else{
+				zombieNum.label.text = "Zombies:"+(zombies.length-1);
+			}
 			syringeUI.label.text = "Syringe:"+ throwable.toString();
 			
 			super.update();
@@ -1890,7 +1900,7 @@ package
 				}
 			}
 			 
-			if (Math.abs(player.x- (exitX))<=TILE_WIDTH/8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/8) {
+			if (Math.abs(player.x- (exitX))<=TILE_WIDTH*.8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/2 && this.exitDoor.doorOpen) {
 				win == true;
 				
 				
