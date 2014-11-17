@@ -74,10 +74,15 @@ package
 		[Embed(source = 'characters0.txt', mimeType = 'application/octet-stream')]private static var characters0:Class;
 		[Embed(source = 'characters1.txt', mimeType = 'application/octet-stream')]private static var characters1:Class;
 		[Embed(source = 'characters2.txt', mimeType = 'application/octet-stream')]private static var characters2:Class;
+		[Embed(source = 'characters2T.txt', mimeType = 'application/octet-stream')]private static var characters2T:Class;
 		[Embed(source = 'characters3.txt', mimeType = 'application/octet-stream')]private static var characters3:Class;
+		[Embed(source = 'characters3T.txt', mimeType = 'application/octet-stream')]private static var characters3T:Class;
 		[Embed(source = 'characters4.txt', mimeType = 'application/octet-stream')]private static var characters4:Class;
+		[Embed(source = 'characters4T.txt', mimeType = 'application/octet-stream')]private static var characters4T:Class;
 		[Embed(source = 'characters5.txt', mimeType = 'application/octet-stream')]private static var characters5:Class;
+		[Embed(source = 'characters5T.txt', mimeType = 'application/octet-stream')]private static var characters5T:Class;
 		[Embed(source = 'characters6.txt', mimeType = 'application/octet-stream')]private static var characters6:Class;
+		[Embed(source = 'characters6T.txt', mimeType = 'application/octet-stream')]private static var characters6T:Class;
 		[Embed(source = 'charactersAlice.txt', mimeType = 'application/octet-stream')]private static var chAlice:Class;
 		[Embed(source = 'default_characters.txt', mimeType = 'application/octet-stream')]private static var default_characters:Class;
 		[Embed(source = 'default_characters_level_middle.txt', mimeType = 'application/octet-stream')]private static var default_characters2:Class;
@@ -87,10 +92,15 @@ package
 		[Embed(source = 'level0.txt', mimeType = 'application/octet-stream')]private static var default_level0:Class;
 		[Embed(source = 'level1.txt', mimeType = 'application/octet-stream')]private static var default_level1:Class;
 		[Embed(source = 'level2.txt', mimeType = 'application/octet-stream')]private static var default_level2:Class;
+		[Embed(source = 'level2T.txt', mimeType = 'application/octet-stream')]private static var default_level2T:Class;
 		[Embed(source = 'level3.txt', mimeType = 'application/octet-stream')]private static var default_level3:Class;
+		[Embed(source = 'level3T.txt', mimeType = 'application/octet-stream')]private static var default_level3T:Class;
 		[Embed(source = 'level4.txt', mimeType = 'application/octet-stream')]private static var default_level4:Class;
+		[Embed(source = 'level4T.txt', mimeType = 'application/octet-stream')]private static var default_level4T:Class;
 		[Embed(source = 'level5.txt', mimeType = 'application/octet-stream')]private static var default_level5:Class;
+		[Embed(source = 'level5T.txt', mimeType = 'application/octet-stream')]private static var default_level5T:Class;
 		[Embed(source = 'level6.txt', mimeType = 'application/octet-stream')]private static var default_level6:Class;
+		[Embed(source = 'level6T.txt', mimeType = 'application/octet-stream')]private static var default_level6T:Class;
 		[Embed(source = 'levelAlice.txt', mimeType = 'application/octet-stream')]private static var default_levelAlice:Class;
 		[Embed(source = 'default_auto.txt', mimeType = 'application/octet-stream')]private static var default_auto:Class;
 		[Embed(source = 'level_middle.txt', mimeType = 'application/octet-stream')]private static var default_middle:Class;
@@ -235,27 +245,42 @@ package
 				collisionMap.loadMap(new default_level2(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==3){
-				collisionMap.loadMap(new default_level3(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level2T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==4){
-				collisionMap.loadMap(new default_level4(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level3(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==5){
-				collisionMap.loadMap(new default_level5(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level3T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==6){
-				collisionMap.loadMap(new default_level6(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level4(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==7){
-				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level4T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==8){
-				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level5(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==9){
-				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level5T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==10){
+				collisionMap.loadMap(new default_level6(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+			}
+			else if(level==11){
+				collisionMap.loadMap(new default_level6T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+			}
+			else if(level==12){
+				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+			}
+			else if(level==13){
+				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+			}
+			else if(level==14){
+				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+			}
+			else if(level==15){
 				collisionMap.loadMap(new default_levelAlice(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			
@@ -317,7 +342,7 @@ package
 				}
 			
 				level++;
-				level = level%10;
+				level = level%16;
 				resetGame();
 			});
 			add(nextLevelBtn);
@@ -374,13 +399,13 @@ package
 				add(instructions = new FlxText(4*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"You can zombify humans by running into them from behind."))
 			} else if (level==2) {
 				add(instructions = new FlxText(7*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE If a human sees you, it will go after you!"))
-			} else if (level==3) {
-				add(instructions = new FlxText(7*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"Humans can kill zombies...but not without getting stunned!"))
 			} else if (level==4) {
-				add(instructions = new FlxText(10*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
-			} else if (level==5) {
-				add(instructions = new FlxText(8*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
+				add(instructions = new FlxText(7*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"Humans can kill zombies...but not without getting stunned!"))
 			} else if (level==6) {
+				add(instructions = new FlxText(10*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
+			} else if (level==8) {
+				add(instructions = new FlxText(8*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
+			} else if (level==10) {
 				add(instructions = new FlxText(8*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
@@ -498,7 +523,7 @@ package
 				this.zombieLimited = new FlxText(-100000,-100000,820,"0/2");
 				this.zombieLimited.size=39;
 				add(this.zombieLimited);
-				var camRe:FlxCamera = new FlxCamera(830, 0, this.zombieLimited.width, this.zombieLimited.height);
+				var camRe:FlxCamera = new FlxCamera(710, 0, this.zombieLimited.width, this.zombieLimited.height);
 				camRe.follow(this.zombieLimited);
 				FlxG.addCamera(camRe);
 			}
@@ -524,20 +549,30 @@ package
 			}else if(level==2){
 				btarray = new characters2();
 			}else if(level==3){
-				btarray = new characters3();
+				btarray = new characters2T();
 			}else if(level==4){
-				btarray = new characters4();
+				btarray = new characters3();
 			}else if(level==5){
-				btarray = new characters5();
+				btarray = new characters3T();
 			}else if(level==6){
-				btarray = new characters6();
+				btarray = new characters4();
 			}else if(level==7){
-				btarray = new default_characters();
+				btarray = new characters4T();
 			}else if(level==8){
-				btarray = new default_characters2();
+				btarray = new characters5();
 			}else if(level==9){
-				btarray = new default_chars_hard();
+				btarray = new characters5T();
 			}else if(level==10){
+				btarray = new characters6();
+			}else if(level==11){
+				btarray = new characters6T();
+			}else if(level==12){
+				btarray = new default_characters();
+			}else if(level==13){
+				btarray = new default_characters2();
+			}else if(level==14){
+				btarray = new default_chars_hard();
+			}else if(level==15){
 				btarray = new chAlice();
 			}
 		
@@ -1551,7 +1586,7 @@ package
 					logger.recordEvent(level+1,101,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" ends");
 					logger.recordLevelEnd();
 					this.youLoseScreen = new FlxText(-100000,0,820,"YOU LOSE TRY NOT TO GET CURED  \nPress R to restart");
-					this.youLoseScreen.size=39;
+					this.youLoseScreen.size=35;
 					add(this.youLoseScreen);
 					var camRe:FlxCamera = new FlxCamera(50, 300, this.youLoseScreen.width, this.youLoseScreen.height);
 					camRe.follow(this.youLoseScreen);
@@ -1804,17 +1839,17 @@ package
 					logger.recordEvent(level+1,102,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" complete");
 					logger.recordLevelEnd();
 
-					if (level==9) {
+					if (level==15) {
 						this.youWinScreen = new FlxText(-200000,0,820,"YOU HAVE ZOMBIFIED THE ENTIRE HOSPITAL! \nUse the Quit Button to return to menu.");
 
 					} else {
 					this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! \nPress R to continue to next floor"); 
 					level++; 
-					level = level%11;
+					level = level%16;
 					}
 					this.youWinScreen.size=20;
 					//this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor");
-					this.youWinScreen.size=39;
+					this.youWinScreen.size=35;
 					add(this.youWinScreen);
 					var camRev:FlxCamera = new FlxCamera(50, 300, this.youWinScreen.width, this.youWinScreen.height);
 					camRev.follow(this.youWinScreen);
