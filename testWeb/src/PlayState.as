@@ -201,7 +201,7 @@ package
 		private var powerUp:Boolean = false;
 		private var stop_btn;
 		public static var soundOn:Boolean = true;
-		private var isABTesting = true;
+		public static var isABTesting = true;
 		private var numberOfZombies = 0;
 		private var pressed = true;
 		

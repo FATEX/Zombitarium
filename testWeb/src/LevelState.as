@@ -113,7 +113,6 @@ package
 				myChannel = sound.play();
 				SoundMixer.stopAll();
 				FlxG.fade(0xff000000, 1, on_fade_completed);
-
 			});
 			
 			level_8 = new FlxButton(400, 260, "9", function():void
