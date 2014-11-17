@@ -118,7 +118,8 @@ package
 		public static var isPageLoaded:Boolean = false;
 		private var playertime:Number = new Date().time;
 		private static var versionID:Number = 2;
-		public static var logger:Logging = new Logging(200,versionID,true);
+		public static var logger:Logging = new Logging(200,versionID,true);		
+		private static var isMuted = false; 
 		
 		// Some static constants for the size of the tilemap tiles
 		public const TILE_WIDTH:uint = 65;
@@ -154,6 +155,10 @@ package
 		private var instructions:FlxText;
 		private var destination:FlxPoint;
 	
+		private var zombieNum:FlxButton;
+		private var muteButton:FlxButton;
+		private var syringeUI:FlxButton;
+		
 		private var keys:Vector.<Key>;
 		private var doors:Vector.<Door>;
 		private var unlockedDoors:Vector.<UnlockedDoor>;
@@ -362,8 +367,7 @@ package
 			
 			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
 			add(t);
-			
-			
+
 			
 			addCam();
 			blankTiles = new Array();
@@ -410,6 +414,36 @@ package
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
 			
+			
+			zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1)+"/2");
+			zombieNum.scrollFactor.x=zombieNum.scrollFactor.y=0;
+			add(zombieNum);
+			//TODO: see if the pos fits actual size
+			
+			muteButton = new FlxButton(FlxG.width-100, 0,"Mute",function():void{
+				if(FlxG.mute == false){
+					FlxG.mute = true;
+					isMuted = true;
+					muteButton.label.text = "UnMute";
+				}else{
+					FlxG.mute = false;
+					isMuted = false;
+					muteButton.label.text = "Mute";
+				}
+			});
+			if(!isMuted){
+				FlxG.mute = false;
+			}else{
+				FlxG.mute = true;
+				muteButton.label.text = "UnMute";
+			}
+			muteButton.scrollFactor.x=muteButton.scrollFactor.y=0;
+			add(muteButton);
+			
+			syringeUI = new FlxButton(FlxG.width-100, 80,"syringe:"+"false");
+			syringeUI.scrollFactor.x=syringeUI.scrollFactor.y=0;
+			add(syringeUI);
+			
 			logger.recordLevelStart(level+1,"start level "+(level+1));
 			//logger.recordEvent(level+1,100,"level starts");
 			this.drawingCamera = new FlxSprite(0,0);
@@ -425,6 +459,7 @@ package
 				isABTesting = false;
 			}
 		}
+		
 		
 		public function revealBoard():void{
 			if(this.darkRooms){
@@ -785,6 +820,9 @@ package
 //				janitors[t].die();
 //			}
 			
+			zombieNum.label.text = "Zombies:"+(zombies.length-1)+"/2";
+			syringeUI.label.text = "Syringe:"+ throwable.toString();
+			
 			super.update();
 		}
 		//var dis:Boolean = false;
@@ -1023,6 +1061,18 @@ package
 						syr.exists = false;
 					}
 					else{
+						//zombie >2
+						if(man is Janitor){
+							logger.recordEvent(level+1,31,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill janitor");
+						}else if(man is Nurse){
+							logger.recordEvent(level+1,32,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill nurse");
+						}else if(man is Doctor){
+							logger.recordEvent(level+1,33,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill doctor");
+						}else if(man is Patient){
+							logger.recordEvent(level+1,34,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill patient");							
+						}else{
+							logger.recordEvent(level+1,35,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill human");
+						}
 						var pos:int = humans.indexOf(man);
 						humans.splice(pos,1);
 						remove(man.alerted);
@@ -1057,6 +1107,7 @@ package
 					}
 				}
 				else{
+					//not AB testing
 					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 					/*if(man.stunAdded){
 						man.stunAdded=false;
@@ -1192,6 +1243,7 @@ package
 							zombies.push(infected);
 						}
 						else{
+							//zom>2
 							if(man.stunAdded){
 								man.stunAdded=false;
 								remove(man.stunAn,true);
@@ -1202,6 +1254,7 @@ package
 
 					}
 					else{
+						//not AB test
 						infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 						if(man.stunAdded){
 							man.stunAdded=false;
@@ -1322,6 +1375,8 @@ package
 						if(zom != player) numberOfZombies--;
 						zombieLimited.text = numberOfZombies + "/2";
 					}
+					var pos3:int = zombies.indexOf(zom);
+					zombies.splice(pos3,1);
 					remove(zom,true);
 					if (soundOn) {
 					soundzdead = (new MySoundzdead()) as Sound;
@@ -1552,10 +1607,12 @@ package
 			player = new Zombie(20, 20,TILE_WIDTH*7/8,TILE_HEIGHT*7/8,640/16*TILE_WIDTH,640/16*TILE_WIDTH,80/16*TILE_WIDTH,80/16*TILE_WIDTH);
 			player.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH,TILE_HEIGHT);
 			//bounding box tweaks
-			player.width = TILE_WIDTH*5/8;
-			player.height = TILE_HEIGHT*7/8;
-			player.offset.x = player.width/4;
-			player.offset.y = 1;
+			//player.offset.x = TILE_WIDTH/4;
+			//player.offset.y = TILE_HEIGHT/4;
+			player.width = TILE_WIDTH*2/8;
+			player.height = TILE_HEIGHT*6/8;
+			player.centerOffsets();
+			
 			
 			//basic player physics
 			player.drag.x = 640/1*TILE_WIDTH;

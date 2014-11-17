@@ -223,11 +223,9 @@ package
 				try{
 					isDisguised=false;
 					this.loadGraphic(ImgPlayer, true, true, TILE_WIDTH,TILE_HEIGHT);
-					
-					this.width =  TILE_WIDTH*5/8;
-					this.height = TILE_HEIGHT*7/8;
-					this.offset.x = this.width/4;
-					this.offset.y = 1;
+					this.width = TILE_WIDTH*2/8;
+					this.height = TILE_HEIGHT*6/8;
+					this.centerOffsets();
 					if(this.pathAngle <22 && this.pathAngle>=-22){
 						this.play("runBack",true);
 						this.facing=FlxObject.RIGHT;
@@ -277,10 +275,9 @@ package
 		public function disguiseON():void{
 			var hold:FlxPoint = new FlxPoint(this.x,this.y);
 			super.loadGraphic(ImgNurse, true, true, TILE_WIDTH,TILE_HEIGHT);
-			this.width =  TILE_WIDTH*5/8;
-			this.height = TILE_HEIGHT*7/8;
-			this.offset.x = this.width/4;
-			this.offset.y = 1;
+			this.width = TILE_WIDTH*2/8;
+			this.height = TILE_HEIGHT*6/8;
+			this.centerOffsets();
 			this.isDisguised = true;
 			var t:Timer = new Timer(5000);
 			t.addEventListener(TimerEvent.TIMER, onDelay);
