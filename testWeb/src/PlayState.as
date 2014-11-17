@@ -414,8 +414,12 @@ package
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
 			
-			
+			if(isABTesting){
 			zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1)+"/2");
+			}
+			else{
+				zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1));
+			}
 			zombieNum.scrollFactor.x=zombieNum.scrollFactor.y=0;
 			add(zombieNum);
 			//TODO: see if the pos fits actual size
@@ -819,8 +823,12 @@ package
 //			for(var t:int=0; t<janitors.length;t++){
 //				janitors[t].die();
 //			}
-			
-			zombieNum.label.text = "Zombies:"+(zombies.length-1)+"/2";
+			if(isABTesting){
+				zombieNum.label.text = "Zombies:"+(zombies.length-1)+"/2";
+			}
+			else{
+				zombieNum.label.text = "Zombies:"+(zombies.length-1);
+			}
 			syringeUI.label.text = "Syringe:"+ throwable.toString();
 			
 			super.update();
