@@ -558,7 +558,7 @@ package
 				this.zombieLimited = new FlxText(-100000,-100000,820,"0/2");
 				this.zombieLimited.size=39;
 				add(this.zombieLimited);
-				var camRe:FlxCamera = new FlxCamera(710, 0, this.zombieLimited.width, this.zombieLimited.height);
+				var camRe:FlxCamera = new FlxCamera(810, 0, this.zombieLimited.width, this.zombieLimited.height);
 				camRe.follow(this.zombieLimited);
 				FlxG.addCamera(camRe);
 			}
@@ -1642,12 +1642,14 @@ package
 				if(this.youLoseScreen ==null){
 					logger.recordEvent(level+1,101,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" ends");
 					logger.recordLevelEnd();
-					this.youLoseScreen = new FlxText(-100000,0,820,"YOU LOSE TRY NOT TO GET CURED  \nPress R to restart");
+					this.youLoseScreen = new FlxText(50,300,800,"YOU LOSE TRY NOT TO GET CURED  \nPress R to restart");
+					this.youLoseScreen.color=0x00FF00
 					this.youLoseScreen.size=35;
+					this.youLoseScreen.scrollFactor = new FlxPoint(0,0);
 					add(this.youLoseScreen);
-					var camRe:FlxCamera = new FlxCamera(50, 300, this.youLoseScreen.width, this.youLoseScreen.height);
+					/*var camRe:FlxCamera = new FlxCamera(50, 300, this.youLoseScreen.width, this.youLoseScreen.height);
 					camRe.follow(this.youLoseScreen);
-					FlxG.addCamera(camRe);
+					FlxG.addCamera(camRe);*/
 					remove(player);
 				}
 			}
@@ -1699,25 +1701,25 @@ package
 				}
 			}*/
 			
-			if(FlxG.keys.LEFT)
+			if(FlxG.keys.LEFT || FlxG.keys.A)
 			{
 				//player.facing = FlxObject.LEFT;
 				player.acceleration.x -= player.drag.x;
 				
 			}
-			else if(FlxG.keys.RIGHT)
+			else if(FlxG.keys.RIGHT || FlxG.keys.D)
 			{
 				//player.facing = FlxObject.RIGHT;
 				player.acceleration.x += player.drag.x;
 				
 			}
-			if(FlxG.keys.UP)
+			if(FlxG.keys.UP || FlxG.keys.W)
 			{
 				//player.facing = FlxObject.UP;
 				player.acceleration.y -= player.drag.y;
 				
 			}
-			else if(FlxG.keys.DOWN)
+			else if(FlxG.keys.DOWN || FlxG.keys.S)
 			{
 				//player.facing = FlxObject.DOWN;
 				player.acceleration.y += player.drag.y;
@@ -1897,20 +1899,22 @@ package
 					logger.recordLevelEnd();
 
 					if (level==15) {
-						this.youWinScreen = new FlxText(-200000,0,820,"YOU HAVE ZOMBIFIED THE ENTIRE HOSPITAL! \nUse the Quit Button to return to menu.");
+						this.youWinScreen = new FlxText(50,300,800,"YOU HAVE ZOMBIFIED THE ENTIRE HOSPITAL! \nUse the Quit Button to return to menu.");
 
 					} else {
-					this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! \nPress R to continue to next floor"); 
+					this.youWinScreen = new FlxText(50,300,800,"YAY YOU ZOMBIFIED THIS FLOOR!! \nPress R to continue to next floor"); 
 					level++; 
 					level = level%16;
 					}
+					this.youWinScreen.color=0x00FF00
+					this.youWinScreen.scrollFactor = new FlxPoint(0,0);
 					this.youWinScreen.size=20;
 					//this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor");
 					this.youWinScreen.size=35;
 					add(this.youWinScreen);
-					var camRev:FlxCamera = new FlxCamera(50, 300, this.youWinScreen.width, this.youWinScreen.height);
+					/*var camRev:FlxCamera = new FlxCamera(50, 300, this.youWinScreen.width, this.youWinScreen.height);
 					camRev.follow(this.youWinScreen);
-					FlxG.addCamera(camRev);
+					FlxG.addCamera(camRev);*/
 					remove(player);
 					//level++;
 					//level = level%10;
