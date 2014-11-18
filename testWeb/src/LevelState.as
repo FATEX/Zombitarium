@@ -269,13 +269,6 @@ package
 			cred.color = 0xcef5ae;
 			
 			FlxG.mouse.show();
-			
-			if(PlayState.isABTesting = true){
-				PlayState.logger.recordEvent(0,201,"A - Max 2 Zombies");
-			}
-			else{
-				PlayState.logger.recordEvent(0,200,"B - Infinite Zombies");
-			}
 		}
 		
 		public function on_fade_completed():void

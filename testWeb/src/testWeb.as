@@ -1,6 +1,7 @@
 package
 {
 	import flash.display.Sprite;
+	import flash.utils.setTimeout;
 	
 	import org.flixel.FlxGame; //Allows you to refer to flixel objects in your code
 
@@ -16,20 +17,28 @@ package
 			if(!PlayState.isPageLoaded){
 				PlayState.logger.recordPageLoad();
 				PlayState.isPageLoaded = true;
+				
 				var myNum:Number = Math.floor(Math.random()*2) + 1;
 				var value:Number = PlayState.logger.recordABTestValue(myNum);
 				//trace(value);
 				if(value == 1){
 					PlayState.isABTesting = true;
-					PlayState.logger.recordEvent(0,201,"A - Max 2 Zombies");
+					setTimeout(logTestA, 2000);
 				}
 				else{
 					PlayState.isABTesting = false;
-					PlayState.logger.recordEvent(0,200,"B - Infinite Zombies");
+					setTimeout(logTestB,2000);
 				}
 				
 			}
 
+		}
+		
+		public function logTestA():void{
+			PlayState.logger.recordEvent(0,201,"A - Max 2 Zombies");
+		}
+		public function logTestB():void{
+			PlayState.logger.recordEvent(0,200,"B - Infinite Zombies")
 		}
 	}
 }
