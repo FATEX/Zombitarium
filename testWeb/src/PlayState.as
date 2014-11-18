@@ -122,7 +122,7 @@ package
 		public static var isPageLoaded:Boolean = false;
 		private var playertime:Number = new Date().time;
 		private static var versionID:Number = 3;
-		public static var logger:Logging = new Logging(200,versionID,true);		
+		public static var logger:Logging = new Logging(200,versionID,false);		
 		private static var isMuted = false; 
 		
 		// Some static constants for the size of the tilemap tiles
@@ -1413,9 +1413,29 @@ package
 					man.stunAn.play("stun");
 					man.stunAdded=true;
 					if(zom==player){
-						logger.recordEvent(level+1,6,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by human");
+						if(man is Janitor){
+							logger.recordEvent(level+1,6,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by janitor");
+						}else if(man is Nurse){
+							logger.recordEvent(level+1,7,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by nurse");
+						}else if(man is Doctor){
+							logger.recordEvent(level+1,8,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by doctor");
+						}else if(man is Patient){
+							logger.recordEvent(level+1,9,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by patient");
+						}else{
+							logger.recordEvent(level+1,10,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by human");
+						}
 					}else{
-						logger.recordEvent(level+1,26,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by human");
+						if(man is Janitor){
+							logger.recordEvent(level+1,26,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by janitor");
+						}else if(man is Nurse){
+							logger.recordEvent(level+1,27,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by nurse");
+						}else if(man is Doctor){
+							logger.recordEvent(level+1,28,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by doctor");
+						}else if(man is Patient){
+							logger.recordEvent(level+1,29,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by patient");
+						}else{
+							logger.recordEvent(level+1,30,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by human");
+						}
 					}
 				}
 				man.alerted.x=man.x;
