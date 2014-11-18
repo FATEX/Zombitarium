@@ -453,7 +453,7 @@ package
 			muteButton.scrollFactor.x=muteButton.scrollFactor.y=0;
 			add(muteButton);
 			
-			syringeUI = new FlxButton(FlxG.width-100, 80,"syringe:"+"false");
+			syringeUI = new FlxButton(FlxG.width-100, 80,"syringe:"+"0");
 			syringeUI.scrollFactor.x=syringeUI.scrollFactor.y=0;
 			add(syringeUI);
 			
@@ -840,7 +840,12 @@ package
 			else{
 				zombieNum.label.text = "Zombies:"+(zombies.length-1);
 			}
-			syringeUI.label.text = "Syringe:"+ throwable.toString();
+			if(throwable){
+				syringeUI.label.text = "Syringe: 1";
+			}
+			else{
+				syringeUI.label.text = "Syringe: 0";
+			}
 			
 			super.update();
 		}
