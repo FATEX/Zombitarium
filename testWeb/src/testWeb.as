@@ -24,7 +24,6 @@ package
 				}
 				else{
 					PlayState.isABTesting = false;
-					PlayState.logger.recordEvent(0,0,"B - Infinite Zombies");
 				}
 				
 			}
