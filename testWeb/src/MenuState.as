@@ -25,7 +25,9 @@ package
 			t.alignment = "center";
 			add(t);
 			soundbg = (new MySoundbg()) as Sound;
-			myChannelbg = soundbg.play();
+			if(PlayState.soundOn){
+				myChannelbg = soundbg.play();
+			}
 			FlxG.mouse.show();
 		}
 
