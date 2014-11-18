@@ -208,9 +208,9 @@ package
 		private var nkeys;
 		private var nkeysC = 0;
 		private var powerUp:Boolean = false;
-		private var stop_btn;
+		//private var stop_btn;
 		public static var soundOn:Boolean = true;
-		public static var isABTesting = true;
+		public static var isABTesting:Boolean = true;
 		private var numberOfZombies = 0;
 		private var pressed = true;
 		
@@ -329,39 +329,20 @@ package
 			characterLoader();
 			
 			
-			var test = setInterval(startbgsounds,0);
-			
-			function startbgsounds():void{
-				if (soundOn) {
-				sound = (new MySound()) as Sound;
-				myChannel = sound.play(0,10);
-				clearInterval(test);
-				}
-			}
-
-			
-			stop_btn = new FlxButton(-100, -100, "Sound I/O", function():void
-			{
-//				if (myChannel)
-//				myChannel.stop();
-//				if (myChannel.soundTransform == new SoundTransform(0)) {
-//					myChannel.soundTransform = new SoundTransform(1);
-//				} else {
-//					myChannel.soundTransform = new SoundTransform(0);
+//			var test = setInterval(startbgsounds,0);
+//			
+//			function startbgsounds():void{
+//				if (soundOn) {
+//				sound = (new MySound()) as Sound;
+//				myChannel = sound.play(0,10);
+//				clearInterval(test);
 //				}
-				soundbtn = (new MySoundbtn()) as Sound;
-				myChannelbtn = soundbtn.play();
-				if (soundOn) {
-					soundOn = false;
-					//SoundMixer.stopAll();
-					myChannel.soundTransform = new SoundTransform(0);
-				} else {
-					myChannel.soundTransform = new SoundTransform(1);
-					soundOn = true;
-				}
-				
-			});
-			add(stop_btn);
+//			}
+			
+			sound = (new MySound()) as Sound;
+			if(soundOn){
+				myChannel = sound.play(0,10);
+			}
 			
 			nextLevelBtn = new FlxButton(-100, 70, "Next Level", function():void
 			{
@@ -445,24 +426,28 @@ package
 				zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1));
 			}
 			zombieNum.scrollFactor.x=zombieNum.scrollFactor.y=0;
-			add(zombieNum);
-			//TODO: see if the pos fits actual size
+			add(zombieNum);			
 			
 			muteButton = new FlxButton(FlxG.width-100, 0,"Mute",function():void{
-				if(FlxG.mute == false){
-					FlxG.mute = true;
-					isMuted = true;
-					muteButton.label.text = "UnMute";
-				}else{
-					FlxG.mute = false;
-					isMuted = false;
+				soundbtn = (new MySoundbtn()) as Sound;
+				myChannelbtn = soundbtn.play();
+				if (soundOn) {
+					soundOn = false;
+					//SoundMixer.stopAll();
+					//myChannel.soundTransform = new SoundTransform(0);
+					myChannel.stop();
 					muteButton.label.text = "Mute";
+				} else {
+					//myChannel.soundTransform = new SoundTransform(1);
+					myChannel = sound.play(0,10);
+					soundOn = true;
+					muteButton.label.text = "UnMute";
 				}
 			});
-			if(!isMuted){
-				FlxG.mute = false;
+			if(soundOn){
+				//FlxG.mute = false;
 			}else{
-				FlxG.mute = true;
+				//FlxG.mute = true;
 				muteButton.label.text = "UnMute";
 			}
 			muteButton.scrollFactor.x=muteButton.scrollFactor.y=0;
@@ -575,8 +560,8 @@ package
 			camLevel.follow(t);
 			FlxG.addCamera(camLevel);
 			
-			camSound.follow(stop_btn);
-			FlxG.addCamera(camSound);
+			//camSound.follow(stop_btn);
+			//FlxG.addCamera(camSound);
 			
 			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
 			this.powerUpMenu.size=12;
@@ -883,7 +868,7 @@ package
 						if(zombies[j].alive && type[i].alive){
 							
 							if(detect(type[i],zombies[j])){
-								if(type[i] is Doctor && cd >=50 ){
+								if(type[i] is Doctor && cd >=50 && !type[i].isStunned){
 									/*var t:FlxText;
 									var a:int = FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
 									t = new FlxText(20,0,40, a.toString());
@@ -1239,7 +1224,9 @@ package
 					zom.disguiseOFF();
 
 					soundhdead = (new MySoundhdead()) as Sound;
-					myChannelhdead = soundhdead.play();
+					if(soundOn){
+						myChannelhdead = soundhdead.play();
+					}
 					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 
 					if(isABTesting){
