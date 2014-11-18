@@ -1219,6 +1219,7 @@ package
 				man.stunAdded=false;
 				remove(man.stunAn,true);
 			}
+			trace("can kill: " + this.canKill(man,zom).toString());
 			if(this.canKill(man,zom)){
 				if(man.isStunned || man is Patient){
 					zom.disguiseOFF();
@@ -1993,11 +1994,20 @@ package
 				}
 			}
 			if(collisionMap.ray(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))){
+				
 				if(FlxU.getDistance(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))<=this.distanceCanSee){
 					var angle:Number = FlxU.getAngle(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2));
 					var lAngle:int = looker.getAngle();
+					//trace("angle is : "+ angle);
+					//trace("Langle is : "+ lAngle);
 					if(angle < 0){
 						angle = angle+360;
+					}
+					//cover the corner case
+					if(lAngle == 0){
+						if(Math.abs(lAngle - angle) <=90 || Math.abs(lAngle+360 - angle) <=90){
+							return true;
+						}
 					}
 					if(lAngle < 0){
 						lAngle = lAngle +360
