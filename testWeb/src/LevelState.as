@@ -17,7 +17,7 @@ package
 	
 	public class LevelState extends FlxState
 	{
-		[Embed(source = "lvlIMG.png")] private var ImgBG:Class;
+		[Embed(source = "level_select.png")] private var ImgBG:Class;
 		[Embed(source = "click.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
 		private var myChannel:SoundChannel = new SoundChannel();
@@ -61,7 +61,7 @@ package
 //			
 
 			
-			level_0 = new FlxButton(170, 200, "1", function():void
+			level_0 = new FlxButton(170, 230, "1", function():void
 			{
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
@@ -72,7 +72,7 @@ package
 			});
 			level_0.color = btnC;
 			
-			level_1 = new FlxButton(170, 230, "2", function():void
+			level_1 = new FlxButton(170, 260, "2", function():void
 			{
 				PlayState.level = 1;
 				sound = (new MySound()) as Sound;
@@ -83,7 +83,7 @@ package
 			});
 			level_1.color = btnC;
 			
-			level_2 = new FlxButton(170, 260, "3", function():void
+			level_2 = new FlxButton(170, 290, "3", function():void
 			{
 				PlayState.level = 2;
 				sound = (new MySound()) as Sound;
@@ -94,7 +94,7 @@ package
 			});
 			level_2.color = btnC;
 			
-			level_3 = new FlxButton(170, 290, "4", function():void
+			level_3 = new FlxButton(170, 320, "4", function():void
 			{
 				PlayState.level = 3;
 				sound = (new MySound()) as Sound;
@@ -105,7 +105,7 @@ package
 			});
 			level_3.color = btnC;
 			
-			level_4 = new FlxButton(170, 320, "5", function():void
+			level_4 = new FlxButton(170, 350, "5", function():void
 			{
 				PlayState.level = 4;
 				sound = (new MySound()) as Sound;
@@ -116,7 +116,7 @@ package
 			});
 			level_4.color = btnC;
 			
-			level_5 = new FlxButton(170, 350, "6", function():void
+			level_5 = new FlxButton(170, 380, "6", function():void
 			{
 				PlayState.level = 5;
 				sound = (new MySound()) as Sound;
@@ -127,7 +127,7 @@ package
 			});
 			level_5.color = btnC;
 			
-			level_6 = new FlxButton(370, 200, "7", function():void
+			level_6 = new FlxButton(370, 230, "7", function():void
 			{
 				PlayState.level = 6;
 				sound = (new MySound()) as Sound;
@@ -138,7 +138,7 @@ package
 			});
 			level_6.color = btnC;
 			
-			level_7 = new FlxButton(370, 230, "8", function():void
+			level_7 = new FlxButton(370, 260, "8", function():void
 			{
 				PlayState.level = 7;
 				sound = (new MySound()) as Sound;
@@ -150,7 +150,7 @@ package
 			});
 			level_7.color = btnC;
 			
-			level_8 = new FlxButton(370, 260, "9", function():void
+			level_8 = new FlxButton(370, 290, "9", function():void
 			{
 				PlayState.level = 8;
 				sound = (new MySound()) as Sound;
@@ -163,7 +163,7 @@ package
 			});
 			level_8.color = btnC;
 			
-			level_9 = new FlxButton(370, 290, "10", function():void
+			level_9 = new FlxButton(370, 320, "10", function():void
 			{
 				PlayState.level = 9;
 				sound = (new MySound()) as Sound;
@@ -174,7 +174,7 @@ package
 			});
 			level_9.color = btnC;
 			
-			level_10 = new FlxButton(370, 320, "11", function():void
+			level_10 = new FlxButton(370, 350, "11", function():void
 			{
 				PlayState.level = 10;
 				sound = (new MySound()) as Sound;
@@ -185,7 +185,7 @@ package
 			});
 			level_10.color = btnC;
 			
-			level_11 = new FlxButton(370, 350, "12", function():void
+			level_11 = new FlxButton(370, 380, "12", function():void
 			{
 				PlayState.level = 11;
 				sound = (new MySound()) as Sound;
@@ -196,7 +196,7 @@ package
 			});
 			level_11.color = btnC;
 			
-			level_12 = new FlxButton(570, 200, "13", function():void
+			level_12 = new FlxButton(570, 230, "13", function():void
 			{
 				PlayState.level = 12;
 				sound = (new MySound()) as Sound;
@@ -207,7 +207,7 @@ package
 			});
 			level_12.color = btnC;
 			
-			level_13 = new FlxButton(570, 230, "14", function():void
+			level_13 = new FlxButton(570, 260, "14", function():void
 			{
 				PlayState.level = 13;
 				sound = (new MySound()) as Sound;
@@ -218,7 +218,7 @@ package
 			});
 			level_13.color = btnC;
 			
-			level_14 = new FlxButton(570, 260, "15", function():void
+			level_14 = new FlxButton(570, 290, "15", function():void
 			{
 				PlayState.level = 14;
 				sound = (new MySound()) as Sound;
@@ -229,7 +229,7 @@ package
 			});
 			level_14.color = btnC;
 			
-			level_15 = new FlxButton(570, 290, "16", function():void
+			level_15 = new FlxButton(570, 320, "16", function():void
 			{
 				PlayState.level = 15;
 				sound = (new MySound()) as Sound;
@@ -240,7 +240,7 @@ package
 			});
 			level_15.color = btnC;
 			
-//			level_16 = new FlxButton(570, 320, "17", function():void
+//			level_16 = new FlxButton(570, 350, "17", function():void
 //			{
 //				PlayState.level = 16;
 //				sound = (new MySound()) as Sound;
@@ -249,7 +249,7 @@ package
 //			});
 //			level_16.color = btnC;
 //			
-//			level_17 = new FlxButton(570, 350, "18", function():void
+//			level_17 = new FlxButton(570, 380, "18", function():void
 //			{
 //				PlayState.level = 17;
 //				//txt = "18";
