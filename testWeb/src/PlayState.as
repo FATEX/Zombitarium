@@ -875,7 +875,7 @@ package
 									t.size = 15;
 									add(t);*/
 									(Doctor(type[i])).stopFollowingPath();
-									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[j].x-type[i].x,zombies[j].y-type[i].y);
+									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[j].x-type[i].x,zombies[j].y-type[i].y, 1);
 									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2));
 									add(dSyringe);
 									if (soundOn) {
@@ -1219,6 +1219,7 @@ package
 				man.stunAdded=false;
 				remove(man.stunAn,true);
 			}
+			trace("can kill: " + this.canKill(man,zom).toString());
 			if(this.canKill(man,zom)){
 				if(man.isStunned || man is Patient){
 					zom.disguiseOFF();
@@ -1830,7 +1831,7 @@ package
 							angleToThrow=-45;
 						}
 					}
-					pSyringe = new Syringe(angleToThrow, player.x+player.width/2, player.y+player.height/2, 0,0);
+					pSyringe = new Syringe(angleToThrow, player.x+player.width/2, player.y+player.height/2, 0,0, 0);
 					pSyringe.angle = angleToThrow-90;
 					add(pSyringe);
 					pSyringe.updatePos(10000);
@@ -2013,11 +2014,20 @@ package
 				}
 			}
 			if(collisionMap.ray(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))){
+				
 				if(FlxU.getDistance(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2))<=this.distanceCanSee){
 					var angle:Number = FlxU.getAngle(new FlxPoint(looker.x + looker.width / 2, looker.y + looker.height / 2),new FlxPoint(lookee.x + lookee.width / 2, lookee.y + lookee.height / 2));
 					var lAngle:int = looker.getAngle();
+					//trace("angle is : "+ angle);
+					//trace("Langle is : "+ lAngle);
 					if(angle < 0){
 						angle = angle+360;
+					}
+					//cover the corner case
+					if(lAngle == 0){
+						if(Math.abs(lAngle - angle) <=90 || Math.abs(lAngle+360 - angle) <=90){
+							return true;
+						}
 					}
 					if(lAngle < 0){
 						lAngle = lAngle +360

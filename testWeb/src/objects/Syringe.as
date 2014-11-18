@@ -11,25 +11,45 @@ package objects
 		private var playerThrowing:Boolean = false;
 		[Embed(source="syringe_use.png")] private static var ImgSpaceman:Class;
 		
-		public function Syringe(direction:int, xPos:int, yPos:int, xVect:Number,yVect:Number)
+		public function Syringe(direction:int, xPos:int, yPos:int, xVect:Number,yVect:Number, type:int)
 		{
 			var x:int = xPos;
 			var y:int = yPos;
-			if(direction == 0){
-				x = x - (TILE_WIDTH*7/8)/4;
+			if(type == 0){
+				if(direction == 0){
+					x = x - (TILE_WIDTH*7/8)/4;
+				}
+				else if(direction == 180){
+					x = x - (TILE_WIDTH*7/8)/4;
+					y = y+(TILE_WIDTH*1/8);
+				}
+				else if (direction == 90){
+					x = x+TILE_WIDTH*1/8;
+					y = y+(TILE_WIDTH*7/8)/8;
+				}
+				else if(direction == -90){
+					x = x-TILE_WIDTH*1/8;
+					y = y+(TILE_WIDTH*7/8)/8;
+				}
+			}else{
+				x = x - (TILE_WIDTH*7/8)/4
+				if(direction == 0){
+					x = x - (TILE_WIDTH*7/8)/4;
+				}
+				else if(direction == 180){
+					x = x - (TILE_WIDTH*7/8)/4;
+					y = y+(TILE_WIDTH*7/8);
+				}
+				else if (direction == 90){
+					x = x+TILE_WIDTH*7/8;
+					y = y+(TILE_WIDTH*7/8)/8;
+				}
+				else if(direction == -90){
+					x = x-(TILE_WIDTH*7/8)/2;
+					y = y+(TILE_WIDTH*7/8)/8;
+				}
 			}
-			else if(direction == 180){
-				x = x - (TILE_WIDTH*7/8)/4;
-				y = y+(TILE_WIDTH*1/8);
-			}
-			else if (direction == 90){
-				x = x+TILE_WIDTH*1/8;
-				y = y+(TILE_WIDTH*7/8)/8;
-			}
-			else if(direction == -90){
-				x = x-TILE_WIDTH*1/8;
-				y = y+(TILE_WIDTH*7/8)/8;
-			}
+			
 			super(x,y);
 			super.loadGraphic(ImgSpaceman, true, true, 44, 9);
 			//bounding box tweaks
