@@ -36,6 +36,10 @@ package
 	{
 		// Tileset that works with AUTO mode (best for thin walls)
 		[Embed(source = 'wall_USE2.png')]private static var auto_tiles:Class;
+		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
+		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
+		[Embed(source = 'wall_USE5.png')]private static var coverTiles3:Class;
+
 		
 		// Music
 		[Embed(source = "bg.mp3")]private var MySound : Class; 		 
@@ -117,7 +121,7 @@ package
 		//logger
 		public static var isPageLoaded:Boolean = false;
 		private var playertime:Number = new Date().time;
-		private static var versionID:Number = 2;
+		private static var versionID:Number = 3;
 		public static var logger:Logging = new Logging(200,versionID,true);		
 		private static var isMuted = false; 
 		
@@ -167,7 +171,7 @@ package
 		
 		private var infected:Zombie;
 		private var area:FlxSprite;
-		
+		private var exitDoor:DoorObject;
 		//Cameras
 		private var cam:FlxCamera;
 		private var camQuit:FlxCamera;
@@ -299,6 +303,26 @@ package
 					}
 				}
 			}
+			for(var i:int =0;i<collisionMap.widthInTiles;i++){
+				for(var j:int=0;j<collisionMap.heightInTiles;j++){
+					if(j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i,j+1)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==0){
+						var coverSpr3:FlxSprite = new FlxSprite(i*TILE_WIDTH,(j)*TILE_HEIGHT);
+						coverSpr3.loadGraphic(coverTiles3,false,false,TILE_WIDTH,TILE_HEIGHT);
+						add(coverSpr3);
+					}
+					else if(j+1<collisionMap.heightInTiles && collisionMap.getTile(i,j+1)==0 && collisionMap.getTile(i,j)==1){
+						var coverSpr:FlxSprite = new FlxSprite(i*TILE_WIDTH,(j)*TILE_HEIGHT);
+						coverSpr.loadGraphic(coverTiles,false,false,TILE_WIDTH,TILE_HEIGHT);
+						add(coverSpr);
+					}
+					else if(i+1<collisionMap.widthInTiles && collisionMap.getTile(i+1,j)==0 && collisionMap.getTile(i,j)==1){
+						var coverSpr2:FlxSprite = new FlxSprite(i*TILE_WIDTH,(j)*TILE_HEIGHT);
+						coverSpr2.loadGraphic(coverTiles2,false,false,TILE_WIDTH,TILE_HEIGHT);
+						add(coverSpr2);
+					}
+					
+				}
+			}
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
 			destination = new FlxPoint(0,0);
 			setupPlayer();
@@ -351,6 +375,7 @@ package
 
 			
 			addCam();
+			
 			blankTiles = new Array();
 			for(var q:int=0;q<collisionMap.widthInTiles;q++){
 				blankTiles[q]=new Array();
@@ -358,14 +383,14 @@ package
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
 					if(collisionMap.getTile(i,j)==0 && this.darkRooms){
-						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH,j*TILE_HEIGHT);
-						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH,TILE_HEIGHT);
+						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-5,j*TILE_HEIGHT);
+						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+5,TILE_HEIGHT);
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
 					}
 					else{
-						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH,j*TILE_HEIGHT);
-						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH,TILE_HEIGHT);
+						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-5,j*TILE_HEIGHT);
+						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+5,TILE_HEIGHT);
 						//blankScreenTile.visible=false;
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
@@ -395,8 +420,12 @@ package
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
 			
-			
+			if(isABTesting){
 			zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1)+"/2");
+			}
+			else{
+				zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1));
+			}
 			zombieNum.scrollFactor.x=zombieNum.scrollFactor.y=0;
 			add(zombieNum);			
 			
@@ -671,6 +700,7 @@ package
 					if(nextIsWinDoor){
 						door.isWin = true;
 						nextIsWinDoor = false;
+						this.exitDoor=door;
 					}
 					doors.push(door);
 				}
@@ -684,6 +714,7 @@ package
 					if(nextIsWinDoor){
 						unlockedDoor.isWin = true;
 						nextIsWinDoor = false;
+						this.exitDoor=unlockedDoor;
 					}
 					unlockedDoors.push(unlockedDoor);
 					
@@ -804,8 +835,12 @@ package
 //			for(var t:int=0; t<janitors.length;t++){
 //				janitors[t].die();
 //			}
-			
-			zombieNum.label.text = "Zombies:"+(zombies.length-1)+"/2";
+			if(isABTesting){
+				zombieNum.label.text = "Zombies:"+(zombies.length-1)+"/2";
+			}
+			else{
+				zombieNum.label.text = "Zombies:"+(zombies.length-1);
+			}
 			syringeUI.label.text = "Syringe:"+ throwable.toString();
 			
 			super.update();
@@ -1877,7 +1912,7 @@ package
 				}
 			}
 			 
-			if (Math.abs(player.x- (exitX))<=TILE_WIDTH/8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/8) {
+			if (Math.abs(player.x- (exitX))<=TILE_WIDTH*.8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/2 && this.exitDoor.doorOpen) {
 				win == true;
 				
 				

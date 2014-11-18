@@ -47,6 +47,10 @@ package objects
 		public var alertedOfEnemy:Boolean = false;
 		private var facingToward:int =0;
 		private var pos:int=0;
+		private var checkNode:int=0;
+		private var holdAngle:Number=0;
+		private var startAngle:Number=0;
+		private var addingAmount:Boolean=true;
 		public function Human(originX:Number, originY:Number, overLoad:Boolean)
 		{
 			super(originX, originY);
@@ -137,40 +141,72 @@ package objects
 			var t:Timer = new Timer(1000,1);
 			t.addEventListener(TimerEvent.TIMER_COMPLETE, onPause2);
 			t.start();
-			var ang:Number = FlxU.getAngle(new FlxPoint(this.x+this.width/2,this.y+this.height/2),this.routeDirection[pos].nodes[1]);
-			
-			if(ang>=0 && this.pathAngle>=0){
-				if(ang>this.pathAngle){
-					this.amountToTurn = (ang-this.pathAngle)/50;
+			var ang:Number=0;
+			var checkNodeNum:int = 1;
+			var difAng:Number=0;
+			while(difAng<10 && difAng >=-10 && checkNodeNum<this.routeDirection[pos].nodes.length){
+				ang = FlxU.getAngle(new FlxPoint(this.x+this.width/2,this.y+this.height/2),this.routeDirection[pos].nodes[checkNodeNum]);
+				if(Math.abs(ang-this.pathAngle)%360>180){
+					difAng=360-ang;
 				}
 				else{
-					this.amountToTurn = (this.pathAngle-ang)/50;
+					difAng=(Math.abs(ang-this.pathAngle)%360);
+				}
+				checkNodeNum++;
+			}
+			this.startAngle=this.pathAngle;
+			if(checkNodeNum<this.routeDirection[pos].nodes.length){
+				this.checkNode=checkNodeNum;
+			}
+			else{
+				this.checkNode=0;
+			}
+			if(ang>=0 && this.pathAngle>=0){
+				if(ang>this.pathAngle){
+					addingAmount = true;
+					this.amountToTurn = (ang-this.pathAngle)/40;
+				}
+				else{
+					addingAmount = false;
+					this.amountToTurn = (this.pathAngle-ang)/40;
 				}
 			}
 			else if(ang<=0 && this.pathAngle<=0){
 				if(ang<this.pathAngle){
-					this.amountToTurn = (ang-this.pathAngle)/50;
+					addingAmount = true;
+					this.amountToTurn = (ang-this.pathAngle)/40;
 				}
 				else{
-					this.amountToTurn = (this.pathAngle-ang)/50;
+					addingAmount = false;
+					this.amountToTurn = (this.pathAngle-ang)/40;
 				}
 			}
 			else if(ang<=0 && this.pathAngle>=0){
 				if(ang>=-90 && this.pathAngle<=90){
-					this.amountToTurn = (this.pathAngle-ang)/50;
+					addingAmount = false;
+					this.amountToTurn = (this.pathAngle-ang)/40;
 				}
 				else{
-					this.amountToTurn = (-ang-this.pathAngle)/50;
+					addingAmount = true;
+					this.amountToTurn = (-ang-this.pathAngle)/40;
 				}
 			}
 			else if(ang>=0 && this.pathAngle<=0){
 				if(ang<=90 && this.pathAngle>=-90){
-					this.amountToTurn = (ang-this.pathAngle)/50;
+					addingAmount = true;
+					this.amountToTurn = (ang-this.pathAngle)/40;
 				}
 				else{
-					this.amountToTurn = (-this.pathAngle-ang)/50;
+					addingAmount = false;
+					if(Math.abs(this.pathAngle)>Math.abs(ang)){
+						this.amountToTurn = (-this.pathAngle-ang)/40;
+					}
+					else{
+						this.amountToTurn = (ang+this.pathAngle)/40;
+					}
 				}
 			}
+			this.holdAngle=ang;
 			
 			
 			j.start();
@@ -198,49 +234,17 @@ package objects
 		}
 		private function rot2():void{
 			try{
-				var ang:Number = FlxU.getAngle(new FlxPoint(this.x+this.width/2,this.y+this.height/2),this.routeDirection[pos].nodes[1]);
-				if(ang>=0 && this.pathAngle>=0){
-					if(ang>this.pathAngle){
-						this.pathAngle = this.pathAngle + this.amountToTurn;
-					}
-					else{
-						this.pathAngle = this.pathAngle - this.amountToTurn;
-					}
+				if(this.addingAmount){
+					this.pathAngle=this.pathAngle+this.amountToTurn;
 				}
-				else if(ang<=0 && this.pathAngle<=0){
-					if(ang<this.pathAngle){
-						this.pathAngle = this.pathAngle - this.amountToTurn;
-					}
-					else{
-						this.pathAngle = this.pathAngle + this.amountToTurn;
-					}
-				}
-				else if(ang<=0 && this.pathAngle>=0){
-					if(ang>=-90 && this.pathAngle<=90){
-						this.pathAngle = this.pathAngle - this.amountToTurn;
-					}
-					else{
-						this.pathAngle = this.pathAngle + this.amountToTurn;
-					}
-				}
-				else if(ang>=0 && this.pathAngle<=0){
-					if(ang<=90 && this.pathAngle>=-90){
-						this.pathAngle = this.pathAngle + this.amountToTurn;
-					}
-					else{
-						if(this.amountToTurn>0){
-							this.pathAngle = this.pathAngle - this.amountToTurn;
-						}
-						else{
-							this.pathAngle = this.pathAngle + this.amountToTurn;
-	
-						}
-					}
+				else{
+					this.pathAngle=this.pathAngle-this.amountToTurn;
 				}
 			}catch(e:Error){
+				trace("someting bad");
 				return;
 			}
-			
+			//trace("ang: "+ang+" end: "+this.pathAngle);
 		}
 		private function onPause(t:TimerEvent):void{
 			onResume();

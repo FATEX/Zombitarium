@@ -6,9 +6,8 @@ package
 	import org.flixel.FlxSprite;
 	
 
-	public class Door extends FlxSprite
+	public class Door extends DoorObject
 	{
-		var doorOpen:Boolean = false;
 		var doorOpenImg:FlxSprite;
 		var pressed:Boolean = true;
 		var isWin:Boolean = false;

@@ -1,22 +1,27 @@
 package
 {
+	import flash.events.MouseEvent;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.media.SoundMixer;
 	import flash.media.SoundTransform;
-	import flash.events.MouseEvent; 
+	
 	import org.flixel.FlxButton;
 	import org.flixel.FlxG;
+	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
+
 	//import flash.events.addEventListener;
 	
 	public class LevelState extends FlxState
 	{
+		[Embed(source = "lvlIMG.png")] private var ImgBG:Class;
 		[Embed(source = "click.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
 		private var myChannel:SoundChannel = new SoundChannel();
 		private var btnFirst:Boolean = true;
+		private var bg: FlxSprite;
 		
 		
 		private var level_0;
@@ -38,89 +43,93 @@ package
 		private var level_16;
 		private var level_17;
 		private var level_18;
+		private var cred;
 		
 		
 		override public function create():void
 		{
-			var t:FlxText;
-			t = new FlxText(0,20,(FlxG.width),"Level Select");
-			t.size = 64
-			t.alignment = "center";
-			add(t);
+			bg = new FlxSprite(0, 0, ImgBG);
+			add(bg);
 			
+//			var t:FlxText;
+//			t = new FlxText(0,20,(FlxG.width),"Level Select");
+//			t.size = 64
+//			t.alignment = "center";
+//			add(t);
+//			
 
 			
-			level_0 = new FlxButton(200, 200, "1", function():void
+			level_0 = new FlxButton(170, 200, "1", function():void
 			{
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
 				PlayState.level = 0;
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_1 = new FlxButton(200, 230, "2", function():void
+			level_1 = new FlxButton(170, 230, "2", function():void
 			{
 				PlayState.level = 1;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_2 = new FlxButton(200, 260, "3", function():void
+			level_2 = new FlxButton(170, 260, "3", function():void
 			{
 				PlayState.level = 2;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_3 = new FlxButton(200, 290, "4", function():void
+			level_3 = new FlxButton(170, 290, "4", function():void
 			{
 				PlayState.level = 3;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_4 = new FlxButton(200, 320, "5", function():void
+			level_4 = new FlxButton(170, 320, "5", function():void
 			{
 				PlayState.level = 4;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_5 = new FlxButton(200, 350, "6", function():void
+			level_5 = new FlxButton(170, 350, "6", function():void
 			{
 				PlayState.level = 5;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_6 = new FlxButton(400, 200, "7", function():void
+			level_6 = new FlxButton(370, 200, "7", function():void
 			{
 				PlayState.level = 6;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_7 = new FlxButton(400, 230, "8", function():void
+			level_7 = new FlxButton(370, 230, "8", function():void
 			{
 				PlayState.level = 7;
 				sound = (new MySound()) as Sound;
@@ -128,10 +137,10 @@ package
 					myChannel = sound.play();
 				}
 				SoundMixer.stopAll();
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_8 = new FlxButton(400, 260, "9", function():void
+			level_8 = new FlxButton(370, 260, "9", function():void
 			{
 				PlayState.level = 8;
 				sound = (new MySound()) as Sound;
@@ -139,98 +148,104 @@ package
 					myChannel = sound.play();
 				}
 				SoundMixer.stopAll();
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 
 			});
 			
-			level_9 = new FlxButton(400, 290, "10", function():void
+			level_9 = new FlxButton(370, 290, "10", function():void
 			{
 				PlayState.level = 9;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
-			level_10 = new FlxButton(400, 320, "11", function():void
+			level_10 = new FlxButton(370, 320, "11", function():void
 			{
 				PlayState.level = 10;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}					
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_11 = new FlxButton(400, 350, "12", function():void
+			level_11 = new FlxButton(370, 350, "12", function():void
 			{
 				PlayState.level = 11;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_12 = new FlxButton(600, 200, "13", function():void
+			level_12 = new FlxButton(570, 200, "13", function():void
 			{
 				PlayState.level = 12;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_13 = new FlxButton(600, 230, "14", function():void
+			level_13 = new FlxButton(570, 230, "14", function():void
 			{
 				PlayState.level = 13;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_14 = new FlxButton(600, 260, "15", function():void
+			level_14 = new FlxButton(570, 260, "15", function():void
 			{
 				PlayState.level = 14;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
-			level_15 = new FlxButton(600, 290, "16", function():void
+			level_15 = new FlxButton(570, 290, "16", function():void
 			{
 				PlayState.level = 15;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_16 = new FlxButton(600, 320, "17", function():void
+			level_16 = new FlxButton(570, 320, "17", function():void
 			{
 				PlayState.level = 16;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			
-			level_17 = new FlxButton(600, 350, "18", function():void
+			level_17 = new FlxButton(570, 350, "18", function():void
 			{
 				PlayState.level = 17;
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
 					myChannel = sound.play();
 				}
-				FlxG.fade(0xff000000, 1, on_fade_completed);
+				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 		
+			cred = new FlxButton(370, 500, "CREDITS", function():void
+			{
+				sound = (new MySound()) as Sound;
+				myChannel = sound.play();
+				FlxG.fade(0xff000000, 0.5, to_credits);
+			});
 			
 			FlxG.mouse.show();
 		}
@@ -241,6 +256,14 @@ package
 			FlxG.switchState(new PlayState());
 			SoundMixer.stopAll();
 		}
+		
+		public function to_credits():void
+		{
+			// playing the game itself
+			FlxG.switchState(new CreditState());
+			//SoundMixer.stopAll();
+		}
+		
 		
 		override public function update():void
 		{
@@ -265,6 +288,7 @@ package
 			add(level_16);
 			add(level_17);
 			add(level_18);
+			add(cred);
 			
 			if (btnFirst == false) {
 				SoundMixer.stopAll();
