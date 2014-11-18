@@ -1351,24 +1351,24 @@ package
 								player.play("idleBack",true);
 							}
 							else if(this.facingDirection==2){
-								player.play("right",true);
+								player.play("idleRight",true);
 							}
 							else if(this.facingDirection==3){
-								player.play("topRight",true);
+								player.play("idleTRight",true);
 							}
 							else if(this.facingDirection==4){
-								player.play("bottomLeft",true);
+								player.play("idleBLeft",true);
 								player.facing=FlxObject.RIGHT;
 							}
 							else if(this.facingDirection==5){
-								player.play("right",true);
+								player.play("idleRight",true);
 								player.facing=FlxObject.LEFT;
 							}
 							else if(this.facingDirection==6){
-								player.play("bottomLeft",true);
+								player.play("idleBLeft",true);
 							}
 							else{
-								player.play("topRight",true);
+								player.play("idleTRight",true);
 								player.facing=FlxObject.RIGHT;
 							}
 						}
@@ -1563,24 +1563,24 @@ package
 							player.play("idleBack",true);
 						}
 						else if(this.facingDirection==2){
-							player.play("right",true);
+							player.play("idleRight",true);
 						}
 						else if(this.facingDirection==3){
-							player.play("topRight",true);
+							player.play("idleTRight",true);
 						}
 						else if(this.facingDirection==4){
-							player.play("bottomLeft",true);
+							player.play("idleBLeft",true);
 							player.facing=FlxObject.RIGHT;
 						}
 						else if(this.facingDirection==5){
-							player.play("right",true);
+							player.play("idleRight",true);
 							player.facing=FlxObject.LEFT;
 						}
 						else if(this.facingDirection==6){
-							player.play("bottomLeft",true);
+							player.play("idleBLeft",true);
 						}
 						else{
-							player.play("topRight",true);
+							player.play("idleTRight",true);
 							player.facing=FlxObject.RIGHT;
 						}
 						
@@ -1668,9 +1668,9 @@ package
 			player.addAnimation("run", [0, 1, 2, 3], 12);
 			player.addAnimation("idleBack",[4]);
 			player.addAnimation("runBack",[5,6,7,4],12);
-			player.addAnimation("topRight",[10]);
-			player.addAnimation("right",[8]);
-			player.addAnimation("bottomLeft",[9]);
+			player.addAnimation("topRight",[16,17,18,19],12);
+			player.addAnimation("right",[8,9,10,11],12);
+			player.addAnimation("bottomLeft",[12,13,14,15],12);
 			zombies.push(player);
 
 
@@ -1906,26 +1906,26 @@ package
 					player.play("idleBack");
 				}
 				else if(this.facingDirection==2){
-					player.play("right");
+					player.play("idleRight");
 				}
 				else if(this.facingDirection==3){
-					player.play("topRight");
+					player.play("idleTRight");
 				}
 				else if(this.facingDirection==4){
-					player.play("bottomLeft");
+					player.play("idleBLeft");
 					player.facing=FlxObject.LEFT;
 				}
 				else if(this.facingDirection==5){
-					player.play("right");
+					player.play("idleRight");
 					player.facing=FlxObject.LEFT;
 				}
 				else if(this.facingDirection==6){
-					player.play("bottomLeft");
+					player.play("idleBLeft");
 					player.facing=FlxObject.RIGHT;
 
 				}
 				else{
-					player.play("topRight");
+					player.play("idleTRight");
 					player.facing=FlxObject.RIGHT;
 				}
 			}

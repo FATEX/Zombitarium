@@ -26,12 +26,12 @@ package objects
 			super(originX, originY,false);
 			super.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH,TILE_HEIGHT);
 			super.addAnimation("idle", [0]);
-			super.addAnimation("run", [0]);
-			super.addAnimation("idleBack", [1]);
-			super.addAnimation("runBack", [1]);
-			super.addAnimation("right",[2]);
-			super.addAnimation("bottomLeft",[3]);
-			super.addAnimation("topRight",[4]);
+			super.addAnimation("run", [1,2,3,0],12);
+			super.addAnimation("idleBack", [4]);
+			super.addAnimation("runBack", [5,6,7,4],12);
+			super.addAnimation("right",[8,9,10,11],12);
+			super.addAnimation("bottomLeft",[12,13,14,15],12);
+			super.addAnimation("topRight",[16,17,18,19],12);
 		}
 		
 		public function throwSyringe(dPosx:int, dPosy:int, tPosx:int, tPosy:int):Boolean{

@@ -78,13 +78,16 @@ package objects
 			
 			//animations
 			if(overLoad){
-			super.addAnimation("idle", [0]);
-			super.addAnimation("run", [1, 2, 3, 0], 6);
-			super.addAnimation("idleBack", [4]);
-			super.addAnimation("runBack", [5,6,7,4],6);
-			super.addAnimation("right",[8]);
-			super.addAnimation("bottomLeft",[9]);
-			super.addAnimation("topRight",[10]);
+				super.addAnimation("idle", [0]);
+				super.addAnimation("run", [0, 1, 2, 3], 12);
+				super.addAnimation("idleBack",[4]);
+				super.addAnimation("runBack",[4,5,6,7],12);
+				super.addAnimation("idleTRight",[16]);
+				super.addAnimation("topRight",[17,18,19,16],12);
+				super.addAnimation("idleRight",[8]);
+				super.addAnimation("right",[9,10,11,8],12);
+				super.addAnimation("idleBLeft",[12]);
+				super.addAnimation("bottomLeft",[13,14,15,12],12);
 			}
 			alerted = new FlxSprite(originX,originY);
 			alerted.loadGraphic(ImgAlert,true,false,TILE_WIDTH,TILE_HEIGHT);
@@ -328,17 +331,17 @@ package objects
 					facingToward=1;
 				}
 				else if(this.restingAngle <67 && this.restingAngle>=22){
-					this.play("topRight");
+					this.play("idleTRight");
 					this.facing=FlxObject.RIGHT;
 					facingToward=2;
 				}
 				else if(this.restingAngle <112 && this.restingAngle>=67){
-					this.play("right");
+					this.play("idleRight");
 					facingToward=4;
 					this.facing=FlxObject.RIGHT;
 				}
 				else if(this.restingAngle <157 && this.restingAngle>=112){
-					this.play("bottomLeft");
+					this.play("ideleBLeft");
 					this.facing=FlxObject.LEFT;
 					facingToward=3;
 				}
@@ -348,17 +351,17 @@ package objects
 					this.facing=FlxObject.RIGHT;
 				}
 				else if(this.restingAngle <-22 && this.restingAngle>=-67){
-					this.play("topRight");
+					this.play("idleTRight");
 					facingToward=5;
 					this.facing=FlxObject.LEFT;
 				}
 				else if(this.restingAngle <-67 && this.restingAngle>=-112){
-					this.play("right");
+					this.play("idleRight");
 					facingToward=6;
 					this.facing=FlxObject.LEFT;
 				}
 				else if(this.restingAngle <-157 && this.restingAngle>=-112){
-					this.play("bottomLeft");
+					this.play("idleBLeft");
 					facingToward=7;
 					this.facing=FlxObject.RIGHT;
 				}

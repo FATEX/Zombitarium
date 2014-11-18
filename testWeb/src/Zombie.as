@@ -49,12 +49,15 @@ package
 			this.xMaxVelocity = xMaxVelocity;
 			this.yMaxVelocity = yMaxVelocity;
 			super.addAnimation("idle", [0]);
-			super.addAnimation("run", [1, 2, 3, 0], 6);
-			super.addAnimation("idleBack", [4]);
-			super.addAnimation("runBack", [5,6,7,4],6);
-			super.addAnimation("right",[8]);
-			super.addAnimation("bottomLeft",[9]);
-			super.addAnimation("topRight",[10]);
+			super.addAnimation("run", [0, 1, 2, 3], 12);
+			super.addAnimation("idleBack",[4]);
+			super.addAnimation("runBack",[4,5,6,7],12);
+			super.addAnimation("idleTRight",[16]);
+			super.addAnimation("topRight",[17,18,19,16],12);
+			super.addAnimation("idleRight",[8]);
+			super.addAnimation("right",[9,10,11,8],12);
+			super.addAnimation("idleBLeft",[12]);
+			super.addAnimation("bottomLeft",[13,14,15,12],12);
 			this.xTile = xPos/TILE_WIDTH;
 			this.yTile = yPos/TILE_HEIGHT;
 		}
