@@ -11,7 +11,7 @@ package
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
-	import flixel.util.FlxColor;
+	//import flixel.util.FlxColor;
 
 	//import flash.events.addEventListener;
 	
