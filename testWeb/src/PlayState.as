@@ -406,17 +406,17 @@ package
 			if (level==0) {
 				add(instructions);
 			} else if (level==1) {
-				add(instructions = new FlxText(4*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"You can zombify humans by running into them from behind."))
+				add(instructions = new FlxText(5*TILE_WIDTH,4*TILE_HEIGHT,6*TILE_WIDTH,"You can zombify humans by running into them from behind."))
 			} else if (level==2) {
-				add(instructions = new FlxText(7*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE If a human sees you, it will go after you!"))
+				add(instructions = new FlxText(6*TILE_WIDTH,4*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE If a human sees you, it will go after you!"))
 			} else if (level==4) {
-				add(instructions = new FlxText(7*TILE_WIDTH,1*TILE_HEIGHT,6*TILE_WIDTH,"Humans can kill zombies...but not without getting stunned!"))
+				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"Humans can kill zombies...but not without getting stunned!"))
 			} else if (level==6) {
 				add(instructions = new FlxText(10*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
 			} else if (level==8) {
-				add(instructions = new FlxText(8*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
+				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
 			} else if (level==10) {
-				add(instructions = new FlxText(8*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
+				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
 			if(isABTesting){
