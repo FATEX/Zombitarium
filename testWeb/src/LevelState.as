@@ -240,7 +240,6 @@ package
 			});
 			level_15.color = btnC;
 			
-<<<<<<< HEAD
 //			level_16 = new FlxButton(570, 320, "17", function():void
 //			{
 //				PlayState.level = 16;
