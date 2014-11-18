@@ -701,6 +701,9 @@ package
 						nextIsWinDoor = false;
 						this.exitDoor=door;
 					}
+					if(x-1>=0 && x+1<collisionMap.widthInTiles &&(collisionMap.getTile(x-1,y)==0 || collisionMap.getTile(x+1,y)==0)){
+						door.angle=90;
+					}
 					doors.push(door);
 				}
 				if(type=="KEY"){
@@ -714,6 +717,9 @@ package
 						unlockedDoor.isWin = true;
 						nextIsWinDoor = false;
 						this.exitDoor=unlockedDoor;
+					}
+					if(x-1>=0 && x+1<collisionMap.widthInTiles &&(collisionMap.getTile(x-1,y)==0 || collisionMap.getTile(x+1,y)==0)){
+						unlockedDoor.angle=90;
 					}
 					unlockedDoors.push(unlockedDoor);
 					
