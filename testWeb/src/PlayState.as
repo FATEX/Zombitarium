@@ -859,7 +859,7 @@ package
 						if(zombies[j].alive && type[i].alive){
 							
 							if(detect(type[i],zombies[j])){
-								if(type[i] is Doctor && cd >=50 ){
+								if(type[i] is Doctor && cd >=50 && !type[i].isStunned){
 									/*var t:FlxText;
 									var a:int = FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[i].x + zombies[i].width/2, zombies[i].y+ zombies[i].height/2));
 									t = new FlxText(20,0,40, a.toString());
