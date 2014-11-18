@@ -122,7 +122,7 @@ package
 		public static var isPageLoaded:Boolean = false;
 		private var playertime:Number = new Date().time;
 		private static var versionID:Number = 3;
-		public static var logger:Logging = new Logging(200,versionID,true);		
+		public static var logger:Logging = new Logging(200,versionID,false);		
 		private static var isMuted = false; 
 		
 		// Some static constants for the size of the tilemap tiles
@@ -876,7 +876,7 @@ package
 									t.size = 15;
 									add(t);*/
 									(Doctor(type[i])).stopFollowingPath();
-									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[j].x-type[i].x,zombies[j].y-type[i].y);
+									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[j].x-type[i].x,zombies[j].y-type[i].y, 1);
 									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2));
 									add(dSyringe);
 									if (soundOn) {
@@ -1811,7 +1811,7 @@ package
 							angleToThrow=-45;
 						}
 					}
-					pSyringe = new Syringe(angleToThrow, player.x+player.width/2, player.y+player.height/2, 0,0);
+					pSyringe = new Syringe(angleToThrow, player.x+player.width/2, player.y+player.height/2, 0,0, 0);
 					pSyringe.angle = angleToThrow-90;
 					add(pSyringe);
 					pSyringe.updatePos(10000);
