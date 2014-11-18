@@ -419,7 +419,6 @@ package
 				add(instructions = new FlxText(8*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
-			
 			if(isABTesting){
 			zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1)+"/2");
 			}
@@ -1799,13 +1798,13 @@ package
 							angleToThrow=45;
 						}
 						else if(this.facingDirection==4){
-							angleToThrow=-135;
+							angleToThrow=135;
 						}
 						else if(this.facingDirection==5){
 							angleToThrow=-90;
 						}
 						else if(this.facingDirection==6){
-							angleToThrow=135;
+							angleToThrow=-135;
 						}
 						else{
 							angleToThrow=-45;
@@ -1823,9 +1822,6 @@ package
 					
 				}
 			}
-			if(FlxG.keys.ALT){
-				throwable = true;
-			}
 			if(FlxG.keys.justPressed("R")){
 //				if ((level==9) && win) {
 //					win=false;
@@ -1840,43 +1836,42 @@ package
 				
 			}
 			
-			//ANIMATION
-			if(player.velocity.x>0 && player.velocity.y==0){
+			if((FlxG.keys.RIGHT || FlxG.keys.D) && player.velocity.y==0){
 				player.play("right");
 				player.facing=FlxObject.RIGHT;
 				this.facingDirection=2;
 			}
-			else if(player.velocity.x>0 && player.velocity.y>0){
+			else if((FlxG.keys.RIGHT || FlxG.keys.D) && (FlxG.keys.DOWN || FlxG.keys.S)){
 				player.play("bottomLeft");
 				player.facing=FlxObject.LEFT;
 				this.facingDirection=4;
 			}
-			else if(player.velocity.x>0 && player.velocity.y<0){
+			else if((FlxG.keys.RIGHT || FlxG.keys.D) && (FlxG.keys.UP || FlxG.keys.W)){
 				player.play("topRight");
 				player.facing=FlxObject.RIGHT;
 				this.facingDirection=3;
 			}
-			else if(player.velocity.x==0 && player.velocity.y>0){
+			else if(player.velocity.x==0 && (FlxG.keys.DOWN || FlxG.keys.S)){
 				player.play("run");
 				player.facing=FlxObject.RIGHT;
 				this.facingDirection=0;
 			}
-			else if(player.velocity.x<0 && player.velocity.y>0){
+			else if((FlxG.keys.LEFT || FlxG.keys.A) && (FlxG.keys.DOWN || FlxG.keys.S)){
 				player.play("bottomLeft");
 				player.facing=FlxObject.RIGHT;
 				this.facingDirection=6;
 			}
-			else if(player.velocity.x<0 && player.velocity.y==0){
+			else if((FlxG.keys.LEFT || FlxG.keys.A) && player.velocity.y==0){
 				player.play("right");
 				player.facing=FlxObject.LEFT;
 				this.facingDirection=5;
 			}
-			else if(player.velocity.x<0 && player.velocity.y<0){
+			else if((FlxG.keys.LEFT || FlxG.keys.A) && (FlxG.keys.UP || FlxG.keys.W)){
 				player.play("topRight");
 				player.facing=FlxObject.RIGHT;
 				this.facingDirection=7;
 			}
-			else if(player.velocity.x==0 && player.velocity.y<0){
+			else if(player.velocity.x==0 && (FlxG.keys.UP || FlxG.keys.W)){
 				
 				player.play("runBack");
 				player.facing=FlxObject.RIGHT;
@@ -1897,7 +1892,7 @@ package
 				}
 				else if(this.facingDirection==4){
 					player.play("bottomLeft");
-					player.facing=FlxObject.RIGHT;
+					player.facing=FlxObject.LEFT;
 				}
 				else if(this.facingDirection==5){
 					player.play("right");
@@ -1905,6 +1900,8 @@ package
 				}
 				else if(this.facingDirection==6){
 					player.play("bottomLeft");
+					player.facing=FlxObject.RIGHT;
+
 				}
 				else{
 					player.play("topRight");
