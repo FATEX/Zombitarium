@@ -1414,9 +1414,29 @@ package
 					man.stunAn.play("stun");
 					man.stunAdded=true;
 					if(zom==player){
-						logger.recordEvent(level+1,6,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by human");
+						if(man is Janitor){
+							logger.recordEvent(level+1,6,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by janitor");
+						}else if(man is Nurse){
+							logger.recordEvent(level+1,7,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by nurse");
+						}else if(man is Doctor){
+							logger.recordEvent(level+1,8,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by doctor");
+						}else if(man is Patient){
+							logger.recordEvent(level+1,9,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by patient");
+						}else{
+							logger.recordEvent(level+1,10,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|action:killed by human");
+						}
 					}else{
-						logger.recordEvent(level+1,26,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by human");
+						if(man is Janitor){
+							logger.recordEvent(level+1,26,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by janitor");
+						}else if(man is Nurse){
+							logger.recordEvent(level+1,27,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by nurse");
+						}else if(man is Doctor){
+							logger.recordEvent(level+1,28,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by doctor");
+						}else if(man is Patient){
+							logger.recordEvent(level+1,29,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by patient");
+						}else{
+							logger.recordEvent(level+1,30,"pos=("+(int)(zom.x/TILE_WIDTH)+","+(int)(zom.y/TILE_HEIGHT)+")|action:zombie killed by human");
+						}
 					}
 				}
 				man.alerted.x=man.x;
@@ -1665,7 +1685,7 @@ package
 					logger.recordEvent(level+1,101,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" ends");
 					logger.recordLevelEnd();
 					this.youLoseScreen = new FlxText(50,300,800,"YOU LOSE TRY NOT TO GET CURED  \nPress R to restart");
-					this.youLoseScreen.color=0x00FF00
+					this.youLoseScreen.color=0x730606;
 					this.youLoseScreen.size=35;
 					this.youLoseScreen.scrollFactor = new FlxPoint(0,0);
 					add(this.youLoseScreen);
@@ -1926,7 +1946,7 @@ package
 					level++; 
 					level = level%16;
 					}
-					this.youWinScreen.color=0x00FF00
+					this.youWinScreen.color=0x6cba31;
 					this.youWinScreen.scrollFactor = new FlxPoint(0,0);
 					this.youWinScreen.size=20;
 					//this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor");
