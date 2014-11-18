@@ -36,6 +36,10 @@ package
 	{
 		// Tileset that works with AUTO mode (best for thin walls)
 		[Embed(source = 'wall_USE2.png')]private static var auto_tiles:Class;
+		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
+		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
+		[Embed(source = 'wall_USE5.png')]private static var coverTiles3:Class;
+
 		
 		// Music
 		[Embed(source = "bg.mp3")]private var MySound : Class; 		 
@@ -117,7 +121,7 @@ package
 		//logger
 		public static var isPageLoaded:Boolean = false;
 		private var playertime:Number = new Date().time;
-		private static var versionID:Number = 2;
+		private static var versionID:Number = 3;
 		public static var logger:Logging = new Logging(200,versionID,true);		
 		private static var isMuted = false; 
 		
@@ -204,9 +208,9 @@ package
 		private var nkeys;
 		private var nkeysC = 0;
 		private var powerUp:Boolean = false;
-		private var stop_btn;
+		//private var stop_btn;
 		public static var soundOn:Boolean = true;
-		public static var isABTesting = true;
+		public static var isABTesting:Boolean = true;
 		private var numberOfZombies = 0;
 		private var pressed = true;
 		
@@ -299,45 +303,46 @@ package
 					}
 				}
 			}
+			for(var i:int =0;i<collisionMap.widthInTiles;i++){
+				for(var j:int=0;j<collisionMap.heightInTiles;j++){
+					if(j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i,j+1)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==0){
+						var coverSpr3:FlxSprite = new FlxSprite(i*TILE_WIDTH,(j)*TILE_HEIGHT);
+						coverSpr3.loadGraphic(coverTiles3,false,false,TILE_WIDTH,TILE_HEIGHT);
+						add(coverSpr3);
+					}
+					else if(j+1<collisionMap.heightInTiles && collisionMap.getTile(i,j+1)==0 && collisionMap.getTile(i,j)==1){
+						var coverSpr:FlxSprite = new FlxSprite(i*TILE_WIDTH,(j)*TILE_HEIGHT);
+						coverSpr.loadGraphic(coverTiles,false,false,TILE_WIDTH,TILE_HEIGHT);
+						add(coverSpr);
+					}
+					else if(i+1<collisionMap.widthInTiles && collisionMap.getTile(i+1,j)==0 && collisionMap.getTile(i,j)==1){
+						var coverSpr2:FlxSprite = new FlxSprite(i*TILE_WIDTH,(j)*TILE_HEIGHT);
+						coverSpr2.loadGraphic(coverTiles2,false,false,TILE_WIDTH,TILE_HEIGHT);
+						add(coverSpr2);
+					}
+					
+				}
+			}
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
 			destination = new FlxPoint(0,0);
 			setupPlayer();
 			characterLoader();
 			
 			
-			var test = setInterval(startbgsounds,0);
-			
-			function startbgsounds():void{
-				if (soundOn) {
-				sound = (new MySound()) as Sound;
-				myChannel = sound.play(0,10);
-				clearInterval(test);
-				}
-			}
-
-			
-			stop_btn = new FlxButton(-100, -100, "Sound I/O", function():void
-			{
-//				if (myChannel)
-//				myChannel.stop();
-//				if (myChannel.soundTransform == new SoundTransform(0)) {
-//					myChannel.soundTransform = new SoundTransform(1);
-//				} else {
-//					myChannel.soundTransform = new SoundTransform(0);
+//			var test = setInterval(startbgsounds,0);
+//			
+//			function startbgsounds():void{
+//				if (soundOn) {
+//				sound = (new MySound()) as Sound;
+//				myChannel = sound.play(0,10);
+//				clearInterval(test);
 //				}
-				soundbtn = (new MySoundbtn()) as Sound;
-				myChannelbtn = soundbtn.play();
-				if (soundOn) {
-					soundOn = false;
-					//SoundMixer.stopAll();
-					myChannel.soundTransform = new SoundTransform(0);
-				} else {
-					myChannel.soundTransform = new SoundTransform(1);
-					soundOn = true;
-				}
-				
-			});
-			add(stop_btn);
+//			}
+			
+			sound = (new MySound()) as Sound;
+			if(soundOn){
+				myChannel = sound.play(0,10);
+			}
 			
 			nextLevelBtn = new FlxButton(-100, 70, "Next Level", function():void
 			{
@@ -370,6 +375,7 @@ package
 
 			
 			addCam();
+			
 			blankTiles = new Array();
 			for(var q:int=0;q<collisionMap.widthInTiles;q++){
 				blankTiles[q]=new Array();
@@ -377,14 +383,14 @@ package
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
 					if(collisionMap.getTile(i,j)==0 && this.darkRooms){
-						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH,j*TILE_HEIGHT);
-						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH,TILE_HEIGHT);
+						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-5,j*TILE_HEIGHT);
+						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+5,TILE_HEIGHT);
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
 					}
 					else{
-						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH,j*TILE_HEIGHT);
-						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH,TILE_HEIGHT);
+						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-5,j*TILE_HEIGHT);
+						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+5,TILE_HEIGHT);
 						//blankScreenTile.visible=false;
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
@@ -421,24 +427,28 @@ package
 				zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1));
 			}
 			zombieNum.scrollFactor.x=zombieNum.scrollFactor.y=0;
-			add(zombieNum);
-			//TODO: see if the pos fits actual size
+			add(zombieNum);			
 			
 			muteButton = new FlxButton(FlxG.width-100, 0,"Mute",function():void{
-				if(FlxG.mute == false){
-					FlxG.mute = true;
-					isMuted = true;
-					muteButton.label.text = "UnMute";
-				}else{
-					FlxG.mute = false;
-					isMuted = false;
+				soundbtn = (new MySoundbtn()) as Sound;
+				myChannelbtn = soundbtn.play();
+				if (soundOn) {
+					soundOn = false;
+					//SoundMixer.stopAll();
+					//myChannel.soundTransform = new SoundTransform(0);
+					myChannel.stop();
 					muteButton.label.text = "Mute";
+				} else {
+					//myChannel.soundTransform = new SoundTransform(1);
+					myChannel = sound.play(0,10);
+					soundOn = true;
+					muteButton.label.text = "UnMute";
 				}
 			});
-			if(!isMuted){
-				FlxG.mute = false;
+			if(soundOn){
+				//FlxG.mute = false;
 			}else{
-				FlxG.mute = true;
+				//FlxG.mute = true;
 				muteButton.label.text = "UnMute";
 			}
 			muteButton.scrollFactor.x=muteButton.scrollFactor.y=0;
@@ -551,8 +561,8 @@ package
 			camLevel.follow(t);
 			FlxG.addCamera(camLevel);
 			
-			camSound.follow(stop_btn);
-			FlxG.addCamera(camSound);
+			//camSound.follow(stop_btn);
+			//FlxG.addCamera(camSound);
 			
 			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
 			this.powerUpMenu.size=12;
@@ -1215,7 +1225,9 @@ package
 					zom.disguiseOFF();
 
 					soundhdead = (new MySoundhdead()) as Sound;
-					myChannelhdead = soundhdead.play();
+					if(soundOn){
+						myChannelhdead = soundhdead.play();
+					}
 					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
 
 					if(isABTesting){
