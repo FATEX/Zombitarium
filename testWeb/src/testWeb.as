@@ -18,11 +18,13 @@ package
 				PlayState.isPageLoaded = true;
 				var myNum:Number = Math.floor(Math.random()*2) + 1;
 				var value:Number = PlayState.logger.recordABTestValue(myNum);
-				if(value == 1){
+				trace(value);
+				if(value == 0){
 					PlayState.isABTesting = true;	
 				}
 				else{
 					PlayState.isABTesting = false;
+					PlayState.logger.recordEvent(0,0,"B - Infinite Zombies");
 				}
 				
 			}

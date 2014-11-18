@@ -64,7 +64,9 @@ package
 			level_0 = new FlxButton(170, 200, "1", function():void
 			{
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play(); 
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				PlayState.level = 0;
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
@@ -74,7 +76,9 @@ package
 			{
 				PlayState.level = 1;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_1.color = btnC;
@@ -83,7 +87,9 @@ package
 			{
 				PlayState.level = 2;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_2.color = btnC;
@@ -92,7 +98,9 @@ package
 			{
 				PlayState.level = 3;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_3.color = btnC;
@@ -101,7 +109,9 @@ package
 			{
 				PlayState.level = 4;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_4.color = btnC;
@@ -110,7 +120,9 @@ package
 			{
 				PlayState.level = 5;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_5.color = btnC;
@@ -119,7 +131,9 @@ package
 			{
 				PlayState.level = 6;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_6.color = btnC;
@@ -128,7 +142,9 @@ package
 			{
 				PlayState.level = 7;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				SoundMixer.stopAll();
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
@@ -138,7 +154,9 @@ package
 			{
 				PlayState.level = 8;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				SoundMixer.stopAll();
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 
@@ -149,7 +167,9 @@ package
 			{
 				PlayState.level = 9;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_9.color = btnC;
@@ -158,7 +178,9 @@ package
 			{
 				PlayState.level = 10;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}					
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_10.color = btnC;
@@ -167,7 +189,9 @@ package
 			{
 				PlayState.level = 11;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_11.color = btnC;
@@ -176,7 +200,9 @@ package
 			{
 				PlayState.level = 12;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_12.color = btnC;
@@ -185,7 +211,9 @@ package
 			{
 				PlayState.level = 13;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_13.color = btnC;
@@ -194,7 +222,9 @@ package
 			{
 				PlayState.level = 14;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_14.color = btnC;
@@ -203,11 +233,14 @@ package
 			{
 				PlayState.level = 15;
 				sound = (new MySound()) as Sound;
-				myChannel = sound.play();
+				if(PlayState.soundOn){
+					myChannel = sound.play();
+				}
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_15.color = btnC;
 			
+<<<<<<< HEAD
 //			level_16 = new FlxButton(570, 320, "17", function():void
 //			{
 //				PlayState.level = 16;
@@ -227,7 +260,7 @@ package
 //			});
 //			level_17.color = btnC;
 			
-		
+
 			cred = new FlxButton(370, 500, "CREDITS", function():void
 			{
 				sound = (new MySound()) as Sound;
