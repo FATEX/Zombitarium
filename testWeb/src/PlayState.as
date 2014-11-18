@@ -456,8 +456,12 @@ package
 			syringeUI = new FlxButton(FlxG.width-100, 80,"syringe:"+"0");
 			syringeUI.scrollFactor.x=syringeUI.scrollFactor.y=0;
 			add(syringeUI);
-			
-			logger.recordLevelStart(level+1,"start level "+(level+1));
+			if(isABTesting){
+				logger.recordLevelStart(level+1,"A: start level "+(level+1));
+			}
+			else{
+				logger.recordLevelStart(level+1,"B: start level "+(level+1));
+			}
 			//logger.recordEvent(level+1,100,"level starts");
 			this.drawingCamera = new FlxSprite(0,0);
 			this.drawingCamera.makeGraphic(1000,2000,0xffffff);
