@@ -11,7 +11,7 @@ package
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
-	import flixel.util.FlxColor;
+
 
 	//import flash.events.addEventListener;
 	
@@ -311,9 +311,6 @@ package
 			add(level_18);
 			add(cred);
 			
-			if (btnFirst == false) {
-				SoundMixer.stopAll();
-			}
 			
 		}
 	}

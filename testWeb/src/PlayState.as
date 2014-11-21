@@ -44,7 +44,7 @@ package
 		// Music
 		[Embed(source = "bg.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
-		private var myChannel:SoundChannel = new SoundChannel();
+		public var myChannel:SoundChannel = new SoundChannel();
 				
 		[Embed(source = "click.mp3")]private var MySoundbtn : Class; 		 
 		private var soundbtn : Sound; // not MySound! 
@@ -198,7 +198,7 @@ package
 		
 		private var exitX:Number;
 		private var exitY:Number;
-		private var win:Boolean = false;
+		public var win:Boolean = false;
 		private var cd:int = 50;
 		private var youLoseScreen:FlxText;
 		private var zombieLimited:FlxText;
@@ -1686,19 +1686,23 @@ package
 		{
 			//wrap(player);
 			if (player.alive == false) {
-				if(this.youLoseScreen ==null){
-					logger.recordEvent(level+1,101,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" ends");
-					logger.recordLevelEnd();
-					this.youLoseScreen = new FlxText(50,300,800,"YOU LOSE TRY NOT TO GET CURED  \nPress R to restart");
-					this.youLoseScreen.color=0x730606;
-					this.youLoseScreen.size=35;
-					this.youLoseScreen.scrollFactor = new FlxPoint(0,0);
-					add(this.youLoseScreen);
-					/*var camRe:FlxCamera = new FlxCamera(50, 300, this.youLoseScreen.width, this.youLoseScreen.height);
-					camRe.follow(this.youLoseScreen);
-					FlxG.addCamera(camRe);*/
-					remove(player);
-				}
+				logger.recordEvent(level+1,101,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" ends");
+				logger.recordLevelEnd();
+				FlxG.fade(0xff000000, 0.3, on_fade_completed2);
+
+//				if(this.youLoseScreen ==null){
+//					logger.recordEvent(level+1,101,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" ends");
+//					logger.recordLevelEnd();
+//					this.youLoseScreen = new FlxText(50,300,800,"YOU LOSE TRY NOT TO GET CURED  \nPress R to restart");
+//					this.youLoseScreen.color=0x730606;
+//					this.youLoseScreen.size=35;
+//					this.youLoseScreen.scrollFactor = new FlxPoint(0,0);
+//					add(this.youLoseScreen);
+//					/*var camRe:FlxCamera = new FlxCamera(50, 300, this.youLoseScreen.width, this.youLoseScreen.height);
+//					camRe.follow(this.youLoseScreen);
+//					FlxG.addCamera(camRe);*/
+//					remove(player);
+//				}
 			}
 						
 			for (var i:Number=0;i<doors.length;i++){
@@ -1849,13 +1853,7 @@ package
 				}
 			}
 			if(FlxG.keys.justPressed("R")){
-//				if ((level==9) && win) {
-//					win=false;
-//					FlxG.fade(0xff000000, 0.22, function():void { 
-//						level = 0;
-//						FlxG.switchState(new PlayState());
-//					} );
-//				} 
+
 				resetGame();
 				
 				
@@ -1936,37 +1934,41 @@ package
 			}
 			 
 			if (Math.abs(player.x- (exitX))<=TILE_WIDTH*.8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/2 && this.exitDoor.doorOpen) {
-				win == true;
+				//win == true;
+				myChannel.stop();
+				logger.recordEvent(level+1,102,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" complete");
+				logger.recordLevelEnd();
+				FlxG.fade(0xff000000, 0.3, on_fade_completed);
 				
 				
-				if(this.youWinScreen ==null){
-					logger.recordEvent(level+1,102,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" complete");
-					logger.recordLevelEnd();
-
-					if (level==15) {
-						this.youWinScreen = new FlxText(50,300,800,"YOU HAVE ZOMBIFIED THE ENTIRE HOSPITAL! \nUse the Quit Button to return to menu.");
-
-					} else {
-					this.youWinScreen = new FlxText(50,300,800,"YAY YOU ZOMBIFIED THIS FLOOR!! \nPress R to continue to next floor"); 
-					level++; 
-					level = level%16;
-					}
-					this.youWinScreen.color=0x6cba31;
-					this.youWinScreen.scrollFactor = new FlxPoint(0,0);
-					this.youWinScreen.size=20;
-					//this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor");
-					this.youWinScreen.size=35;
-					add(this.youWinScreen);
-					/*var camRev:FlxCamera = new FlxCamera(50, 300, this.youWinScreen.width, this.youWinScreen.height);
-					camRev.follow(this.youWinScreen);
-					FlxG.addCamera(camRev);*/
-					remove(player);
-					//level++;
-					//level = level%10;
-					//resetGame();
-					
-					
-				}
+//				if(this.youWinScreen ==null){
+//					logger.recordEvent(level+1,102,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" complete");
+//					logger.recordLevelEnd();
+//
+//					if (level==15) {
+//						this.youWinScreen = new FlxText(50,300,800,"YOU HAVE ZOMBIFIED THE ENTIRE HOSPITAL! \nUse the Quit Button to return to menu.");
+//
+//					} else {
+//					this.youWinScreen = new FlxText(50,300,800,"YAY YOU ZOMBIFIED THIS FLOOR!! \nPress R to continue to next floor"); 
+//					level++; 
+//					level = level%16;
+//					}
+//					this.youWinScreen.color=0x6cba31;
+//					this.youWinScreen.scrollFactor = new FlxPoint(0,0);
+//					this.youWinScreen.size=20;
+//					//this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor");
+//					this.youWinScreen.size=35;
+//					add(this.youWinScreen);
+//					/*var camRev:FlxCamera = new FlxCamera(50, 300, this.youWinScreen.width, this.youWinScreen.height);
+//					camRev.follow(this.youWinScreen);
+//					FlxG.addCamera(camRev);*/
+//					remove(player);
+//					//level++;
+//					//level = level%10;
+//					//resetGame();
+//					
+//					
+//				}
 			}
 		
 		}
@@ -2053,6 +2055,18 @@ package
 		{
 			obj.x = (obj.x + obj.width / 2 + FlxG.width) % FlxG.width - obj.width / 2;
 			obj.y = (obj.y + obj.height / 2) % FlxG.height - obj.height / 2;
+		}
+		
+		public function on_fade_completed():void
+		{
+			// playing the game itself
+			FlxG.switchState(new WinState());
+		}
+		public function on_fade_completed2():void
+		{
+			// playing the game itself
+			myChannel.stop();
+			FlxG.switchState(new LoseState());
 		}
 		
 	}
