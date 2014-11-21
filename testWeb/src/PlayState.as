@@ -456,8 +456,12 @@ package
 			syringeUI = new FlxButton(FlxG.width-100, 80,"syringe:"+"0");
 			syringeUI.scrollFactor.x=syringeUI.scrollFactor.y=0;
 			add(syringeUI);
-			
-			logger.recordLevelStart(level+1,"start level "+(level+1));
+			if(isABTesting){
+				logger.recordLevelStart(level+1,"A: start level "+(level+1));
+			}
+			else{
+				logger.recordLevelStart(level+1,"B: start level "+(level+1));
+			}
 			//logger.recordEvent(level+1,100,"level starts");
 			this.drawingCamera = new FlxSprite(0,0);
 			this.drawingCamera.makeGraphic(1000,2000,0xffffff);
@@ -701,6 +705,9 @@ package
 						nextIsWinDoor = false;
 						this.exitDoor=door;
 					}
+					if(x-1>=0 && x+1<collisionMap.widthInTiles &&(collisionMap.getTile(x-1,y)==0 || collisionMap.getTile(x+1,y)==0)){
+						door.angle=90;
+					}
 					doors.push(door);
 				}
 				if(type=="KEY"){
@@ -714,6 +721,9 @@ package
 						unlockedDoor.isWin = true;
 						nextIsWinDoor = false;
 						this.exitDoor=unlockedDoor;
+					}
+					if(x-1>=0 && x+1<collisionMap.widthInTiles &&(collisionMap.getTile(x-1,y)==0 || collisionMap.getTile(x+1,y)==0)){
+						unlockedDoor.angle=90;
 					}
 					unlockedDoors.push(unlockedDoor);
 					

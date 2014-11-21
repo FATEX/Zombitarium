@@ -12,6 +12,7 @@ package
 	import org.flixel.FlxState;
 	import org.flixel.FlxText;
 
+	//import flixel.util.FlxColor;
 
 	//import flash.events.addEventListener;
 	
