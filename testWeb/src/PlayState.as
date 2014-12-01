@@ -839,6 +839,9 @@ package
 				if(zombies[w]!= player){
 					zombies[w].zombieUpdate(collisionMap,humans,new FlxPoint(zombies[w].x+zombies[w].width/2,zombies[w].y+zombies[w].height/2));
 				}
+				else{
+					zombies[w].playerUpdate();
+				}
 			}
 			
 //			for(var t:int=0; t<janitors.length;t++){

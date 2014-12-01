@@ -34,6 +34,7 @@ package
 		private var xTile:int=0;
 		private var yTile:int=0;
 		public var isDisguised:Boolean = false;
+		private var disguiseTimer:int = 1000;
 		//private var color: int = 0;
 		public function Zombie(xPos:int, yPos:int, width:int, height:int, xDrag:int, yDrag:int, xMaxVelocity:int, yMaxVelocity:int)
 		{
@@ -123,8 +124,20 @@ package
 			this.checkAgain=true;
 			
 		}
+		public function playerUpdate():void{
+			if(this.disguiseTimer<150){
+				this.disguiseTimer++;
+				if(this.disguiseTimer==150){
+					if(this.alive && this.exists){
+						disguiseOFF();
+					}
+				}
+			}
+		}
+		
 		
 		public function zombieUpdate(collisionMap:FlxTilemap, humanP:Vector.<Human>, zombieP:FlxPoint):void{
+			
 			if(this.humanFollowing!=null && humanP!=null && humanP.indexOf(this.humanFollowing)==-1){
 				this.stopFollowingPath(true);
 				this.pathSpeed=0;
@@ -282,9 +295,10 @@ package
 			this.height = TILE_HEIGHT*6/8;
 			this.centerOffsets();
 			this.isDisguised = true;
+			this.disguiseTimer=0;/*
 			var t:Timer = new Timer(5000);
 			t.addEventListener(TimerEvent.TIMER, onDelay);
-			t.start();
+			t.start();*/
 			
 		}
 		
