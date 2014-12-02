@@ -491,8 +491,7 @@ package
 				} ); } );
 			add(quitBtn);
 			
-			header = new FlxSprite(0, 0, ImgHeader);
-			add(header);
+			
 			
 			
 			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
@@ -580,6 +579,10 @@ package
 			}
 			muteButton.scrollFactor.x=muteButton.scrollFactor.y=0;
 			add(muteButton);
+			
+			header = new FlxSprite(0, 0, ImgHeader);
+			header.scrollFactor.x=header.scrollFactor.y=0;
+			add(header);
 			
 			syringeUI = new FlxButton(FlxG.width-100, 80,"syringe:"+"0");
 			syringeUI.scrollFactor.x=syringeUI.scrollFactor.y=0;
@@ -1026,7 +1029,7 @@ package
 									t = new FlxText(20,0,40, a.toString());
 									t.size = 15;
 									add(t);*/
-									(Doctor(type[i])).stopFollowingPath();
+									//(Doctor(type[i])).stopFollowingPath();
 									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[j].x-type[i].x,zombies[j].y-type[i].y, 1);
 									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2));
 									add(dSyringe);
@@ -1034,7 +1037,7 @@ package
 									soundsyrg = (new MySoundsyrg()) as Sound;
 									myChannelsyrg = soundsyrg.play(); }
 									dSyringe.updatePos(10000);
-									(Doctor(type[i])).goBack(collisionMap);
+									//(Doctor(type[i])).goBack(collisionMap);
 									cd = 0;
 								}
 								(Human(type[i])).alerted.x=(Human(type[i])).x;
