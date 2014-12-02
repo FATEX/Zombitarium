@@ -73,6 +73,7 @@ package
 		[Embed(source = "doorIO.mp3")]private var MySounddr : Class; 		 
 		private var sounddr : Sound; // not MySound! 
 		private var myChanneldr:SoundChannel = new SoundChannel();
+
 				
 		// Default character loading texts		
 		[Embed(source = 'characters0.txt', mimeType = 'application/octet-stream')]private static var characters0:Class;
@@ -1751,7 +1752,8 @@ package
 					
 					if (soundOn) {
 					sounddr = (new MySounddr()) as Sound;
-					myChanneldr = sounddr.play(); }
+					myChanneldr = sounddr.play(); 
+					}
 					
 					
 				} else if (FlxG.keys.E == false) {
