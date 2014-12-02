@@ -42,8 +42,21 @@ package
 		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
 		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
 		[Embed(source = 'wall_USE5.png')]private static var coverTiles3:Class;
-		[Embed(source = "header2.png")] private var ImgHeader:Class;
+		
+		
+		// menu bar 
+		[Embed(source = "menuBar1.png")] private var ImgHeader:Class;
 		private var header: FlxSprite;
+		[Embed(source = "imgZ.png")] private var ImgZ:Class;
+		private var imgZ: FlxSprite;
+		[Embed(source = "imgSy.png")] private var ImgSy:Class;
+		private var imgSy: FlxSprite;
+		[Embed(source = "imgN.png")] private var ImgN:Class;
+		private var imgN: FlxSprite;
+		[Embed(source = "bExit.png")] private var BtnExit:Class;
+		[Embed(source = "bMute.png")] private var BtnMute:Class;
+		[Embed(source = "bUnmute.png")] private var BtnUnmute:Class;
+		
 		// Music
 		[Embed(source = "zbg1.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
@@ -466,20 +479,20 @@ package
 				myChannel = sound.play(0,10);
 			}
 			
-			nextLevelBtn = new FlxButton(-100, 70, "Next Level", function():void
-			{
-				if (soundOn) {
-				soundbtn = (new MySoundbtn()) as Sound;
-				myChannelbtn = soundbtn.play();
-				}
-			
-				level++;
-				level = level%16;
-				resetGame();
-			});
-			add(nextLevelBtn);
+//			nextLevelBtn = new FlxButton(-100, 70, "Next Level", function():void
+//			{
+//				if (soundOn) {
+//				soundbtn = (new MySoundbtn()) as Sound;
+//				myChannelbtn = soundbtn.play();
+//				}
+//			
+//				level++;
+//				level = level%16;
+//				resetGame();
+//			});
+//			add(nextLevelBtn);
 
-			quitBtn = new FlxButton(-1000, 30, "Quit",
+			quitBtn = new FlxButton(0, 0, "Quit",
 				function():void { FlxG.fade(0xff000000, 0.22, function():void { 
 					level = 0;
 					SoundMixer.stopAll();
@@ -489,6 +502,8 @@ package
 					}
 					FlxG.resetGame();
 				} ); } );
+			quitBtn.loadGraphic(BtnExit);
+			quitBtn.scrollFactor.x=quitBtn.scrollFactor.y=0;
 			add(quitBtn);
 			
 			
