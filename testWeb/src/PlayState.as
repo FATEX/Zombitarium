@@ -42,8 +42,21 @@ package
 		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
 		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
 		[Embed(source = 'wall_USE5.png')]private static var coverTiles3:Class;
-		[Embed(source = "header2.png")] private var ImgHeader:Class;
+		
+		
+		// menu bar 
+		[Embed(source = "menuBar1.png")] private var ImgHeader:Class;
 		private var header: FlxSprite;
+		[Embed(source = "imgZ.png")] private var ImgZ:Class;
+		private var imgZ: FlxSprite;
+		[Embed(source = "imgSy.png")] private var ImgSy:Class;
+		private var imgSy: FlxSprite;
+		[Embed(source = "imgN.png")] private var ImgN:Class;
+		private var imgN: FlxSprite;
+		[Embed(source = "bExit.png")] private var BtnExit:Class;
+		[Embed(source = "bMute.png")] private var BtnMute:Class;
+		[Embed(source = "bUnmute.png")] private var BtnUnmute:Class;
+		
 		// Music
 		[Embed(source = "zbg1.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
@@ -466,20 +479,20 @@ package
 				myChannel = sound.play(0,10);
 			}
 			
-			nextLevelBtn = new FlxButton(-100, 70, "Next Level", function():void
-			{
-				if (soundOn) {
-				soundbtn = (new MySoundbtn()) as Sound;
-				myChannelbtn = soundbtn.play();
-				}
-			
-				level++;
-				level = level%16;
-				resetGame();
-			});
-			add(nextLevelBtn);
+//			nextLevelBtn = new FlxButton(-100, 70, "Next Level", function():void
+//			{
+//				if (soundOn) {
+//				soundbtn = (new MySoundbtn()) as Sound;
+//				myChannelbtn = soundbtn.play();
+//				}
+//			
+//				level++;
+//				level = level%16;
+//				resetGame();
+//			});
+//			add(nextLevelBtn);
 
-			quitBtn = new FlxButton(-1000, 30, "Quit",
+			quitBtn = new FlxButton(0, 0, "Quit",
 				function():void { FlxG.fade(0xff000000, 0.22, function():void { 
 					level = 0;
 					SoundMixer.stopAll();
@@ -489,10 +502,11 @@ package
 					}
 					FlxG.resetGame();
 				} ); } );
+			quitBtn.loadGraphic(BtnExit);
+			quitBtn.scrollFactor.x=quitBtn.scrollFactor.y=0;
 			add(quitBtn);
 			
-			header = new FlxSprite(0, 0, ImgHeader);
-			add(header);
+			
 			
 			
 			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
@@ -528,7 +542,7 @@ package
 			}
 			revealBoard();			
 
-			instructions = new FlxText(1*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys to move \nPress E to open doors \nPress R to reset");
+			instructions = new FlxText(1*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys to move \nPress E to open doors");
 
 
 			if (level==0) {
@@ -580,6 +594,10 @@ package
 			}
 			muteButton.scrollFactor.x=muteButton.scrollFactor.y=0;
 			add(muteButton);
+			
+			header = new FlxSprite(0, 0, ImgHeader);
+			header.scrollFactor.x=header.scrollFactor.y=0;
+			add(header);
 			
 			syringeUI = new FlxButton(FlxG.width-100, 80,"syringe:"+"0");
 			syringeUI.scrollFactor.x=syringeUI.scrollFactor.y=0;
@@ -1026,7 +1044,7 @@ package
 									t = new FlxText(20,0,40, a.toString());
 									t.size = 15;
 									add(t);*/
-									(Doctor(type[i])).stopFollowingPath();
+									//(Doctor(type[i])).stopFollowingPath();
 									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[j].x-type[i].x,zombies[j].y-type[i].y, 1);
 									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2));
 									add(dSyringe);
@@ -1034,7 +1052,7 @@ package
 									soundsyrg = (new MySoundsyrg()) as Sound;
 									myChannelsyrg = soundsyrg.play(); }
 									dSyringe.updatePos(10000);
-									(Doctor(type[i])).goBack(collisionMap);
+									//(Doctor(type[i])).goBack(collisionMap);
 									cd = 0;
 								}
 								(Human(type[i])).alerted.x=(Human(type[i])).x;
