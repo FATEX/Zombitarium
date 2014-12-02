@@ -39,10 +39,10 @@ package
 		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
 		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
 		[Embed(source = 'wall_USE5.png')]private static var coverTiles3:Class;
-
-		
+		[Embed(source = "header2.png")] private var ImgHeader:Class;
+		private var header: FlxSprite;
 		// Music
-		[Embed(source = "bg.mp3")]private var MySound : Class; 		 
+		[Embed(source = "zbg1.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
 		public var myChannel:SoundChannel = new SoundChannel();
 				
@@ -179,7 +179,6 @@ package
 		private var camLevel:FlxCamera;
 		private var drawingCamera:FlxSprite;
 		private var camSound:FlxCamera;
-		
 		private static var resetNumber:int = 0;
 		
 		//Decides wheter the rooms go dark or not
@@ -213,10 +212,12 @@ package
 		public static var isABTesting:Boolean = true;
 		private var numberOfZombies = 0;
 		private var pressed = true;
+		public static var isNotPlaying:Boolean;
 		
 		override public function create():void
 		{
 			//SoundMixer.stopAll();
+			
 			FlxG.worldBounds = new FlxRect(0,0,TILE_WIDTH*100,TILE_HEIGHT*100);
 			FlxG.framerate = 50;
 			FlxG.flashFramerate = 50;
@@ -368,6 +369,9 @@ package
 					FlxG.resetGame();
 				} ); } );
 			add(quitBtn);
+			
+			header = new FlxSprite(0, 0, ImgHeader);
+			add(header);
 			
 			
 			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
@@ -528,6 +532,7 @@ package
 			myChannel.stop();
 			FlxG.resetState();
 			win = false;
+			isNotPlaying = false;
 			
 		}
 		
@@ -538,7 +543,8 @@ package
 				FlxG.removeCamera(camQuit,false);
 				FlxG.removeCamera(camNextLevel,false);
 				FlxG.removeCamera(camLevel,false);
-				FlxG.removeCamera(camSound,false);
+				//FlxG.removeCamera(camSound,false);
+				//FlxG.removeCamera(camHeader,false);
 			}
 			else{
 				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); // we put the first one in the top left corner
@@ -546,7 +552,8 @@ package
 				//camReset = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
 				camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
 				camLevel = new FlxCamera(2,62,t.width, t.height);
-				camSound = new FlxCamera(2,92, quitBtn.width, quitBtn.height);
+				//camSound = new FlxCamera(2,92, quitBtn.width, quitBtn.height);
+				//camHeader = new FlxCamera(0,0,800,100);
 
 			}
 			cam.follow(player);
@@ -564,8 +571,8 @@ package
 			camLevel.follow(t);
 			FlxG.addCamera(camLevel);
 			
-			//camSound.follow(stop_btn);
-			//FlxG.addCamera(camSound);
+			//camLevel.follow(header);
+			//FlxG.addCamera(camHeader);
 			
 			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
 			this.powerUpMenu.size=12;
@@ -1945,7 +1952,7 @@ package
 			 
 			if (Math.abs(player.x- (exitX))<=TILE_WIDTH*.8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/2 && this.exitDoor.doorOpen) {
 				//win == true;
-				myChannel.stop();
+				//myChannel.stop();
 				logger.recordEvent(level+1,102,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" complete");
 				logger.recordLevelEnd();
 				FlxG.fade(0xff000000, 0.3, on_fade_completed);
@@ -2075,7 +2082,7 @@ package
 		public function on_fade_completed2():void
 		{
 			// playing the game itself
-			myChannel.stop();
+			//myChannel.stop();
 			FlxG.switchState(new LoseState());
 		}
 		

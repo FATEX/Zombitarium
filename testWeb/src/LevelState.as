@@ -19,6 +19,25 @@ package
 	public class LevelState extends FlxState
 	{
 		[Embed(source = "level_select.png")] private var ImgBG:Class;
+		[Embed(source = "test1.png")] private var ImgBut1:Class;
+		[Embed(source = "l2.png")] private var ImgBut2:Class;
+		[Embed(source = "l3.png")] private var ImgBut3:Class;
+		[Embed(source = "l4.png")] private var ImgBut4:Class;
+		[Embed(source = "l5.png")] private var ImgBut5:Class;
+		[Embed(source = "l6.png")] private var ImgBut6:Class;
+		[Embed(source = "l7.png")] private var ImgBut7:Class;
+		[Embed(source = "l8.png")] private var ImgBut8:Class;
+		[Embed(source = "l9.png")] private var ImgBut9:Class;
+		[Embed(source = "l10.png")] private var ImgBut10:Class;
+		[Embed(source = "l11.png")] private var ImgBut11:Class;
+		[Embed(source = "l12.png")] private var ImgBut12:Class;
+		[Embed(source = "l13.png")] private var ImgBut13:Class;
+		[Embed(source = "l14.png")] private var ImgBut14:Class;
+		[Embed(source = "l15.png")] private var ImgBut15:Class;
+		[Embed(source = "l16.png")] private var ImgBut16:Class;
+		[Embed(source = "c.png")] private var ImgCredit:Class;
+		
+		
 		[Embed(source = "click.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
 		private var myChannel:SoundChannel = new SoundChannel();
@@ -52,7 +71,11 @@ package
 		{
 			bg = new FlxSprite(0, 0, ImgBG);
 			add(bg);
-			var btnC = 0xa3d370;
+			var btnC = 0xfafafa;
+			var one = 130;
+			var two = 280;
+			var three = 430;
+			var four = 580;
 			
 //			var t:FlxText;
 //			t = new FlxText(0,20,(FlxG.width),"Level Select");
@@ -62,7 +85,7 @@ package
 //			
 
 			
-			level_0 = new FlxButton(170, 230, "1", function():void
+			level_0 = new FlxButton(one, 200, "", function():void
 			{
 				sound = (new MySound()) as Sound;
 				if(PlayState.soundOn){
@@ -72,8 +95,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_0.color = btnC;
+			level_0.loadGraphic(ImgBut1);
 			
-			level_1 = new FlxButton(170, 260, "2", function():void
+			level_1 = new FlxButton(one, 270, "", function():void
 			{
 				PlayState.level = 1;
 				sound = (new MySound()) as Sound;
@@ -83,8 +107,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_1.color = btnC;
+			level_1.loadGraphic(ImgBut2);
 			
-			level_2 = new FlxButton(170, 290, "3", function():void
+			level_2 = new FlxButton(one, 340, "", function():void
 			{
 				PlayState.level = 2;
 				sound = (new MySound()) as Sound;
@@ -94,8 +119,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_2.color = btnC;
+			level_2.loadGraphic(ImgBut3);
 			
-			level_3 = new FlxButton(170, 320, "4", function():void
+			level_3 = new FlxButton(one, 410, "", function():void
 			{
 				PlayState.level = 3;
 				sound = (new MySound()) as Sound;
@@ -105,8 +131,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_3.color = btnC;
+			level_3.loadGraphic(ImgBut4);
 			
-			level_4 = new FlxButton(170, 350, "5", function():void
+			level_4 = new FlxButton(two, 200, "", function():void
 			{
 				PlayState.level = 4;
 				sound = (new MySound()) as Sound;
@@ -116,8 +143,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_4.color = btnC;
+			level_4.loadGraphic(ImgBut5);
 			
-			level_5 = new FlxButton(170, 380, "6", function():void
+			level_5 = new FlxButton(two, 270, "", function():void
 			{
 				PlayState.level = 5;
 				sound = (new MySound()) as Sound;
@@ -127,8 +155,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_5.color = btnC;
+			level_5.loadGraphic(ImgBut6);
 			
-			level_6 = new FlxButton(370, 230, "7", function():void
+			level_6 = new FlxButton(two, 340, "", function():void
 			{
 				PlayState.level = 6;
 				sound = (new MySound()) as Sound;
@@ -138,8 +167,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_6.color = btnC;
+			level_6.loadGraphic(ImgBut7);
 			
-			level_7 = new FlxButton(370, 260, "8", function():void
+			level_7 = new FlxButton(two, 410, "", function():void
 			{
 				PlayState.level = 7;
 				sound = (new MySound()) as Sound;
@@ -150,8 +180,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_7.color = btnC;
+			level_7.loadGraphic(ImgBut8);
 			
-			level_8 = new FlxButton(370, 290, "9", function():void
+			level_8 = new FlxButton(three, 200, "", function():void
 			{
 				PlayState.level = 8;
 				sound = (new MySound()) as Sound;
@@ -163,8 +194,9 @@ package
 
 			});
 			level_8.color = btnC;
+			level_8.loadGraphic(ImgBut9);
 			
-			level_9 = new FlxButton(370, 320, "10", function():void
+			level_9 = new FlxButton(three, 270, "", function():void
 			{
 				PlayState.level = 9;
 				sound = (new MySound()) as Sound;
@@ -174,8 +206,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_9.color = btnC;
+			level_9.loadGraphic(ImgBut10);
 			
-			level_10 = new FlxButton(370, 350, "11", function():void
+			level_10 = new FlxButton(three, 340, "", function():void
 			{
 				PlayState.level = 10;
 				sound = (new MySound()) as Sound;
@@ -185,8 +218,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_10.color = btnC;
+			level_10.loadGraphic(ImgBut11);
 			
-			level_11 = new FlxButton(370, 380, "12", function():void
+			level_11 = new FlxButton(three, 410, "", function():void
 			{
 				PlayState.level = 11;
 				sound = (new MySound()) as Sound;
@@ -196,8 +230,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_11.color = btnC;
+			level_11.loadGraphic(ImgBut12);
 			
-			level_12 = new FlxButton(570, 230, "13", function():void
+			level_12 = new FlxButton(four, 200, "", function():void
 			{
 				PlayState.level = 12;
 				sound = (new MySound()) as Sound;
@@ -207,8 +242,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_12.color = btnC;
+			level_12.loadGraphic(ImgBut13);
 			
-			level_13 = new FlxButton(570, 260, "14", function():void
+			level_13 = new FlxButton(four, 270, "", function():void
 			{
 				PlayState.level = 13;
 				sound = (new MySound()) as Sound;
@@ -218,8 +254,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_13.color = btnC;
+			level_13.loadGraphic(ImgBut14);
 			
-			level_14 = new FlxButton(570, 290, "15", function():void
+			level_14 = new FlxButton(four, 340, "", function():void
 			{
 				PlayState.level = 14;
 				sound = (new MySound()) as Sound;
@@ -229,8 +266,9 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_14.color = btnC;
+			level_14.loadGraphic(ImgBut15);
 			
-			level_15 = new FlxButton(570, 320, "16", function():void
+			level_15 = new FlxButton(four, 410, "", function():void
 			{
 				PlayState.level = 15;
 				sound = (new MySound()) as Sound;
@@ -240,35 +278,17 @@ package
 				FlxG.fade(0xff000000, 0.5, on_fade_completed);
 			});
 			level_15.color = btnC;
-			
-//			level_16 = new FlxButton(570, 350, "17", function():void
-//			{
-//				PlayState.level = 16;
-//				sound = (new MySound()) as Sound;
-//				myChannel = sound.play();
-//				FlxG.fade(0xff000000, 0.5, on_fade_completed);
-//			});
-//			level_16.color = btnC;
-//			
-//			level_17 = new FlxButton(570, 380, "18", function():void
-//			{
-//				PlayState.level = 17;
-//				//txt = "18";
-//				sound = (new MySound()) as Sound;
-//				myChannel = sound.play();
-//				FlxG.fade(0xff000000, 0.5, on_fade_completed);
-//			});
-//			level_17.color = btnC;
-			
+			level_15.loadGraphic(ImgBut16);
+						
 
-			cred = new FlxButton(370, 500, "CREDITS", function():void
+			cred = new FlxButton(340, 500, "", function():void
 			{
 				sound = (new MySound()) as Sound;
 				myChannel = sound.play();
 				FlxG.fade(0xff000000, 0.5, to_credits);
 			});
 			cred.color = 0xcef5ae;
-			
+			cred.loadGraphic(ImgCredit);
 			FlxG.mouse.show();
 		}
 		
@@ -290,7 +310,6 @@ package
 		override public function update():void
 		{
 			super.update();
-			
 			add(level_0);
 			add(level_1);
 			add(level_2);
