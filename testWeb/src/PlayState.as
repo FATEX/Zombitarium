@@ -377,6 +377,9 @@ package
 			addCam();
 			
 			blankTiles = new Array();
+			if(level==0){
+				add((instructions = new FlxText(9*TILE_WIDTH,1*TILE_HEIGHT,5*TILE_WIDTH,"You can open locked doors with a key")).setFormat(null,30/100*TILE_WIDTH));
+			}
 			for(var q:int=0;q<collisionMap.widthInTiles;q++){
 				blankTiles[q]=new Array();
 			}
@@ -466,6 +469,7 @@ package
 			this.drawingCamera = new FlxSprite(0,0);
 			this.drawingCamera.makeGraphic(1000,2000,0xffffff);
 			add(this.drawingCamera);
+			
 		}
 		
 		public function setABTesting(value:int):void{
@@ -522,6 +526,8 @@ package
 
 
 			}
+		
+			
 		}
 		
 		private function resetGame():void{
