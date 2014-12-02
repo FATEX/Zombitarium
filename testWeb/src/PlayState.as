@@ -138,7 +138,7 @@ package
 		private var highlightBox:FlxObject;
 		
 		// Player modified from "Mode" demo
-
+		private var beatLevel:Boolean=false;
 		public var player:Zombie;
 		private var humans:Vector.<Human>;
 		private var janitors:Vector.<Janitor>;
@@ -1872,9 +1872,11 @@ package
 				}
 			}
 			if(FlxG.keys.justPressed("R")){
-
+				if(beatLevel){
+					level++;
+					level=level%16;
+				}
 				resetGame();
-				
 				
 				
 			}
@@ -1957,6 +1959,7 @@ package
 				myChannel.stop();
 				logger.recordEvent(level+1,102,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" complete");
 				logger.recordLevelEnd();
+				this.beatLevel=true;
 				FlxG.fade(0xff000000, 0.3, on_fade_completed);
 				
 				
