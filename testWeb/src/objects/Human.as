@@ -51,6 +51,10 @@ package objects
 		private var holdAngle:Number=0;
 		private var startAngle:Number=0;
 		private var addingAmount:Boolean=true;
+		private var stunTimer:int=1000;
+		private var rotateTimer:int=1000;
+		private var changeTimer:int=1000;
+		private var pauseTimer:int=1000;
 		public function Human(originX:Number, originY:Number, overLoad:Boolean)
 		{
 			super(originX, originY);
@@ -120,9 +124,11 @@ package objects
 		
 		public function stunHuman():void{
 			this.isStunned=true;
-			var t:Timer = new Timer(1000);
+			/*var t:Timer = new Timer(1000);
 			t.addEventListener(TimerEvent.TIMER, onDelay);
 			t.start();
+			*/
+			this.stunTimer=0;
 		}
 		private function onDelay(te:TimerEvent):void {
 			doCall();
@@ -133,17 +139,23 @@ package objects
 		
 		private function pauseHuman():void{
 			this.isPaused = true;
+			this.pauseTimer=0;
+			/*
 			var t:Timer = new Timer(1000,1);
 			t.addEventListener(TimerEvent.TIMER, onPause);
 			t.start();
+			*/
 		}
 		private function pauseHuman2():void{
 			this.isPaused2 = true;
+			this.rotateTimer=0;
+			this.changeTimer=0;
+			/*
 			var j:Timer = new Timer(20,50);
 			j.addEventListener(TimerEvent.TIMER,rotate2);
 			var t:Timer = new Timer(1000,1);
 			t.addEventListener(TimerEvent.TIMER_COMPLETE, onPause2);
-			t.start();
+			t.start();*/
 			var ang:Number=0;
 			var checkNodeNum:int = 1;
 			var difAng:Number=0;
@@ -167,52 +179,52 @@ package objects
 			if(ang>=0 && this.pathAngle>=0){
 				if(ang>this.pathAngle){
 					addingAmount = true;
-					this.amountToTurn = (ang-this.pathAngle)/40;
+					this.amountToTurn = (ang-this.pathAngle)/30;
 				}
 				else{
 					addingAmount = false;
-					this.amountToTurn = (this.pathAngle-ang)/40;
+					this.amountToTurn = (this.pathAngle-ang)/30;
 				}
 			}
 			else if(ang<=0 && this.pathAngle<=0){
 				if(ang<this.pathAngle){
 					addingAmount = true;
-					this.amountToTurn = (ang-this.pathAngle)/40;
+					this.amountToTurn = (ang-this.pathAngle)/30;
 				}
 				else{
 					addingAmount = false;
-					this.amountToTurn = (this.pathAngle-ang)/40;
+					this.amountToTurn = (this.pathAngle-ang)/30;
 				}
 			}
 			else if(ang<=0 && this.pathAngle>=0){
 				if(ang>=-90 && this.pathAngle<=90){
 					addingAmount = false;
-					this.amountToTurn = (this.pathAngle-ang)/40;
+					this.amountToTurn = (this.pathAngle-ang)/30;
 				}
 				else{
 					addingAmount = true;
-					this.amountToTurn = (-ang-this.pathAngle)/40;
+					this.amountToTurn = (-ang-this.pathAngle)/30;
 				}
 			}
 			else if(ang>=0 && this.pathAngle<=0){
 				if(ang<=90 && this.pathAngle>=-90){
 					addingAmount = true;
-					this.amountToTurn = (ang-this.pathAngle)/40;
+					this.amountToTurn = (ang-this.pathAngle)/30;
 				}
 				else{
 					addingAmount = false;
 					if(Math.abs(this.pathAngle)>Math.abs(ang)){
-						this.amountToTurn = (-this.pathAngle-ang)/40;
+						this.amountToTurn = (-this.pathAngle-ang)/30;
 					}
 					else{
-						this.amountToTurn = (ang+this.pathAngle)/40;
+						this.amountToTurn = (ang+this.pathAngle)/30;
 					}
 				}
 			}
 			this.holdAngle=ang;
 			
 			
-			j.start();
+			//j.start();
 
 		}
 		private function onPause2(t:TimerEvent):void{
@@ -285,6 +297,30 @@ package objects
 		public function humanUpdate(collisionMap:FlxTilemap):void{
 			//if(onRoute == false)this.pauseHuman();
 			//onRoute = true;
+			if(this.stunTimer<90){
+				this.stunTimer++;
+				if(this.stunTimer==90){
+					doCall();
+				}
+			}
+			if(this.pauseTimer<60){
+				this.pauseTimer++;
+				if(this.pauseTimer==60){
+					onResume();
+				}
+			}
+			if(this.rotateTimer<60){
+				this.rotateTimer++;
+				if(this.rotateTimer%2==0){
+					rot2();
+				}
+			}
+			if(this.changeTimer<60){
+				this.changeTimer++;
+				if(this.changeTimer==60){
+					onResume2();
+				}
+			}
 			if(this.isStunned || this.isPaused ||this.isPaused2){
 				this.moves=false;
 			}else{
