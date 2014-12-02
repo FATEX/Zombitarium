@@ -37,7 +37,8 @@ package
 	public class PlayState extends FlxState
 	{
 		// Tileset that works with AUTO mode (best for thin walls)
-		[Embed(source = 'wall_USE2.png')]private static var auto_tiles:Class;
+		[Embed(source = 'wall_tile_universal_gray_130x65.png')]private static var auto_tiles:Class;
+		[Embed(source = 'wall_tile_universal_gray_130x65.png')]private static var universal_Wall:Class;
 		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
 		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
 		[Embed(source = 'wall_USE5.png')]private static var coverTiles3:Class;
@@ -98,11 +99,15 @@ package
 		[Embed(source = 'level0.txt', mimeType = 'application/octet-stream')]private static var default_level0:Class;
 		[Embed(source = 'lvl0_alt.txt', mimeType = 'application/octet-stream')]private static var level0:Class;
 		[Embed(source = 'level1.txt', mimeType = 'application/octet-stream')]private static var default_level1:Class;
+		[Embed(source = 'lvl1_alt.txt', mimeType = 'application/octet-stream')]private static var level1:Class;
 		[Embed(source = 'level2.txt', mimeType = 'application/octet-stream')]private static var default_level2:Class;
+		[Embed(source = 'lvl2_alt.txt', mimeType = 'application/octet-stream')]private static var level2:Class;
 		[Embed(source = 'level2T.txt', mimeType = 'application/octet-stream')]private static var default_level2T:Class;
 		[Embed(source = 'level3.txt', mimeType = 'application/octet-stream')]private static var default_level3:Class;
+		[Embed(source = 'lvl3_alt.txt', mimeType = 'application/octet-stream')]private static var level3:Class;
 		[Embed(source = 'level3T.txt', mimeType = 'application/octet-stream')]private static var default_level3T:Class;
 		[Embed(source = 'level4.txt', mimeType = 'application/octet-stream')]private static var default_level4:Class;
+		[Embed(source = 'lvl4_alt.txt', mimeType = 'application/octet-stream')]private static var level4:Class;
 		[Embed(source = 'level4T.txt', mimeType = 'application/octet-stream')]private static var default_level4T:Class;
 		[Embed(source = 'level5.txt', mimeType = 'application/octet-stream')]private static var default_level5:Class;
 		[Embed(source = 'level5T.txt', mimeType = 'application/octet-stream')]private static var default_level5T:Class;
@@ -251,25 +256,33 @@ package
 			if(level==0){
 				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 				add(collisionMap);	
-				//constructMap();
+				constructMap(new level0());
 			}
 			else if(level==1){
 				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				add(collisionMap);	
+				constructMap(new level1());
 			}
 			else if(level==2){
 				collisionMap.loadMap(new default_level2(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				add(collisionMap);	
+				constructMap(new level2());
 			}
 			else if(level==3){
 				collisionMap.loadMap(new default_level2T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==4){
 				collisionMap.loadMap(new default_level3(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				add(collisionMap);	
+				constructMap(new level3());
 			}
 			else if(level==5){
 				collisionMap.loadMap(new default_level3T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 			}
 			else if(level==6){
 				collisionMap.loadMap(new default_level4(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				add(collisionMap);	
+				constructMap(new level4());
 			}
 			else if(level==7){
 				collisionMap.loadMap(new default_level4T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
@@ -303,20 +316,21 @@ package
 			trace("aaa");
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
-					if(collisionMap.getTile(i,j)==1){
-						if(collisionMap.getTile(i+1,j) == 1 && collisionMap.getTile(i,j+1) == 1 && collisionMap.getTile(i-1,j) != 1 && collisionMap.getTile(i-1,j-1) != 1){
+					
+					/*if(collisionMap.getTile(i,j)==1){
+						if(i-1 < 0 && j-1 < 0 && collisionMap.getTile(i-1,j) == 0 && collisionMap.getTile(i,j-1) == 0 && collisionMap.getTile(i,j+1) == 1 && collisionMap.getTile(i+1,j) == 1){
 							add(new Wall(i*65, j*65, 1));
 						}
-						/*else if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j+1) == 1){
+						else if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j+1) == 1){
 							add(new Wall(i*65, j*65, 3));
-						}*/
-						else if(collisionMap.getTile(i+1,j) == 1 && collisionMap.getTile(i,j-1) == 1 && collisionMap.getTile(i-1,j-1) != 1 && collisionMap.getTile(i,j+1) != 1){
+						}
+						else if(i-1 < 0 && j+1 >= collisionMap.heightInTiles  && collisionMap.getTile(i-1,j) == 0 && collisionMap.getTile(i,j-1) == 1 && collisionMap.getTile(i+1,j) == 1 && collisionMap.getTile(i,j+1) == 0){
 							add(new Wall(i*65, j*65, 2));
 						}
-						else if(collisionMap.getTile(i+1,j) == 1 && collisionMap.getTile(i,j+1) == 1 && collisionMap.getTile(i-1,j-1) != 1 && collisionMap.getTile(i-1,j) == 1){
+						else if(collisionMap.getTile(i-1,j-1) == 1 && collisionMap.getTile(i,j-1) == 1 && collisionMap.getTile(i+1,j-1) == 1){
 							add(new Wall(i*65, j*65, 0));
 						}
-						else if(j-1 >=0 && collisionMap.getTile(i,j-1) == 0){
+						else if((j-1 >=0 && collisionMap.getTile(i,j-1) == 0) || (collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1)){
 							var myNum:Number = Math.floor(Math.random()*2) + 1;
 							if(myNum == 1){
 								add(new Wall(i*65, j*65, 8));
@@ -325,7 +339,7 @@ package
 								add(new Wall(i*65, j*65, 12));
 							}
 						}
-						else if(collisionMap.getTile(i,j+1) == 0){
+						else if(collisionMap.getTile(i,j+1) == 0 || (collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i+1,j) == 1)){
 							var myNum:Number = Math.floor(Math.random()*2) + 1;
 							if(myNum == 1){
 								add(new Wall(i*65, j*65, 6));
@@ -342,10 +356,10 @@ package
 						}
 						/*else if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
 							add(new Wall(i*65, j*65, 4));
-						}*/
+						}
 						
-					}
-					else if(collisionMap.getTile(i,j)==0){
+					}*/
+					if(collisionMap.getTile(i,j)==0){
 						
 						if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
 							add(new Floors(i*65, j*65, "dc"));
@@ -477,8 +491,7 @@ package
 				} ); } );
 			add(quitBtn);
 			
-			header = new FlxSprite(0, 0, ImgHeader);
-			add(header);
+			
 			
 			
 			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
@@ -566,6 +579,10 @@ package
 			}
 			muteButton.scrollFactor.x=muteButton.scrollFactor.y=0;
 			add(muteButton);
+			
+			header = new FlxSprite(0, 0, ImgHeader);
+			header.scrollFactor.x=header.scrollFactor.y=0;
+			add(header);
 			
 			syringeUI = new FlxButton(FlxG.width-100, 80,"syringe:"+"0");
 			syringeUI.scrollFactor.x=syringeUI.scrollFactor.y=0;
@@ -1012,7 +1029,7 @@ package
 									t = new FlxText(20,0,40, a.toString());
 									t.size = 15;
 									add(t);*/
-									(Doctor(type[i])).stopFollowingPath();
+									//(Doctor(type[i])).stopFollowingPath();
 									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[j].x-type[i].x,zombies[j].y-type[i].y, 1);
 									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2));
 									add(dSyringe);
@@ -1020,7 +1037,7 @@ package
 									soundsyrg = (new MySoundsyrg()) as Sound;
 									myChannelsyrg = soundsyrg.play(); }
 									dSyringe.updatePos(10000);
-									(Doctor(type[i])).goBack(collisionMap);
+									//(Doctor(type[i])).goBack(collisionMap);
 									cd = 0;
 								}
 								(Human(type[i])).alerted.x=(Human(type[i])).x;
@@ -2213,55 +2230,60 @@ package
 			FlxG.switchState(new LoseState());
 		}
 		
-		private function constructMap():void{
-			var map:String = new level0();
+		private function constructMap(map:String):void{
 			var row:Array = map.split("\n");
 			for(var i:int = 0; i < row.length; i++){
 				var cols:String = String(row[i]);
 				var col:Array = cols.split(",");
 				for(var j:int = 0; j < col.length; j++){
-					if(col[j] == "0"){
+					if(col[j] == "5"){
 						trace(i);
 						trace(j);
-						add(new Wall(j*65, i*65, 0));
-					}
-					else if(col[j] == "1"){
-						add(new Wall(j*65, i*65, 1));
-					}
-					else if(col[j] == "2"){
-						add(new Wall(j*65, i*65, 2));
-					}
-					else if(col[j] == "3"){
-						add(new Wall(j*65, i*65, 3));
-					}
-					else if(col[j] == "4"){
-						add(new Wall(j*65, i*65, 4));
-					}
-					else if(col[j] == "5"){
-						add(new Wall(j*65, i*65, 5));
-					}
-					else if(col[j] == "6"){
-						add(new Wall(j*65, i*65, 6));
-					}
-					else if(col[j] == "7"){
-						add(new Wall(j*65, i*65, 7));
-					}
-					else if(col[j] == "8"){
-						add(new Wall(j*65, i*65, 8));
-					}
-					else if(col[j] == "9"){
-						add(new Wall(j*65, i*65, 9));
-					}
-					else if(col[j] == "10"){
-						add(new Wall(j*65, i*65, 10));
-					}
-					else if(col[j] == "11"){
-						add(new Wall(j*65, i*65, 11));
-					}
-					else if(col[j] == "12"){
-						add(new Wall(j*65, i*65, 12));
+						add(new Wall(j*65, i*65, "5"));
 					}
 					else if(col[j] == "A"){
+						add(new Wall(j*65, i*65, "A"));
+					}
+					else if(col[j] == "B"){
+						add(new Wall(j*65, i*65, "B"));
+					}
+					else if(col[j] == "C"){
+						add(new Wall(j*65, i*65, "C"));
+					}
+					else if(col[j] == "D"){
+						add(new Wall(j*65, i*65, "D"));
+					}
+					else if(col[j] == "E"){
+						add(new Wall(j*65, i*65, "E"));
+					}
+					else if(col[j] == "F"){
+						add(new Wall(j*65, i*65, "F"));
+					}
+					else if(col[j] == "G"){
+						add(new Wall(j*65, i*65, "G"));
+					}
+					else if(col[j] == "H"){
+						add(new Wall(j*65, i*65, "H"));
+					}
+					else if(col[j] == "1"){
+						add(new Wall(j*65, i*65, "1"));
+					}
+					else if(col[j] == "2"){
+						add(new Wall(j*65, i*65, "2"));
+					}
+					else if(col[j] == "3"){
+						add(new Wall(j*65, i*65, "3"));
+					}
+					else if(col[j] == "4"){
+						add(new Wall(j*65, i*65, "4"));
+					}
+					else if(col[j] == "6"){
+						add(new Wall(j*65, i*65, "6"));
+					}
+					else if(col[j] == "7"){
+						add(new Wall(j*65, i*65, "7"));
+					}
+					/*else if(col[j] == "A"){
 						add(new Floors(j*65, i*65, "A"));
 					}
 					else if(col[j] == "B"){
@@ -2359,7 +2381,7 @@ package
 					}
 					else if(col[j] == "dc"){
 						add(new Floors(j*65, i*65, "dc"));
-					}
+					}*/
 				}
 			}
 			
