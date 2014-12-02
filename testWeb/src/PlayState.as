@@ -250,7 +250,7 @@ package
 			if(level==0){
 				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
 				add(collisionMap);	
-				constructMap();
+				//constructMap();
 			}
 			else if(level==1){
 				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
@@ -299,16 +299,118 @@ package
 			}
 			
 			add(collisionMap);
-			/*for(var i:int =0;i<collisionMap.widthInTiles;i++){
+			trace("aaa");
+			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
-					if(collisionMap.getTile(i,j)==0){
-						var floorScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH,j*TILE_HEIGHT);
-						floorScreenTile.loadGraphic(FloorTile,false,false,TILE_WIDTH,TILE_HEIGHT);
-						add(floorScreenTile);
+					if(collisionMap.getTile(i,j)==1){
+						if(collisionMap.getTile(i+1,j) == 1 && collisionMap.getTile(i,j+1) == 1 && collisionMap.getTile(i-1,j) != 1 && collisionMap.getTile(i-1,j-1) != 1){
+							add(new Wall(i*65, j*65, 1));
+						}
+						/*else if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j+1) == 1){
+							add(new Wall(i*65, j*65, 3));
+						}*/
+						else if(collisionMap.getTile(i+1,j) == 1 && collisionMap.getTile(i,j-1) == 1 && collisionMap.getTile(i-1,j-1) != 1 && collisionMap.getTile(i,j+1) != 1){
+							add(new Wall(i*65, j*65, 2));
+						}
+						else if(collisionMap.getTile(i+1,j) == 1 && collisionMap.getTile(i,j+1) == 1 && collisionMap.getTile(i-1,j-1) != 1 && collisionMap.getTile(i-1,j) == 1){
+							add(new Wall(i*65, j*65, 0));
+						}
+						else if(j-1 >=0 && collisionMap.getTile(i,j-1) == 0){
+							var myNum:Number = Math.floor(Math.random()*2) + 1;
+							if(myNum == 1){
+								add(new Wall(i*65, j*65, 8));
+							}
+							else if(myNum == 2){
+								add(new Wall(i*65, j*65, 12));
+							}
+						}
+						else if(collisionMap.getTile(i,j+1) == 0){
+							var myNum:Number = Math.floor(Math.random()*2) + 1;
+							if(myNum == 1){
+								add(new Wall(i*65, j*65, 6));
+							}
+							else if(myNum == 2){
+								add(new Wall(i*65, j*65, 10));
+							}
+						}
+						else if(i-1 >= 0 && collisionMap.getTile(i-1,j) == 0){
+							add(new Wall(i*65, j*65, 11));
+						}
+						else if(collisionMap.getTile(i+1,j) == 0){
+							add(new Wall(i*65, j*65, 9));
+						}
+						/*else if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
+							add(new Wall(i*65, j*65, 4));
+						}*/
+						
+					}
+					else if(collisionMap.getTile(i,j)==0){
+						
+						if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
+							add(new Floors(i*65, j*65, "dc"));
+						}
+						else if(collisionMap.getTile(i,j-1) == 1){
+							var myNum:Number = Math.floor(Math.random()*5) + 1;
+							if(myNum == 1){
+								add(new Floors(i*65, j*65, "up1"));
+							}
+							else if(myNum == 2){
+								add(new Floors(i*65, j*65, "up2"));
+							}
+							else if(myNum == 3){
+								add(new Floors(i*65, j*65, "up3"));
+							}
+							else if(myNum == 4){
+								add(new Floors(i*65, j*65, "up4"));
+							}
+							else if(myNum == 5){
+								add(new Floors(i*65, j*65, "up5"));
+							}
+							add(new Floors(i*65, j*65, "dup"));
+						}
+						else if(collisionMap.getTile(i-1,j) == 1){
+							var myNum:Number = Math.floor(Math.random()*5) + 1;
+							if(myNum == 1){
+								add(new Floors(i*65, j*65, "left1"));
+							}
+							else if(myNum == 2){
+								add(new Floors(i*65, j*65, "left2"));
+							}
+							else if(myNum == 3){
+								add(new Floors(i*65, j*65, "left3"));
+							}
+							else if(myNum == 4){
+								add(new Floors(i*65, j*65, "left4"));
+							}
+							else if(myNum == 5){
+								add(new Floors(i*65, j*65, "left5"));
+							}
+							add(new Floors(i*65, j*65, "dleft"));
+						}
+						else{
+							var myNum:Number = Math.floor(Math.random()*5) + 1;
+							if(myNum == 1){
+								add(new Floors(i*65, j*65, "A"));
+							}
+							else if(myNum == 2){
+								add(new Floors(i*65, j*65, "B"));
+							}
+							else if(myNum == 3){
+								add(new Floors(i*65, j*65, "C"));
+							}
+							else if(myNum == 4){
+								add(new Floors(i*65, j*65, "D"));
+							}
+							else if(myNum == 5){
+								add(new Floors(i*65, j*65, "E"));
+							}
+						}
+						
 					}
 				}
 			}
-			/*for(var i:int =0;i<collisionMap.widthInTiles;i++){
+			/*
+			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
 					if(j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i,j+1)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==0){
 						var coverSpr3:FlxSprite = new FlxSprite(i*TILE_WIDTH,(j)*TILE_HEIGHT);
