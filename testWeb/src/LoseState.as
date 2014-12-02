@@ -24,10 +24,10 @@ package
 			bg = new FlxSprite(0, 0, ImgBG);
 			add(bg);
 			
-			soundbg = (new MySoundbg()) as Sound;
-			if(PlayState.soundOn){
-				myChannelbg = soundbg.play();
-			}
+//			soundbg = (new MySoundbg()) as Sound;
+//			if(PlayState.soundOn){
+//				myChannelbg = soundbg.play();
+//			}
 			FlxG.mouse.show();
 			
 			levelBtn = new FlxButton(350, 500, "Level Select", function():void

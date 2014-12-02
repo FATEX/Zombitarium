@@ -17,6 +17,7 @@ package
 	import objects.Nurse;
 	import objects.Patient;
 	import objects.Syringe;
+	import objects.Wall;
 	
 	import org.flixel.FlxButton;
 	import org.flixel.FlxCamera;
@@ -30,6 +31,7 @@ package
 	import org.flixel.FlxText;
 	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
+	import objects.Floors;
 
 
 	public class PlayState extends FlxState
@@ -39,10 +41,10 @@ package
 		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
 		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
 		[Embed(source = 'wall_USE5.png')]private static var coverTiles3:Class;
-
-		
+		[Embed(source = "header2.png")] private var ImgHeader:Class;
+		private var header: FlxSprite;
 		// Music
-		[Embed(source = "bg.mp3")]private var MySound : Class; 		 
+		[Embed(source = "zbg1.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
 		public var myChannel:SoundChannel = new SoundChannel();
 				
@@ -95,6 +97,7 @@ package
 
 		// Default levels
 		[Embed(source = 'level0.txt', mimeType = 'application/octet-stream')]private static var default_level0:Class;
+		[Embed(source = 'lvl0_alt.txt', mimeType = 'application/octet-stream')]private static var level0:Class;
 		[Embed(source = 'level1.txt', mimeType = 'application/octet-stream')]private static var default_level1:Class;
 		[Embed(source = 'level2.txt', mimeType = 'application/octet-stream')]private static var default_level2:Class;
 		[Embed(source = 'level2T.txt', mimeType = 'application/octet-stream')]private static var default_level2T:Class;
@@ -117,7 +120,7 @@ package
 		[Embed(source="human_dead.png")] private static var ImgJanitorDead:Class;
 		[Embed(source="nurse_dead.png")] private static var ImgNurseDead:Class;
 		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
-		[Embed(source="basic_floor_tile_USE_65.png")] private static var FloorTile:Class;
+		[Embed(source="floor_tile_type3_gray.png")] private static var FloorTile:Class;
 
 		//logger
 		public static var isPageLoaded:Boolean = false;
@@ -180,7 +183,6 @@ package
 		private var camLevel:FlxCamera;
 		private var drawingCamera:FlxSprite;
 		private var camSound:FlxCamera;
-		
 		private static var resetNumber:int = 0;
 		
 		//Decides wheter the rooms go dark or not
@@ -214,10 +216,12 @@ package
 		public static var isABTesting:Boolean = true;
 		private var numberOfZombies = 0;
 		private var pressed = true;
+		public static var isNotPlaying:Boolean;
 		
 		override public function create():void
 		{
 			//SoundMixer.stopAll();
+			
 			FlxG.worldBounds = new FlxRect(0,0,TILE_WIDTH*100,TILE_HEIGHT*100);
 			FlxG.framerate = 50;
 			FlxG.flashFramerate = 50;
@@ -246,7 +250,9 @@ package
 			
 			// Initializes the map using the generated string, the tile images, and the tile size
 			if(level==0){
-				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);	
+				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				add(collisionMap);	
+				//constructMap();
 			}
 			else if(level==1){
 				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
@@ -295,15 +301,117 @@ package
 			}
 			
 			add(collisionMap);
+			trace("aaa");
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
-					if(collisionMap.getTile(i,j)==0){
-						var floorScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH,j*TILE_HEIGHT);
-						floorScreenTile.loadGraphic(FloorTile,false,false,TILE_WIDTH,TILE_HEIGHT);
-						add(floorScreenTile);
+					if(collisionMap.getTile(i,j)==1){
+						if(collisionMap.getTile(i+1,j) == 1 && collisionMap.getTile(i,j+1) == 1 && collisionMap.getTile(i-1,j) != 1 && collisionMap.getTile(i-1,j-1) != 1){
+							add(new Wall(i*65, j*65, 1));
+						}
+						/*else if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j+1) == 1){
+							add(new Wall(i*65, j*65, 3));
+						}*/
+						else if(collisionMap.getTile(i+1,j) == 1 && collisionMap.getTile(i,j-1) == 1 && collisionMap.getTile(i-1,j-1) != 1 && collisionMap.getTile(i,j+1) != 1){
+							add(new Wall(i*65, j*65, 2));
+						}
+						else if(collisionMap.getTile(i+1,j) == 1 && collisionMap.getTile(i,j+1) == 1 && collisionMap.getTile(i-1,j-1) != 1 && collisionMap.getTile(i-1,j) == 1){
+							add(new Wall(i*65, j*65, 0));
+						}
+						else if(j-1 >=0 && collisionMap.getTile(i,j-1) == 0){
+							var myNum:Number = Math.floor(Math.random()*2) + 1;
+							if(myNum == 1){
+								add(new Wall(i*65, j*65, 8));
+							}
+							else if(myNum == 2){
+								add(new Wall(i*65, j*65, 12));
+							}
+						}
+						else if(collisionMap.getTile(i,j+1) == 0){
+							var myNum:Number = Math.floor(Math.random()*2) + 1;
+							if(myNum == 1){
+								add(new Wall(i*65, j*65, 6));
+							}
+							else if(myNum == 2){
+								add(new Wall(i*65, j*65, 10));
+							}
+						}
+						else if(i-1 >= 0 && collisionMap.getTile(i-1,j) == 0){
+							add(new Wall(i*65, j*65, 11));
+						}
+						else if(collisionMap.getTile(i+1,j) == 0){
+							add(new Wall(i*65, j*65, 9));
+						}
+						/*else if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
+							add(new Wall(i*65, j*65, 4));
+						}*/
+						
+					}
+					else if(collisionMap.getTile(i,j)==0){
+						
+						if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
+							add(new Floors(i*65, j*65, "dc"));
+						}
+						else if(collisionMap.getTile(i,j-1) == 1){
+							var myNum:Number = Math.floor(Math.random()*5) + 1;
+							if(myNum == 1){
+								add(new Floors(i*65, j*65, "up1"));
+							}
+							else if(myNum == 2){
+								add(new Floors(i*65, j*65, "up2"));
+							}
+							else if(myNum == 3){
+								add(new Floors(i*65, j*65, "up3"));
+							}
+							else if(myNum == 4){
+								add(new Floors(i*65, j*65, "up4"));
+							}
+							else if(myNum == 5){
+								add(new Floors(i*65, j*65, "up5"));
+							}
+							add(new Floors(i*65, j*65, "dup"));
+						}
+						else if(collisionMap.getTile(i-1,j) == 1){
+							var myNum:Number = Math.floor(Math.random()*5) + 1;
+							if(myNum == 1){
+								add(new Floors(i*65, j*65, "left1"));
+							}
+							else if(myNum == 2){
+								add(new Floors(i*65, j*65, "left2"));
+							}
+							else if(myNum == 3){
+								add(new Floors(i*65, j*65, "left3"));
+							}
+							else if(myNum == 4){
+								add(new Floors(i*65, j*65, "left4"));
+							}
+							else if(myNum == 5){
+								add(new Floors(i*65, j*65, "left5"));
+							}
+							add(new Floors(i*65, j*65, "dleft"));
+						}
+						else{
+							var myNum:Number = Math.floor(Math.random()*5) + 1;
+							if(myNum == 1){
+								add(new Floors(i*65, j*65, "A"));
+							}
+							else if(myNum == 2){
+								add(new Floors(i*65, j*65, "B"));
+							}
+							else if(myNum == 3){
+								add(new Floors(i*65, j*65, "C"));
+							}
+							else if(myNum == 4){
+								add(new Floors(i*65, j*65, "D"));
+							}
+							else if(myNum == 5){
+								add(new Floors(i*65, j*65, "E"));
+							}
+						}
+						
 					}
 				}
 			}
+			/*
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
 					if(j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i,j+1)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==0){
@@ -323,7 +431,7 @@ package
 					}
 					
 				}
-			}
+			}*/
 			highlightBox = new FlxObject(0, 0, TILE_WIDTH, TILE_HEIGHT);
 			destination = new FlxPoint(0,0);
 			setupPlayer();
@@ -369,6 +477,9 @@ package
 					FlxG.resetGame();
 				} ); } );
 			add(quitBtn);
+			
+			header = new FlxSprite(0, 0, ImgHeader);
+			add(header);
 			
 			
 			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
@@ -535,6 +646,7 @@ package
 			myChannel.stop();
 			FlxG.resetState();
 			win = false;
+			isNotPlaying = false;
 			
 		}
 		
@@ -545,7 +657,8 @@ package
 				FlxG.removeCamera(camQuit,false);
 				FlxG.removeCamera(camNextLevel,false);
 				FlxG.removeCamera(camLevel,false);
-				FlxG.removeCamera(camSound,false);
+				//FlxG.removeCamera(camSound,false);
+				//FlxG.removeCamera(camHeader,false);
 			}
 			else{
 				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); // we put the first one in the top left corner
@@ -553,7 +666,8 @@ package
 				//camReset = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
 				camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
 				camLevel = new FlxCamera(2,62,t.width, t.height);
-				camSound = new FlxCamera(2,92, quitBtn.width, quitBtn.height);
+				//camSound = new FlxCamera(2,92, quitBtn.width, quitBtn.height);
+				//camHeader = new FlxCamera(0,0,800,100);
 
 			}
 			cam.follow(player);
@@ -571,8 +685,8 @@ package
 			camLevel.follow(t);
 			FlxG.addCamera(camLevel);
 			
-			//camSound.follow(stop_btn);
-			//FlxG.addCamera(camSound);
+			//camLevel.follow(header);
+			//FlxG.addCamera(camHeader);
 			
 			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
 			this.powerUpMenu.size=12;
@@ -1966,7 +2080,7 @@ package
 			 
 			if (Math.abs(player.x- (exitX))<=TILE_WIDTH*.8 && Math.abs(player.y - (exitY))<=TILE_HEIGHT/2 && this.exitDoor.doorOpen) {
 				//win == true;
-				myChannel.stop();
+				//myChannel.stop();
 				logger.recordEvent(level+1,102,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" complete");
 				logger.recordLevelEnd();
 				this.beatLevel=true;
@@ -2097,8 +2211,161 @@ package
 		public function on_fade_completed2():void
 		{
 			// playing the game itself
-			myChannel.stop();
+			//myChannel.stop();
 			FlxG.switchState(new LoseState());
+		}
+		
+		private function constructMap():void{
+			var map:String = new level0();
+			var row:Array = map.split("\n");
+			for(var i:int = 0; i < row.length; i++){
+				var cols:String = String(row[i]);
+				var col:Array = cols.split(",");
+				for(var j:int = 0; j < col.length; j++){
+					if(col[j] == "0"){
+						trace(i);
+						trace(j);
+						add(new Wall(j*65, i*65, 0));
+					}
+					else if(col[j] == "1"){
+						add(new Wall(j*65, i*65, 1));
+					}
+					else if(col[j] == "2"){
+						add(new Wall(j*65, i*65, 2));
+					}
+					else if(col[j] == "3"){
+						add(new Wall(j*65, i*65, 3));
+					}
+					else if(col[j] == "4"){
+						add(new Wall(j*65, i*65, 4));
+					}
+					else if(col[j] == "5"){
+						add(new Wall(j*65, i*65, 5));
+					}
+					else if(col[j] == "6"){
+						add(new Wall(j*65, i*65, 6));
+					}
+					else if(col[j] == "7"){
+						add(new Wall(j*65, i*65, 7));
+					}
+					else if(col[j] == "8"){
+						add(new Wall(j*65, i*65, 8));
+					}
+					else if(col[j] == "9"){
+						add(new Wall(j*65, i*65, 9));
+					}
+					else if(col[j] == "10"){
+						add(new Wall(j*65, i*65, 10));
+					}
+					else if(col[j] == "11"){
+						add(new Wall(j*65, i*65, 11));
+					}
+					else if(col[j] == "12"){
+						add(new Wall(j*65, i*65, 12));
+					}
+					else if(col[j] == "A"){
+						add(new Floors(j*65, i*65, "A"));
+					}
+					else if(col[j] == "B"){
+						add(new Floors(j*65, i*65, "B"));
+					}
+					else if(col[j] == "C"){
+						add(new Floors(j*65, i*65, "C"));
+					}
+					else if(col[j] == "D"){
+						add(new Floors(j*65, i*65, "D"));
+					}
+					else if(col[j] == "E"){
+						add(new Floors(j*65, i*65, "E"));
+					}
+					else if(col[j] == "up1"){
+						add(new Floors(j*65, i*65, "up1"));
+					}
+					else if(col[j] == "up2"){
+						add(new Floors(j*65, i*65, "up2"));
+					}
+					else if(col[j] == "up3"){
+						add(new Floors(j*65, i*65, "up3"));
+					}
+					else if(col[j] == "up4"){
+						add(new Floors(j*65, i*65, "up4"));
+					}
+					else if(col[j] == "up5"){
+						add(new Floors(j*65, i*65, "up5"));
+					}
+					else if(col[j] == "left1"){
+						add(new Floors(j*65, i*65, "left1"));
+					}
+					else if(col[j] == "left2"){
+						add(new Floors(j*65, i*65, "left2"));
+					}
+					else if(col[j] == "left3"){
+						add(new Floors(j*65, i*65, "left3"));
+					}
+					else if(col[j] == "left4"){
+						add(new Floors(j*65, i*65, "left4"));
+					}
+					else if(col[j] == "left5"){
+						add(new Floors(j*65, i*65, "left5"));
+					}
+					else if(col[j] == "right1"){
+						add(new Floors(j*65, i*65, "right1"));
+					}
+					else if(col[j] == "right2"){
+						add(new Floors(j*65, i*65, "right2"));
+					}
+					else if(col[j] == "right3"){
+						add(new Floors(j*65, i*65, "right3"));
+					}
+					else if(col[j] == "right4"){
+						add(new Floors(j*65, i*65, "right4"));
+					}
+					else if(col[j] == "right5"){
+						add(new Floors(j*65, i*65, "right5"));
+					}
+					else if(col[j] == "down1"){
+						add(new Floors(j*65, i*65, "down1"));
+					}
+					else if(col[j] == "down2"){
+						add(new Floors(j*65, i*65, "down2"));
+					}
+					else if(col[j] == "down3"){
+						add(new Floors(j*65, i*65, "down3"));
+					}
+					else if(col[j] == "down4"){
+						add(new Floors(j*65, i*65, "down4"));
+					}
+					else if(col[j] == "down5"){
+						add(new Floors(j*65, i*65, "down5"));
+					}
+					else if(col[j] == "bup"){
+						add(new Floors(j*65, i*65, "bup"));
+					}
+					else if(col[j] == "bleft"){
+						add(new Floors(j*65, i*65, "bleft"));
+					}
+					else if(col[j] == "bright"){
+						add(new Floors(j*65, i*65, "bright"));
+					}
+					else if(col[j] == "bdown"){
+						add(new Floors(j*65, i*65, "bdown"));
+					}
+					else if(col[j] == "bf"){
+						add(new Floors(j*65, i*65, "bf"));
+					}
+					else if(col[j] == "dup"){
+						add(new Floors(j*65, i*65, "dup"));
+					}
+					else if(col[j] == "dleft"){
+						add(new Floors(j*65, i*65, "dleft"));
+					}
+					else if(col[j] == "dc"){
+						add(new Floors(j*65, i*65, "dc"));
+					}
+				}
+			}
+			
+			trace(map.length);
 		}
 		
 	}
