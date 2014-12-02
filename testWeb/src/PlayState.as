@@ -503,7 +503,7 @@ package
 					FlxG.resetGame();
 				} ); } );
 			quitBtn.loadGraphic(BtnExit);
-			quitBtn.scrollFactor.x=quitBtn.scrollFactor.y=0;
+			//quitBtn.scrollFactor.x=quitBtn.scrollFactor.y=0;
 			add(quitBtn);
 			
 			

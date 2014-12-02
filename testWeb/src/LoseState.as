@@ -13,6 +13,7 @@ package
 	public class LoseState extends FlxState
 	{
 		[Embed(source = "lose_screen.png")] private var ImgBG:Class;
+		[Embed(source = "bLevels.png")] private var BtnLevels:Class;
 		[Embed(source = "bgm.mp3")]private var MySoundbg : Class; 
 		private var soundbg : Sound; // not MySound! 
 		private var myChannelbg:SoundChannel = new SoundChannel();
@@ -34,7 +35,8 @@ package
 			{
 				FlxG.switchState(new LevelState());
 			});
-			levelBtn.color = 0xa3d370;
+			levelBtn.color = 0xfafafa;
+			levelBtn.loadGraphic(BtnLevels);
 			add(levelBtn);
 		}
 		
