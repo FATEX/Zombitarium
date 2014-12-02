@@ -29,7 +29,8 @@ package objects
 		[Embed(source = 'wall_tile_type4_gray_65x65_4.png')]private static var wall44:Class;
 		[Embed(source = 'wall_tile_type5_gray_65x65.png')]private static var wall5:Class;*/
 		[Embed(source = 'Walls/wall_tile_type6_gray_65x65_with_shadow_dark.png')]private static var wallDarkRCorner:Class;
-		[Embed(source = 'Walls/wall_tile_corner3_gray_65x65_with_shadow_dark.png')]private static var wallDarkCorner:Class;
+		[Embed(source = 'Walls/wall_tile_corner2_gray_65x65_left.png')]private static var wallDarkCornerL:Class;
+		[Embed(source = 'Walls/wall_tile_corner2_gray_65x65_right.png')]private static var wallDarkCornerR:Class;
 		[Embed(source = 'Walls/wall_tile_type5_gray_65x65.png')]private static var wall5:Class;
 		
 		private const TILE_WIDTH:uint = 65;
@@ -80,7 +81,10 @@ package objects
 				super.loadGraphic(wall5, true, true, TILE_WIDTH, TILE_HEIGHT);
 			}
 			else if(label == "7"){
-				super.loadGraphic(wallDarkCorner, true, true, TILE_WIDTH, TILE_HEIGHT);
+				super.loadGraphic(wallDarkCornerL, true, true, TILE_WIDTH, TILE_HEIGHT);
+			}
+			else if(label == "8"){
+				super.loadGraphic(wallDarkCornerR, true, true, TILE_WIDTH, TILE_HEIGHT);
 			}
 		}
 	}
