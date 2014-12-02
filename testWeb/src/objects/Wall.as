@@ -28,7 +28,7 @@ package objects
 		[Embed(source = 'wall_tile_type6_gray_65x65.png')]private static var wall43:Class;
 		[Embed(source = 'wall_tile_type4_gray_65x65_4.png')]private static var wall44:Class;
 		[Embed(source = 'wall_tile_type5_gray_65x65.png')]private static var wall5:Class;*/
-		[Embed(source = 'Floors/wall_tile_type6_gray_65x65_with_shadow_dark.png')]private static var wallDarkRCorner:Class;
+		[Embed(source = 'Walls/wall_tile_type6_gray_65x65_with_shadow_dark.png')]private static var wallDarkRCorner:Class;
 		[Embed(source = 'Walls/wall_tile_corner3_gray_65x65_with_shadow_dark.png')]private static var wallDarkCorner:Class;
 		[Embed(source = 'Walls/wall_tile_type5_gray_65x65.png')]private static var wall5:Class;
 		

@@ -319,43 +319,43 @@ package
 					
 					/*if(collisionMap.getTile(i,j)==1){
 						if(i-1 < 0 && j-1 < 0 && collisionMap.getTile(i-1,j) == 0 && collisionMap.getTile(i,j-1) == 0 && collisionMap.getTile(i,j+1) == 1 && collisionMap.getTile(i+1,j) == 1){
-							add(new Wall(i*65, j*65, 1));
+							add(new Wall(i*65, j*65, "A"));
 						}
 						else if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j+1) == 1){
 							add(new Wall(i*65, j*65, 3));
 						}
 						else if(i-1 < 0 && j+1 >= collisionMap.heightInTiles  && collisionMap.getTile(i-1,j) == 0 && collisionMap.getTile(i,j-1) == 1 && collisionMap.getTile(i+1,j) == 1 && collisionMap.getTile(i,j+1) == 0){
-							add(new Wall(i*65, j*65, 2));
+							add(new Wall(i*65, j*65, "B"));
 						}
 						else if(collisionMap.getTile(i-1,j-1) == 1 && collisionMap.getTile(i,j-1) == 1 && collisionMap.getTile(i+1,j-1) == 1){
-							add(new Wall(i*65, j*65, 0));
+							add(new Wall(i*65, j*65, "6"));
 						}
 						else if((j-1 >=0 && collisionMap.getTile(i,j-1) == 0) || (collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1)){
 							var myNum:Number = Math.floor(Math.random()*2) + 1;
 							if(myNum == 1){
-								add(new Wall(i*65, j*65, 8));
+								add(new Wall(i*65, j*65, "F"));
 							}
 							else if(myNum == 2){
-								add(new Wall(i*65, j*65, 12));
+								add(new Wall(i*65, j*65, "2"));
 							}
 						}
 						else if(collisionMap.getTile(i,j+1) == 0 || (collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i+1,j) == 1)){
 							var myNum:Number = Math.floor(Math.random()*2) + 1;
 							if(myNum == 1){
-								add(new Wall(i*65, j*65, 6));
+								add(new Wall(i*65, j*65, "E"));
 							}
 							else if(myNum == 2){
-								add(new Wall(i*65, j*65, 10));
+								add(new Wall(i*65, j*65, "1"));
 							}
 						}
 						else if(i-1 >= 0 && collisionMap.getTile(i-1,j) == 0){
-							add(new Wall(i*65, j*65, 11));
+							add(new Wall(i*65, j*65, "G"));
 						}
 						else if(collisionMap.getTile(i+1,j) == 0){
-							add(new Wall(i*65, j*65, 9));
+							add(new Wall(i*65, j*65, "3"));
 						}
-						/*else if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
-							add(new Wall(i*65, j*65, 4));
+						else if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
+							add(new Wall(i*65, j*65, "D"));
 						}
 						
 					}*/
