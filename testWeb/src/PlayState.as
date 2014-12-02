@@ -774,7 +774,7 @@ package
 			this.drawingCamera.fill(0x00000000);
 			for each(var hum:Human in humans){
 				try{
-				if(!FlxSprite(this.blankTiles[int(hum.x/TILE_WIDTH)][int(hum.y/TILE_HEIGHT)]).visible){
+				if(!FlxSprite(this.blankTiles[int((hum.x+hum.width/2)/TILE_WIDTH)][int((hum.y+hum.height/2)/TILE_HEIGHT)]).visible && this.collisionMap.getTile((hum.x+hum.width/2)/TILE_WIDTH,(hum.y+hum.height/2)/TILE_HEIGHT)!=1){
 					var triangle:Shape = new Shape(); 
 					var sides:Number = 5;
 					var xP:Vector.<Number> = new Vector.<Number>();
@@ -994,10 +994,13 @@ package
 					zom = Zombie(obj1);
 					syr = Syringe(obj2);
 					var pos:int = zombies.indexOf(zom);
+					if(zom!=player){
 					zombies.splice(pos,1);
-					remove(zom, true);
+						remove(zom,true);
+						zom.exists = false;
+
+					}
 					remove(syr, true);
-					zom.exists = false;
 					zom.alive = false;
 					syr.exists = false;
 					syr.destory();
@@ -1422,15 +1425,17 @@ package
 						zombieLimited.text = numberOfZombies + "/2";
 					}
 					var pos3:int = zombies.indexOf(zom);
-					zombies.splice(pos3,1);
-					remove(zom,true);
+					if(zom!=player){
+						zombies.splice(pos3,1);
+						remove(zom,true);
+						zom.exists=false;
+					}
 					if (soundOn) {
 					soundzdead = (new MySoundzdead()) as Sound;
 					myChannelzdead = soundzdead.play();
 					}
 					man.goBack(collisionMap);
 					zom.alive=false;
-					zom.exists=false;
 					man.stunHuman();
 					man.stunAn.x=man.x;
 					man.stunAn.y=man.y-man.height;
@@ -1707,6 +1712,8 @@ package
 			if (player.alive == false) {
 				logger.recordEvent(level+1,101,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" ends");
 				logger.recordLevelEnd();
+				player.play("right",true);
+				player.angle=player.angle+10;
 				FlxG.fade(0xff000000, 0.3, on_fade_completed2);
 
 //				if(this.youLoseScreen ==null){
@@ -1770,30 +1777,31 @@ package
 					isABTesting = true;
 				}
 			}*/
-			
-			if(FlxG.keys.LEFT || FlxG.keys.A)
-			{
-				//player.facing = FlxObject.LEFT;
-				player.acceleration.x -= player.drag.x;
+			if(player.alive){
+				if(FlxG.keys.LEFT || FlxG.keys.A)
+				{
+					//player.facing = FlxObject.LEFT;
+					player.acceleration.x -= player.drag.x;
+					
+				}
+				else if(FlxG.keys.RIGHT || FlxG.keys.D)
+				{
+					//player.facing = FlxObject.RIGHT;
+					player.acceleration.x += player.drag.x;
 				
-			}
-			else if(FlxG.keys.RIGHT || FlxG.keys.D)
-			{
-				//player.facing = FlxObject.RIGHT;
-				player.acceleration.x += player.drag.x;
+				}
+				if(FlxG.keys.UP || FlxG.keys.W)
+				{
+					//player.facing = FlxObject.UP;
+					player.acceleration.y -= player.drag.y;
+					
+				}
+				else if(FlxG.keys.DOWN || FlxG.keys.S)
+				{
+					//player.facing = FlxObject.DOWN;
+					player.acceleration.y += player.drag.y;
 				
-			}
-			if(FlxG.keys.UP || FlxG.keys.W)
-			{
-				//player.facing = FlxObject.UP;
-				player.acceleration.y -= player.drag.y;
-				
-			}
-			else if(FlxG.keys.DOWN || FlxG.keys.S)
-			{
-				//player.facing = FlxObject.DOWN;
-				player.acceleration.y += player.drag.y;
-			
+				}
 			}
 			if(FlxG.keys.SPACE){
 				if(throwable){
