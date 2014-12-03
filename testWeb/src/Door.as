@@ -17,8 +17,8 @@ package
 		private const TILE_WIDTH:uint = 65;
 		private const TILE_HEIGHT:uint = 65;
 		
-		[Embed(source="wall_door_locked_gray_with_trim.png")] static var ImgDoorClose:Class;
-		[Embed(source="wall_door_unlocked_gray_65x65.png")] static var ImgDoorOpen:Class;
+		[Embed(source="doorL_100.png")] public static var ImgDoorClose:Class;
+		[Embed(source="doorOpenL_100.png")] public static var ImgDoorOpen:Class;
 		[Embed(source="doorWin_100.png")] private static var ImgDoorCloseWin:Class;
 		[Embed(source="doorOpenWin_100.png")] private static var ImgDoorOpenWin:Class;
 		[Embed(source = "doorIO.mp3")]private var MySound : Class; 
@@ -39,20 +39,20 @@ package
 			
 			if (doorOpen == false) {
 				if(isWin){
-					this.loadGraphic(ImgDoorClose, false, false, TILE_WIDTH, TILE_HEIGHT);
+					this.loadGraphic(ImgDoorCloseWin, false, false, TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
 
 				}else{
-					this.loadGraphic(ImgDoorClose, false, false, TILE_WIDTH, TILE_HEIGHT);
+					this.loadGraphic(ImgDoorClose, false, false, TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
 
 				}
 				this.immovable = true;
 			} else
 			{
 				if(isWin){
-					this.loadGraphic(ImgDoorOpen, false, false, TILE_WIDTH, TILE_HEIGHT);
+					this.loadGraphic(ImgDoorOpenWin, false, false, TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
 
 				}else{
-					this.loadGraphic(ImgDoorOpen, false, false,  TILE_WIDTH, TILE_HEIGHT);
+					this.loadGraphic(ImgDoorOpen, false, false,  TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
 
 				}
 				this.immovable = true;
