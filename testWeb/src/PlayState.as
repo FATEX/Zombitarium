@@ -12,6 +12,7 @@ package
 	import flash.utils.setInterval;
 	
 	import objects.Doctor;
+	import objects.Floors;
 	import objects.Human;
 	import objects.Janitor;
 	import objects.Nurse;
@@ -31,7 +32,6 @@ package
 	import org.flixel.FlxText;
 	import org.flixel.FlxTilemap;
 	import org.flixel.FlxU;
-	import objects.Floors;
 
 
 	public class PlayState extends FlxState
@@ -330,55 +330,12 @@ package
 			trace("aaa");
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
-					
-					/*if(collisionMap.getTile(i,j)==1){
-						if(i-1 < 0 && j-1 < 0 && collisionMap.getTile(i-1,j) == 0 && collisionMap.getTile(i,j-1) == 0 && collisionMap.getTile(i,j+1) == 1 && collisionMap.getTile(i+1,j) == 1){
-							add(new Wall(i*65, j*65, 1));
-						}
-						else if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j+1) == 1){
-							add(new Wall(i*65, j*65, 3));
-						}
-						else if(i-1 < 0 && j+1 >= collisionMap.heightInTiles  && collisionMap.getTile(i-1,j) == 0 && collisionMap.getTile(i,j-1) == 1 && collisionMap.getTile(i+1,j) == 1 && collisionMap.getTile(i,j+1) == 0){
-							add(new Wall(i*65, j*65, 2));
-						}
-						else if(collisionMap.getTile(i-1,j-1) == 1 && collisionMap.getTile(i,j-1) == 1 && collisionMap.getTile(i+1,j-1) == 1){
-							add(new Wall(i*65, j*65, 0));
-						}
-						else if((j-1 >=0 && collisionMap.getTile(i,j-1) == 0) || (collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1)){
-							var myNum:Number = Math.floor(Math.random()*2) + 1;
-							if(myNum == 1){
-								add(new Wall(i*65, j*65, 8));
-							}
-							else if(myNum == 2){
-								add(new Wall(i*65, j*65, 12));
-							}
-						}
-						else if(collisionMap.getTile(i,j+1) == 0 || (collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i+1,j) == 1)){
-							var myNum:Number = Math.floor(Math.random()*2) + 1;
-							if(myNum == 1){
-								add(new Wall(i*65, j*65, 6));
-							}
-							else if(myNum == 2){
-								add(new Wall(i*65, j*65, 10));
-							}
-						}
-						else if(i-1 >= 0 && collisionMap.getTile(i-1,j) == 0){
-							add(new Wall(i*65, j*65, 11));
-						}
-						else if(collisionMap.getTile(i+1,j) == 0){
-							add(new Wall(i*65, j*65, 9));
-						}
-						/*else if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
-							add(new Wall(i*65, j*65, 4));
-						}
-						
-					}*/
 					if(collisionMap.getTile(i,j)==0){
 						
-						if(collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
+						if(i>0 && collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
 							add(new Floors(i*65, j*65, "dc"));
 						}
-						else if(collisionMap.getTile(i,j-1) == 1){
+						else if(j>0 && collisionMap.getTile(i,j-1) == 1){
 							var myNum:Number = Math.floor(Math.random()*5) + 1;
 							if(myNum == 1){
 								add(new Floors(i*65, j*65, "up1"));
@@ -397,7 +354,7 @@ package
 							}
 							add(new Floors(i*65, j*65, "dup"));
 						}
-						else if(collisionMap.getTile(i-1,j) == 1){
+						else if(i>0 && collisionMap.getTile(i-1,j) == 1){
 							var myNum:Number = Math.floor(Math.random()*5) + 1;
 							if(myNum == 1){
 								add(new Floors(i*65, j*65, "left1"));
@@ -434,7 +391,23 @@ package
 								add(new Floors(i*65, j*65, "E"));
 							}
 						}
-						
+					}
+					else{
+						if(j-1>=0 && j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i,j+1)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==0){
+							add(new Wall(i*65, j*65, "D"));
+						}
+						else if(j-1>=0 && j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i,j-1)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==0){
+							add(new Wall(i*65, j*65, "C"));
+						}
+						else if(i-1>=0 && j+1<collisionMap.heightInTiles && collisionMap.getTile(i-1,j)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i,j+1)==0){
+							add(new Wall(i*65, j*65, "B"));
+						}
+						else if(i-1>=0 && j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i-1,j)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i,j-1)==0){
+							add(new Wall(i*65, j*65, "A"));
+						}
+						else if(i-1>=0 && j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i-1,j)==1 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==1 && collisionMap.getTile(i,j+1)==0){
+							add(new Wall(i*65, j*65, "H"));
+						}
 					}
 				}
 			}
@@ -686,18 +659,18 @@ package
 			//add(player);
 			if(cam !=null){
 				FlxG.removeCamera(cam,false);
-				FlxG.removeCamera(camQuit,false);
-				FlxG.removeCamera(camNextLevel,false);
-				FlxG.removeCamera(camLevel,false);
+				//FlxG.removeCamera(camQuit,false);
+				//FlxG.removeCamera(camNextLevel,false);
+				//FlxG.removeCamera(camLevel,false);
 				//FlxG.removeCamera(camSound,false);
 				//FlxG.removeCamera(camHeader,false);
 			}
 			else{
 				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); // we put the first one in the top left corner
-				camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+				//camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
 				//camReset = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-				camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
-				camLevel = new FlxCamera(2,62,t.width, t.height);
+				//camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
+				//camLevel = new FlxCamera(2,62,t.width, t.height);
 				//camSound = new FlxCamera(2,92, quitBtn.width, quitBtn.height);
 				//camHeader = new FlxCamera(0,0,800,100);
 
@@ -708,14 +681,14 @@ package
 			//cam.color = 0xFFFFFF; 
 			FlxG.addCamera(cam);
 			
-			camQuit.follow(quitBtn);
+			/*camQuit.follow(quitBtn);
 			FlxG.addCamera(camQuit);
 			
 			camNextLevel.follow(nextLevelBtn);
 			FlxG.addCamera(camNextLevel);
 			
 			camLevel.follow(t);
-			FlxG.addCamera(camLevel);
+			FlxG.addCamera(camLevel);*/
 			
 			//camLevel.follow(header);
 			//FlxG.addCamera(camHeader);
