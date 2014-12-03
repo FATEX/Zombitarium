@@ -267,12 +267,12 @@ package
 			
 			// Initializes the map using the generated string, the tile images, and the tile size
 			if(level==0){
-				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT,FlxTilemap.ALT);
+				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT,FlxTilemap.AUTO);
 				add(collisionMap);	
 				//constructMap(new level0());
 			}
 			else if(level==1){
-				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
+				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 				add(collisionMap);	
 				//constructMap(new level1());
 			}
