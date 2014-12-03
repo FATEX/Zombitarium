@@ -132,7 +132,7 @@ package
 		//logger
 		public static var isPageLoaded:Boolean = false;
 		private var playertime:Number = new Date().time;
-		private static var versionID:Number = 3;
+		private static var versionID:Number = 4;
 		public static var logger:Logging = new Logging(200,versionID,false);		
 		
 		// Some static constants for the size of the tilemap tiles
