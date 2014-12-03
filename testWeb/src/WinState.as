@@ -35,20 +35,20 @@ package
 //			}
 			FlxG.mouse.show();
 			
-			levelBtn = new FlxButton(400, 500, "Level Select", function():void
+			levelBtn = new FlxButton(440, 450, "", function():void
 			{
 				FlxG.switchState(new LevelState());
 			});
-			levelBtn.color = 0xa3d370;
+			levelBtn.color = 0xfafafa;
 			levelBtn.loadGraphic(BtnLevels);
 			add(levelBtn);
 			
-			replayBtn = new FlxButton(300, 500, "Replay", function():void
+			replayBtn = new FlxButton(250, 450, "", function():void
 			{
 				FlxG.switchState(new PlayState());
 				SoundMixer.stopAll();
 			});
-			replayBtn.color = 0xa3d370;
+			replayBtn.color = 0xfafafa;
 			replayBtn.loadGraphic(BtnReplay);
 			add(replayBtn);
 		}

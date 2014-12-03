@@ -31,7 +31,7 @@ package
 //			}
 			FlxG.mouse.show();
 			
-			levelBtn = new FlxButton(350, 500, "Level Select", function():void
+			levelBtn = new FlxButton(340, 450, "", function():void
 			{
 				FlxG.switchState(new LevelState());
 			});
