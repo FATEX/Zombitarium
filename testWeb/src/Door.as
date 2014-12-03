@@ -1,6 +1,7 @@
 package
 {
 	import flash.media.Sound;
+	import flash.media.SoundChannel;
 	
 	import org.flixel.FlxG;
 	import org.flixel.FlxSprite;
@@ -20,9 +21,10 @@ package
 		[Embed(source="wall_door_unlocked_gray_65x65.png")] static var ImgDoorOpen:Class;
 		[Embed(source="doorWin_100.png")] private static var ImgDoorCloseWin:Class;
 		[Embed(source="doorOpenWin_100.png")] private static var ImgDoorOpenWin:Class;
-		[Embed(source = "doorIO.mp3")]private var MySound : Class; 		 
+		[Embed(source = "doorIO.mp3")]private var MySound : Class; 
+		[Embed(source = "locked-door.mp3")]private var MySoundLockedDoor : Class; 		 
 		private var sound : Sound; // not MySound! 
-		
+		private var doorUnlocked:Boolean=false;
 		
 		public function Door(tx,ty)
 		{
@@ -33,7 +35,6 @@ package
 		}
 		public function updateDoor():void 
 		{
-			
 			
 			
 			if (doorOpen == false) {
@@ -66,9 +67,15 @@ package
 			if(FlxG.overlap(p, d) && FlxG.keys.E && pressed){ // check if the door and the player are touching
 						pressed = false;
 						
-						
-						sound = (new MySound()) as Sound;
-						sound.play();
+						if(this.doorOpen || this.doorUnlocked){
+							sound = (new MySound()) as Sound;
+							sound.play();
+							this.doorUnlocked=true;
+						}
+						else if(!doorUnlocked){
+							sound = (new MySoundLockedDoor()) as Sound;
+							sound.play();
+						}
 						
 						
 					} else if (FlxG.keys.E == false) {
