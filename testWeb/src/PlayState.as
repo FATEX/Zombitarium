@@ -37,7 +37,7 @@ package
 	public class PlayState extends FlxState
 	{
 		// Tileset that works with AUTO mode (best for thin walls)
-		[Embed(source = 'wall_complete_file.png')]private static var auto_tiles:Class;
+		[Embed(source = 'wall_complete_file2.png')]private static var auto_tiles:Class;
 		[Embed(source = 'wall_tile_universal_gray_130x65.png')]private static var universal_Wall:Class;
 		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
 		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
@@ -123,7 +123,7 @@ package
 		[Embed(source="doctor_dead.png")] private static var ImgDoctorDead:Class;
 		[Embed(source="human_dead.png")] private static var ImgJanitorDead:Class;
 		[Embed(source="nurse_dead.png")] private static var ImgNurseDead:Class;
-		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
+		[Embed(source="blank2.png")] private static var BlackTile:Class;
 		[Embed(source="floor_tile_type3_gray.png")] private static var FloorTile:Class;
 
 		//logger
@@ -676,38 +676,14 @@ package
 		private function addCam():void {
 			if(cam !=null){
 				FlxG.removeCamera(cam,false);
-				//FlxG.removeCamera(camQuit,false);
-				//FlxG.removeCamera(camNextLevel,false);
-				//FlxG.removeCamera(camLevel,false);
-				//FlxG.removeCamera(camSound,false);
-				//FlxG.removeCamera(camHeader,false);
 			}
 			else{
-				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); // we put the first one in the top left corner
-				//camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-				//camReset = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-				//camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
-				//camLevel = new FlxCamera(2,62,t.width, t.height);
-				//camSound = new FlxCamera(2,92, quitBtn.width, quitBtn.height);
-				//camHeader = new FlxCamera(0,0,800,100);
-
+				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); 
 			}
 			cam.follow(player);
 			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
 			FlxG.addCamera(cam);
-			
 
-			//camQuit.follow(quitBtn);
-			//FlxG.addCamera(camQuit);			
-			//camNextLevel.follow(nextLevelBtn);
-			//FlxG.addCamera(camNextLevel);
-			
-			//camLevel.follow(t);
-			//FlxG.addCamera(camLevel);
-			
-			//camLevel.follow(header);
-			//FlxG.addCamera(camHeader);
-			
 			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
 			this.powerUpMenu.size=12;
 			
