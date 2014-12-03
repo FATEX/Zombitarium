@@ -42,7 +42,7 @@ package
 		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
 		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
 		[Embed(source = 'wall_USE5.png')]private static var coverTiles3:Class;
-		[Embed(source = "header2.png")] private var ImgHeader:Class;
+		[Embed(source = "menuBar1.png")] private var ImgHeader:Class;
 		private var header: FlxSprite;
 		// Music
 		[Embed(source = "zbg1.mp3")]private var MySound : Class; 		 
@@ -525,7 +525,7 @@ package
 			}
 			revealBoard();			
 
-			instructions = new FlxText(1*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys to move \nPress E to open doors \nPress R to reset");
+			instructions = new FlxText(1*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys or WASD to move \nPress E to open doors");
 
 
 			if (level==0) {
