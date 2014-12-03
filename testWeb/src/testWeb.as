@@ -21,7 +21,7 @@ package
 				var myNum:Number = Math.floor(Math.random()*2) + 1;
 				var value:Number = PlayState.logger.recordABTestValue(myNum);
 				//trace(value);
-				PlayState.isABTesting = true;
+				PlayState.isABTesting = false;
 
 				
 			}
