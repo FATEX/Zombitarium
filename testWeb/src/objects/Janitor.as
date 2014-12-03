@@ -4,7 +4,7 @@ package objects
 	
 	public class Janitor extends Human
 	{
-		[Embed(source="janitor_live.png")] private static var ImgJanitor:Class;
+		[Embed(source="janitor_all.png")] private static var ImgJanitor:Class;
 		public var key:Key;
 		
 		public function Janitor(originX:Number, originY:Number)

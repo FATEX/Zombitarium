@@ -121,10 +121,13 @@ package
 		[Embed(source="zombie_combined.png")] private static var ImgSpaceman:Class;
 		[Embed(source="human_dead.png")] private static var ImgHumanDead:Class;
 		[Embed(source="doctor_dead.png")] private static var ImgDoctorDead:Class;
-		[Embed(source="human_dead.png")] private static var ImgJanitorDead:Class;
-		[Embed(source="nurse_dead.png")] private static var ImgNurseDead:Class;
+
 		[Embed(source="blank2.png")] private static var BlackTile:Class;
 		[Embed(source="floor_tile_type3_gray2.png")] private static var FloorTile:Class;
+
+		[Embed(source="janitor_all_zombies.png")] private static var ImgJanitorDead:Class;
+		[Embed(source="nurse_all_zombies_use_final.png")] private static var ImgNurseDead:Class;
+
 
 		//logger
 		public static var isPageLoaded:Boolean = false;
