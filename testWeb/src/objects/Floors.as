@@ -45,6 +45,7 @@ package objects
 		[Embed(source = 'Floors/floor_tile_type1_gray_with_shadow_dark_up.png')]private static var floorDarkUp:Class;
 		[Embed(source = 'Floors/floor_tile_type1_gray_with_shadow_dark_left.png')]private static var floorDarkLeft:Class;
 		[Embed(source = 'Floors/floor_tile_corner_gray_with_shadow_dark.png')]private static var floorDarkCorner:Class;
+		[Embed(source = 'Floors/floor_tile_corner.png')]private static var floorOutsideDarkCorner:Class;
 		
 		public function Floors(x:int, y:int, label:String)
 		{
@@ -147,6 +148,9 @@ package objects
 			}
 			else if(label == "dc"){
 				super.loadGraphic(floorDarkCorner, true, true, TILE_WIDTH, TILE_HEIGHT);
+			}
+			else if(label == "outCorner"){
+				super.loadGraphic(floorOutsideDarkCorner, true, true, TILE_WIDTH, TILE_HEIGHT);
 			}
 		}
 	}

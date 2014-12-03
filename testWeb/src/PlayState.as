@@ -332,6 +332,7 @@ package
 					if(collisionMap.getTile(i,j)==0){
 						if(collisionMap.getTile(i-1,j) != 0 && collisionMap.getTile(i,j-1) != 0){
 							add(new Floors(i*65, j*65, "dc"));
+							
 						}
 						else if(collisionMap.getTile(i,j-1) != 0){
 							var myNum:Number = Math.floor(Math.random()*5) + 1;
@@ -370,6 +371,9 @@ package
 								add(new Floors(i*65, j*65, "left5"));
 							}
 							add(new Floors(i*65, j*65, "dleft"));
+						}
+						else if(i>0 && j >0 && collisionMap.getTile(i-1,j-1) != 0){
+							add(new Floors(i*65, j*65, "outCorner"));
 						}
 						else{
 							var myNum:Number = Math.floor(Math.random()*5) + 1;
