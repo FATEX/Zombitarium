@@ -505,7 +505,7 @@ package
 			}
 			revealBoard();			
 
-			instructions = new FlxText(2*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys or WASD to move \nPress E to open doors");
+			instructions = new FlxText(3*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys or WASD to move \nPress E to open doors");
 
 
 
