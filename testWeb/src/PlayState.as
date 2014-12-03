@@ -42,8 +42,6 @@ package
 		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
 		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
 		[Embed(source = 'wall_USE5.png')]private static var coverTiles3:Class;
-		[Embed(source = "header2.png")] private var ImgHeader:Class;
-		private var header: FlxSprite;
 		// Music
 		[Embed(source = "zbg1.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
@@ -167,9 +165,13 @@ package
 		private var instructions:FlxText;
 		private var destination:FlxPoint;
 	
-		private var zombieNum:FlxButton;
+		private var zombieNum:FlxText;
 		private var muteButton:FlxButton;
-		private var syringeUI:FlxButton;
+		private var syringeUI:FlxSprite;
+		private var zombieHead:FlxSprite;
+		private var levelText:FlxText;
+		private var nurseHead:FlxSprite;
+		private var disguiseTimerText:FlxText;
 		
 		private var keys:Vector.<Key>;
 		private var doors:Vector.<Door>;
@@ -182,9 +184,9 @@ package
 		private var exitDoor:DoorObject;
 		//Cameras
 		private var cam:FlxCamera;
-		private var camQuit:FlxCamera;
-		private var camNextLevel:FlxCamera;
-		private var camLevel:FlxCamera;
+		//private var camQuit:FlxCamera;
+		//private var camNextLevel:FlxCamera;
+		//private var camLevel:FlxCamera;
 		private var drawingCamera:FlxSprite;
 		private var camSound:FlxCamera;
 		private static var resetNumber:int = 0;
@@ -219,6 +221,19 @@ package
 		public static var isABTesting:Boolean = true;
 		private var numberOfZombies = 0;
 		private var pressed = true;
+		
+		// menu bar 
+		[Embed(source = "menuBar1.png")] private var ImgHeader:Class;
+		private var header: FlxSprite;
+		[Embed(source = "imgZ.png")] private var ImgZ:Class;
+		private var imgZ: FlxSprite;
+		[Embed(source = "imgSy.png")] private var ImgSy:Class;
+		private var imgSy: FlxSprite;
+		[Embed(source = "imgN.png")] private var ImgN:Class;
+		private var imgN: FlxSprite;
+		[Embed(source = "bExit.png")] private var BtnExit:Class;
+		[Embed(source = "bMute.png")] private var BtnMute:Class;
+		[Embed(source = "bUnmute.png")] private var BtnUnmute:Class;
 		
 		override public function create():void
 		{
@@ -450,22 +465,6 @@ package
 			});
 			add(nextLevelBtn);
 
-			quitBtn = new FlxButton(-1000, 30, "Quit",
-				function():void { FlxG.fade(0xff000000, 0.22, function():void { 
-					level = 0;
-					SoundMixer.stopAll();
-					if (soundOn) {
-					soundbtn = (new MySoundbtn()) as Sound;
-					myChannelbtn = soundbtn.play();
-					}
-					FlxG.resetGame();
-				} ); } );
-			add(quitBtn);
-			
-			header = new FlxSprite(0, 0, ImgHeader);
-			add(header);
-			
-			
 			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
 			add(t);
 
@@ -518,35 +517,83 @@ package
 				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
+			
+			header = new FlxSprite(0, 0, ImgHeader);
+			header.scrollFactor.x=header.scrollFactor.y=0;
+			add(header);
+			
+			quitBtn = new FlxButton(0, 0, "Quit",
+				function():void { FlxG.fade(0xff000000, 0.22, function():void { 
+					level = 0;
+					SoundMixer.stopAll();
+					if (soundOn) {
+						soundbtn = (new MySoundbtn()) as Sound;
+						myChannelbtn = soundbtn.play();
+					}
+					FlxG.resetGame();
+				} ); } );
+			quitBtn.loadGraphic(BtnExit);
+			quitBtn.scrollFactor.x=quitBtn.scrollFactor.y=0;
+			add(quitBtn);
+			
+			levelText = new FlxText(130, 5, 100, ""+(level+1));
+			levelText.scrollFactor.x=levelText.scrollFactor.y=0;
+			levelText.color=0x00382E;
+			levelText.size=20;
+			add(levelText);
+			
+			disguiseTimerText = new FlxText(450,5,200);
+			disguiseTimerText.scrollFactor.x=disguiseTimerText.scrollFactor.y=0;
+			disguiseTimerText.color=0x7E0000;
+			disguiseTimerText.size=20;
+			add(disguiseTimerText);
+			
+			zombieHead = new FlxSprite(300,0, ImgZ);
+			zombieHead.scrollFactor.x=zombieHead.scrollFactor.y=0;
+			add(zombieHead);
+			nurseHead = new FlxSprite(400,0, ImgN);
+			nurseHead.scrollFactor.x=nurseHead.scrollFactor.y=0;
+			add(nurseHead);
+			
 			if(isABTesting){
-			zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1)+"/2");
+				zombieNum = new FlxText(250, 5, 100, "Zombies:"+(zombies.length-1)+"/2");
 			}
 			else{
-				zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1));
+				zombieNum = new FlxText(250, 5, 100, "Zombies:"+(zombies.length-1));
 			}
 			zombieNum.scrollFactor.x=zombieNum.scrollFactor.y=0;
-			add(zombieNum);			
+			zombieNum.color=0x7E0000;
+			zombieNum.size=20;
+			add(zombieNum);
 			
-			muteButton = new FlxButton(FlxG.width-100, 0,"Mute",function():void{
+			muteButton = new FlxButton(FlxG.width-60, 0,"Mute",function():void{
 				soundbtn = (new MySoundbtn()) as Sound;
 				myChannelbtn = soundbtn.play();
 				if (soundOn) {
 					soundOn = false;
 					myChannel.stop();
-					muteButton.label.text = "Mute";
+					muteButton.loadGraphic(BtnUnmute);
 				} else {
 					myChannel = sound.play(0,10);
 					soundOn = true;
-					muteButton.label.text = "UnMute";
+					muteButton.loadGraphic(BtnMute);
 				}
 			});
-			if(!soundOn){
-				muteButton.label.text = "UnMute";
+
+			if(soundOn){
+				//FlxG.mute = false;
+				muteButton.loadGraphic(BtnMute);
+			}else{
+				//FlxG.mute = true;
+				//muteButton.label.text = "UnMute";
+				muteButton.loadGraphic(BtnUnmute);
 			}
 			muteButton.scrollFactor.x=muteButton.scrollFactor.y=0;
 			add(muteButton);
 			
-			syringeUI = new FlxButton(FlxG.width-100, 80,"syringe:"+"0");
+			
+			
+			syringeUI = new FlxSprite(350, 0,ImgSy);
 			syringeUI.scrollFactor.x=syringeUI.scrollFactor.y=0;
 			add(syringeUI);
 			if(isABTesting){
@@ -625,28 +672,37 @@ package
 		private function addCam():void {
 			if(cam !=null){
 				FlxG.removeCamera(cam,false);
-				FlxG.removeCamera(camQuit,false);
-				FlxG.removeCamera(camNextLevel,false);
-				FlxG.removeCamera(camLevel,false);
+				//FlxG.removeCamera(camQuit,false);
+				//FlxG.removeCamera(camNextLevel,false);
+				//FlxG.removeCamera(camLevel,false);
+				//FlxG.removeCamera(camSound,false);
+				//FlxG.removeCamera(camHeader,false);
 			}
 			else{
 				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); // we put the first one in the top left corner
-				camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-				camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
-				camLevel = new FlxCamera(2,62,t.width, t.height);
+				//camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+				//camReset = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
+				//camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
+				//camLevel = new FlxCamera(2,62,t.width, t.height);
+				//camSound = new FlxCamera(2,92, quitBtn.width, quitBtn.height);
+				//camHeader = new FlxCamera(0,0,800,100);
+
 			}
 			cam.follow(player);
 			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
 			FlxG.addCamera(cam);
 			
-			/*camQuit.follow(quitBtn);
-			FlxG.addCamera(camQuit);
+
+			//camQuit.follow(quitBtn);
+			//FlxG.addCamera(camQuit);			
+			//camNextLevel.follow(nextLevelBtn);
+			//FlxG.addCamera(camNextLevel);
 			
-			camNextLevel.follow(nextLevelBtn);
-			FlxG.addCamera(camNextLevel);
+			//camLevel.follow(t);
+			//FlxG.addCamera(camLevel);
 			
-			camLevel.follow(t);
-			FlxG.addCamera(camLevel);*/
+			//camLevel.follow(header);
+			//FlxG.addCamera(camHeader);
 			
 			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
 			this.powerUpMenu.size=12;
@@ -920,16 +976,24 @@ package
 			}
 
 			if(isABTesting){
-				zombieNum.label.text = "Zombies:"+(zombies.length-1)+"/2";
+				zombieNum.text = ""+(zombies.length-1)+"/2";
 			}
 			else{
-				zombieNum.label.text = "Zombies:"+(zombies.length-1);
+				zombieNum.text = ""+(zombies.length-1);
 			}
 			if(throwable){
-				syringeUI.label.text = "Syringe: 1";
+				syringeUI.visible=true;
 			}
 			else{
-				syringeUI.label.text = "Syringe: 0";
+				syringeUI.visible=false;
+			}
+			if(player.isDisguised){
+				nurseHead.visible=true;
+				disguiseTimerText.visible=true;
+				disguiseTimerText.text = "0:0"+(int)(4-player.disguiseTimer/50);
+			}else{
+				nurseHead.visible=false;
+				disguiseTimerText.visible=false;
 			}
 			
 			super.update();

@@ -34,7 +34,7 @@ package
 		private var xTile:int=0;
 		private var yTile:int=0;
 		public var isDisguised:Boolean = false;
-		private var disguiseTimer:int = 1000;
+		public var disguiseTimer:int = 1000;
 		//private var color: int = 0;
 		public function Zombie(xPos:int, yPos:int, width:int, height:int, xDrag:int, yDrag:int, xMaxVelocity:int, yMaxVelocity:int)
 		{
