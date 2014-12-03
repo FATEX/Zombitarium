@@ -37,13 +37,12 @@ package
 	public class PlayState extends FlxState
 	{
 		// Tileset that works with AUTO mode (best for thin walls)
-		[Embed(source = 'wall_tile_universal_gray_130x65.png')]private static var auto_tiles:Class;
+		[Embed(source = 'wall_complete_file.png')]private static var auto_tiles:Class;
 		[Embed(source = 'wall_tile_universal_gray_130x65.png')]private static var universal_Wall:Class;
 		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
 		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
 		[Embed(source = 'wall_USE5.png')]private static var coverTiles3:Class;
-		[Embed(source = "menuBar1.png")] private var ImgHeader:Class;
-		private var header: FlxSprite;
+
 		// Music
 		[Embed(source = "zbg1.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
@@ -167,9 +166,13 @@ package
 		private var instructions:FlxText;
 		private var destination:FlxPoint;
 	
-		private var zombieNum:FlxButton;
+		private var zombieNum:FlxText;
 		private var muteButton:FlxButton;
-		private var syringeUI:FlxButton;
+		private var syringeUI:FlxSprite;
+		private var zombieHead:FlxSprite;
+		private var levelText:FlxText;
+		private var nurseHead:FlxSprite;
+		private var disguiseTimerText:FlxText;
 		
 		private var keys:Vector.<Key>;
 		private var doors:Vector.<Door>;
@@ -182,9 +185,9 @@ package
 		private var exitDoor:DoorObject;
 		//Cameras
 		private var cam:FlxCamera;
-		private var camQuit:FlxCamera;
-		private var camNextLevel:FlxCamera;
-		private var camLevel:FlxCamera;
+		//private var camQuit:FlxCamera;
+		//private var camNextLevel:FlxCamera;
+		//private var camLevel:FlxCamera;
 		private var drawingCamera:FlxSprite;
 		private var camSound:FlxCamera;
 		private static var resetNumber:int = 0;
@@ -220,6 +223,19 @@ package
 		private var numberOfZombies = 0;
 		private var pressed = true;
 		
+		// menu bar 
+		[Embed(source = "menuBar1.png")] private var ImgHeader:Class;
+		private var header: FlxSprite;
+		[Embed(source = "imgZ.png")] private var ImgZ:Class;
+		private var imgZ: FlxSprite;
+		[Embed(source = "imgSy.png")] private var ImgSy:Class;
+		private var imgSy: FlxSprite;
+		[Embed(source = "imgN.png")] private var ImgN:Class;
+		private var imgN: FlxSprite;
+		[Embed(source = "bExit.png")] private var BtnExit:Class;
+		[Embed(source = "bMute.png")] private var BtnMute:Class;
+		[Embed(source = "bUnmute.png")] private var BtnUnmute:Class;
+		
 		override public function create():void
 		{
 			//SoundMixer.stopAll();
@@ -252,62 +268,62 @@ package
 			
 			// Initializes the map using the generated string, the tile images, and the tile size
 			if(level==0){
-				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT,FlxTilemap.ALT);
 				add(collisionMap);	
-				constructMap(new level0());
+				//constructMap(new level0());
 			}
 			else if(level==1){
-				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
 				add(collisionMap);	
-				constructMap(new level1());
+				//constructMap(new level1());
 			}
 			else if(level==2){
-				collisionMap.loadMap(new default_level2(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level2(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 				add(collisionMap);	
-				constructMap(new level2());
+				//constructMap(new level2());
 			}
 			else if(level==3){
-				collisionMap.loadMap(new default_level2T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level2T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==4){
-				collisionMap.loadMap(new default_level3(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level3(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 				add(collisionMap);	
-				constructMap(new level3());
+				//constructMap(new level3());
 			}
 			else if(level==5){
-				collisionMap.loadMap(new default_level3T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level3T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==6){
-				collisionMap.loadMap(new default_level4(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level4(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 				add(collisionMap);	
-				constructMap(new level4());
+				//constructMap(new level4());
 			}
 			else if(level==7){
-				collisionMap.loadMap(new default_level4T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level4T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==8){
-				collisionMap.loadMap(new default_level5(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level5(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==9){
-				collisionMap.loadMap(new default_level5T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level5T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==10){
-				collisionMap.loadMap(new default_level6(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level6(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==11){
-				collisionMap.loadMap(new default_level6T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level6T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==12){
-				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==13){
-				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==14){
-				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==15){
-				collisionMap.loadMap(new default_levelAlice(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_levelAlice(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			
 			add(collisionMap);
@@ -377,7 +393,7 @@ package
 						}
 					}
 					else{
-						if(j-1>=0 && j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i,j+1)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==0){
+						/*if(j-1>=0 && j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i,j+1)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==0){
 							add(new Wall(i*65, j*65, "D"));
 						}
 						else if(j-1>=0 && j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i,j-1)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==0){
@@ -391,7 +407,7 @@ package
 						}
 						else if(i-1>=0 && j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i-1,j)==1 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==1 && collisionMap.getTile(i,j+1)==0){
 							add(new Wall(i*65, j*65, "H"));
-						}
+						}*/
 					}
 				}
 			}
@@ -450,22 +466,6 @@ package
 			});
 			add(nextLevelBtn);
 
-			quitBtn = new FlxButton(-1000, 30, "Quit",
-				function():void { FlxG.fade(0xff000000, 0.22, function():void { 
-					level = 0;
-					SoundMixer.stopAll();
-					if (soundOn) {
-					soundbtn = (new MySoundbtn()) as Sound;
-					myChannelbtn = soundbtn.play();
-					}
-					FlxG.resetGame();
-				} ); } );
-			add(quitBtn);
-			
-			header = new FlxSprite(0, 0, ImgHeader);
-			add(header);
-			
-			
 			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
 			add(t);
 
@@ -474,7 +474,7 @@ package
 			
 			blankTiles = new Array();
 			if(level==0){
-				add((instructions = new FlxText(9*TILE_WIDTH,1*TILE_HEIGHT,5*TILE_WIDTH,"You can open locked doors with a key")).setFormat(null,30/100*TILE_WIDTH));
+				add((instructions = new FlxText(10*TILE_WIDTH,1*TILE_HEIGHT,5*TILE_WIDTH,"You can open locked doors with a key")).setFormat(null,30/100*TILE_WIDTH));
 			}
 			for(var q:int=0;q<collisionMap.widthInTiles;q++){
 				blankTiles[q]=new Array();
@@ -482,14 +482,14 @@ package
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
 					if(collisionMap.getTile(i,j)==0 && this.darkRooms){
-						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-5,j*TILE_HEIGHT);
-						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+5,TILE_HEIGHT);
+						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-25,j*TILE_HEIGHT-20);
+						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+45,TILE_HEIGHT+40);
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
 					}
 					else{
-						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-5,j*TILE_HEIGHT);
-						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+5,TILE_HEIGHT);
+						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-25,j*TILE_HEIGHT-20);
+						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+45,TILE_HEIGHT+40);
 						//blankScreenTile.visible=false;
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
@@ -502,51 +502,102 @@ package
 			instructions = new FlxText(1*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys or WASD to move \nPress E to open doors");
 
 
+
 			if (level==0) {
 				add(instructions);
 			} else if (level==1) {
-				add(instructions = new FlxText(5*TILE_WIDTH,4*TILE_HEIGHT,6*TILE_WIDTH,"You can zombify humans by running into them from behind."))
+				add(instructions = new FlxText(6*TILE_WIDTH,4*TILE_HEIGHT,6*TILE_WIDTH,"You can zombify humans by running into them from behind."))
 			} else if (level==2) {
-				add(instructions = new FlxText(6*TILE_WIDTH,4*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE If a human sees you, it will go after you!"))
+				add(instructions = new FlxText(7*TILE_WIDTH,4*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE If a human sees you, it will go after you!"))
 			} else if (level==4) {
-				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"Humans can kill zombies...but not without getting stunned!"))
+				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"Humans can kill zombies...but not without getting stunned!"))
 			} else if (level==6) {
-				add(instructions = new FlxText(10*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
+				add(instructions = new FlxText(11*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
 			} else if (level==8) {
-				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
+				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
 			} else if (level==10) {
-				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
+				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
+			
+			header = new FlxSprite(0, 0, ImgHeader);
+			header.scrollFactor.x=header.scrollFactor.y=0;
+			add(header);
+			
+			quitBtn = new FlxButton(0, 0, "",
+				function():void { FlxG.fade(0xff000000, 0.22, function():void { 
+					level = 0;
+					SoundMixer.stopAll();
+					if (soundOn) {
+						soundbtn = (new MySoundbtn()) as Sound;
+						myChannelbtn = soundbtn.play();
+					}
+					FlxG.resetGame();
+				} ); } );
+			quitBtn.color = 0xfafafa;
+			quitBtn.loadGraphic(BtnExit);
+			quitBtn.scrollFactor.x=quitBtn.scrollFactor.y=0;
+			add(quitBtn);
+			
+			levelText = new FlxText(130, 5, 100, ""+(level+1));
+			levelText.scrollFactor.x=levelText.scrollFactor.y=0;
+			levelText.color=0x00382E;
+			levelText.size=20;
+			add(levelText);
+			
+			disguiseTimerText = new FlxText(450,5,200);
+			disguiseTimerText.scrollFactor.x=disguiseTimerText.scrollFactor.y=0;
+			disguiseTimerText.color=0x7E0000;
+			disguiseTimerText.size=20;
+			add(disguiseTimerText);
+			
+			zombieHead = new FlxSprite(300,0, ImgZ);
+			zombieHead.scrollFactor.x=zombieHead.scrollFactor.y=0;
+			add(zombieHead);
+			nurseHead = new FlxSprite(400,0, ImgN);
+			nurseHead.scrollFactor.x=nurseHead.scrollFactor.y=0;
+			add(nurseHead);
+			
 			if(isABTesting){
-			zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1)+"/2");
+				zombieNum = new FlxText(250, 5, 100, "Zombies:"+(zombies.length-1)+"/2");
 			}
 			else{
-				zombieNum = new FlxButton(FlxG.width-100, 40,"Zombies:"+(zombies.length-1));
+				zombieNum = new FlxText(250, 5, 100, "Zombies:"+(zombies.length-1));
 			}
 			zombieNum.scrollFactor.x=zombieNum.scrollFactor.y=0;
-			add(zombieNum);			
-			
-			muteButton = new FlxButton(FlxG.width-100, 0,"Mute",function():void{
+			zombieNum.color=0x7E0000;
+			zombieNum.size=20;
+			add(zombieNum);
+
+			muteButton = new FlxButton(FlxG.width-70, 0,"",function():void{
 				soundbtn = (new MySoundbtn()) as Sound;
 				myChannelbtn = soundbtn.play();
 				if (soundOn) {
 					soundOn = false;
 					myChannel.stop();
-					muteButton.label.text = "Mute";
+					muteButton.loadGraphic(BtnUnmute);
 				} else {
 					myChannel = sound.play(0,10);
 					soundOn = true;
-					muteButton.label.text = "UnMute";
+					muteButton.loadGraphic(BtnMute);
 				}
 			});
-			if(!soundOn){
-				muteButton.label.text = "UnMute";
+			muteButton.color = 0xfafafa;
+
+			if(soundOn){
+				//FlxG.mute = false;
+				muteButton.loadGraphic(BtnMute);
+			}else{
+				//FlxG.mute = true;
+				//muteButton.label.text = "UnMute";
+				muteButton.loadGraphic(BtnUnmute);
 			}
 			muteButton.scrollFactor.x=muteButton.scrollFactor.y=0;
 			add(muteButton);
 			
-			syringeUI = new FlxButton(FlxG.width-100, 80,"syringe:"+"0");
+			
+			
+			syringeUI = new FlxSprite(350, 0,ImgSy);
 			syringeUI.scrollFactor.x=syringeUI.scrollFactor.y=0;
 			add(syringeUI);
 			if(isABTesting){
@@ -625,28 +676,37 @@ package
 		private function addCam():void {
 			if(cam !=null){
 				FlxG.removeCamera(cam,false);
-				FlxG.removeCamera(camQuit,false);
-				FlxG.removeCamera(camNextLevel,false);
-				FlxG.removeCamera(camLevel,false);
+				//FlxG.removeCamera(camQuit,false);
+				//FlxG.removeCamera(camNextLevel,false);
+				//FlxG.removeCamera(camLevel,false);
+				//FlxG.removeCamera(camSound,false);
+				//FlxG.removeCamera(camHeader,false);
 			}
 			else{
 				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); // we put the first one in the top left corner
-				camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-				camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
-				camLevel = new FlxCamera(2,62,t.width, t.height);
+				//camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+				//camReset = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
+				//camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
+				//camLevel = new FlxCamera(2,62,t.width, t.height);
+				//camSound = new FlxCamera(2,92, quitBtn.width, quitBtn.height);
+				//camHeader = new FlxCamera(0,0,800,100);
+
 			}
 			cam.follow(player);
 			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
 			FlxG.addCamera(cam);
 			
-			/*camQuit.follow(quitBtn);
-			FlxG.addCamera(camQuit);
+
+			//camQuit.follow(quitBtn);
+			//FlxG.addCamera(camQuit);			
+			//camNextLevel.follow(nextLevelBtn);
+			//FlxG.addCamera(camNextLevel);
 			
-			camNextLevel.follow(nextLevelBtn);
-			FlxG.addCamera(camNextLevel);
+			//camLevel.follow(t);
+			//FlxG.addCamera(camLevel);
 			
-			camLevel.follow(t);
-			FlxG.addCamera(camLevel);*/
+			//camLevel.follow(header);
+			//FlxG.addCamera(camHeader);
 			
 			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
 			this.powerUpMenu.size=12;
@@ -726,6 +786,7 @@ package
 				
 				type = lineArray[0];
 				x = int(lineArray[1]);
+				x=x+1;
 				y = int(lineArray[2]);
 				if(type=="H"){
 					h=new Human(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2,true);
@@ -919,16 +980,24 @@ package
 			}
 
 			if(isABTesting){
-				zombieNum.label.text = "Zombies:"+(zombies.length-1)+"/2";
+				zombieNum.text = ""+(zombies.length-1)+"/2";
 			}
 			else{
-				zombieNum.label.text = "Zombies:"+(zombies.length-1);
+				zombieNum.text = ""+(zombies.length-1);
 			}
 			if(throwable){
-				syringeUI.label.text = "Syringe: 1";
+				syringeUI.visible=true;
 			}
 			else{
-				syringeUI.label.text = "Syringe: 0";
+				syringeUI.visible=false;
+			}
+			if(player.isDisguised){
+				nurseHead.visible=true;
+				disguiseTimerText.visible=true;
+				disguiseTimerText.text = "0:0"+(int)(4-player.disguiseTimer/50);
+			}else{
+				nurseHead.visible=false;
+				disguiseTimerText.visible=false;
 			}
 			
 			super.update();
@@ -968,8 +1037,9 @@ package
 									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2));
 									add(dSyringe);
 									if (soundOn) {
-									soundsyrg = (new MySoundsyrg()) as Sound;
-									myChannelsyrg = soundsyrg.play(); }
+										soundsyrg = (new MySoundsyrg()) as Sound;
+										myChannelsyrg = soundsyrg.play(); 
+									}
 									dSyringe.updatePos(10000);
 									(Doctor(type[i])).goBack(collisionMap);
 									cd = 0;
@@ -1051,11 +1121,6 @@ package
 					syr.exists = false;
 				}
 				else{
-					//syr.explode();//might be a problem
-					if(isABTesting){
-						if(zom != player) numberOfZombies--;
-						zombieLimited.text = numberOfZombies + "/2"; 
-					}
 					zom = Zombie(obj1);
 					syr = Syringe(obj2);
 					var pos:int = zombies.indexOf(zom);
@@ -1097,182 +1162,71 @@ package
 					}
 				}
 
-
-				if(isABTesting){
-					if(numberOfZombies < 2){
-						numberOfZombies++;
-						zombieLimited.text = numberOfZombies + "/2"; 
-						infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-						if(man.stunAdded){
-							man.stunAdded=false;
-							remove(man.stunAn,true);
-						}
-						if (man is Doctor) {
-							infected.setImage(ImgDoctorDead);
-						} else if (man is Nurse) {
-							infected.setImage(ImgNurseDead);
-						} else if (man is Janitor) {
-							infected.setImage(ImgJanitorDead);
-						} else {
-							infected.setImage(ImgHumanDead);
-						}
-						if(man is Janitor){
-							logger.recordEvent(level+1,31,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill janitor");
-						}else if(man is Nurse){
-							logger.recordEvent(level+1,32,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill nurse");
-						}else if(man is Doctor){
-							logger.recordEvent(level+1,33,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill doctor");
-						}else if(man is Patient){
-							logger.recordEvent(level+1,34,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill patient");							
-						}else{
-							logger.recordEvent(level+1,35,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill human");
-						}
-						var pos:int = humans.indexOf(man);
-						humans.splice(pos,1);
-						remove(player);
-						add(infected);
-						add(player);
-						var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
-						infected.attackNearestHuman(collisionMap, path);
-						zombies.push(infected);
-						remove(man.alerted);
-						if(!man.isStunned && man.stunAdded){
-							man.stunAdded=false;
-							remove(man.stunAn,true);
-						}
-						syr = Syringe(obj2);
-						if(man is Janitor){
-							var jan:Janitor = man as Janitor;
-							jan.exists=false;
-							jan.alive=false;
-							jan.die();
-						}
-						man.alive = false;
-						if(!man.isStunned && man.stunAdded){
-							man.stunAdded=false;
-							remove(man.stunAn,true);
-						}
-						for(var j:int=0;j<20;j++){
-							if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
-								this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
-							}
-						}
-						remove(man, true);
-						remove(syr, true);
-						man.exists = false;
-						
-						syr.explode();//might be a problem
-						syr.destory();
-						syr.exists = false;
-					}
-					else{
-						//zombie >2
-						if(man is Janitor){
-							logger.recordEvent(level+1,31,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill janitor");
-						}else if(man is Nurse){
-							logger.recordEvent(level+1,32,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill nurse");
-						}else if(man is Doctor){
-							logger.recordEvent(level+1,33,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill doctor");
-						}else if(man is Patient){
-							logger.recordEvent(level+1,34,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill patient");							
-						}else{
-							logger.recordEvent(level+1,35,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill human");
-						}
-						var pos:int = humans.indexOf(man);
-						humans.splice(pos,1);
-						remove(man.alerted);
-						if(!man.isStunned && man.stunAdded){
-							man.stunAdded=false;
-							remove(man.stunAn,true);
-						}
-						syr = Syringe(obj2);
-						if(man is Janitor){
-							var jan:Janitor = man as Janitor;
-							jan.exists=false;
-							jan.alive=false;
-							jan.die();
-						}
-						man.alive = false;
-						if(!man.isStunned && man.stunAdded){
-							man.stunAdded=false;
-							remove(man.stunAn,true);
-						}
-						for(var j:int=0;j<20;j++){
-							if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
-								this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
-							}
-						}
-						remove(man, true);
-						remove(syr, true);
-						man.exists = false;
-						
-						syr.explode();//might be a problem
-						syr.destory();
-						syr.exists = false;
+				
+				//not AB testing
+				infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+				/*if(man.stunAdded){
+				man.stunAdded=false;
+				remove(man.stunAn,true);
+				}*/
+				if (man is Doctor) {
+					infected.setImage(ImgDoctorDead);
+				} else if (man is Nurse) {
+					infected.setImage(ImgNurseDead);
+				} else if (man is Janitor) {
+					infected.setImage(ImgJanitorDead);
+				} else {
+					infected.setImage(ImgHumanDead);
+				}
+				if(man is Janitor){
+					logger.recordEvent(level+1,31,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill janitor");
+				}else if(man is Nurse){
+					logger.recordEvent(level+1,32,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill nurse");
+				}else if(man is Doctor){
+					logger.recordEvent(level+1,33,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill doctor");
+				}else if(man is Patient){
+					logger.recordEvent(level+1,34,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill patient");							
+				}else{
+					logger.recordEvent(level+1,35,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill human");
+				}
+				var pos:int = humans.indexOf(man);
+				humans.splice(pos,1);
+				remove(player);
+				add(infected);
+				add(player);
+				var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+				infected.attackNearestHuman(collisionMap, path);
+				zombies.push(infected);
+				remove(man.alerted);
+				if(!man.isStunned && man.stunAdded){
+					man.stunAdded=false;
+					remove(man.stunAn,true);
+				}
+				syr = Syringe(obj2);
+				if(man is Janitor){
+					var jan:Janitor = man as Janitor;
+					jan.exists=false;
+					jan.alive=false;
+					jan.die();
+				}
+				man.alive = false;
+				if(!man.isStunned && man.stunAdded){
+					man.stunAdded=false;
+					remove(man.stunAn,true);
+				}
+				for(var j:int=0;j<20;j++){
+					if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
+						this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
 					}
 				}
-				else{
-					//not AB testing
-					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
+				remove(man, true);
+				remove(syr, true);
+				man.exists = false;
+				
+				syr.explode();//might be a problem
+				syr.destory();
+				syr.exists = false;
 
-					if (man is Doctor) {
-						infected.setImage(ImgDoctorDead);
-					} else if (man is Nurse) {
-						infected.setImage(ImgNurseDead);
-					} else if (man is Janitor) {
-						infected.setImage(ImgJanitorDead);
-					} else {
-						infected.setImage(ImgHumanDead);
-					}
-					if(man is Janitor){
-						logger.recordEvent(level+1,31,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill janitor");
-					}else if(man is Nurse){
-						logger.recordEvent(level+1,32,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill nurse");
-					}else if(man is Doctor){
-						logger.recordEvent(level+1,33,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill doctor");
-					}else if(man is Patient){
-						logger.recordEvent(level+1,34,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill patient");							
-					}else{
-						logger.recordEvent(level+1,35,"pos=("+(int)(man.x/TILE_WIDTH)+","+(int)(man.y/TILE_HEIGHT)+")|action:syringe kill human");
-					}
-					var pos:int = humans.indexOf(man);
-					humans.splice(pos,1);
-					remove(player);
-					add(infected);
-					add(player);
-					var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
-					infected.attackNearestHuman(collisionMap, path);
-					zombies.push(infected);
-					remove(man.alerted);
-					if(!man.isStunned && man.stunAdded){
-						man.stunAdded=false;
-						remove(man.stunAn,true);
-					}
-					syr = Syringe(obj2);
-					if(man is Janitor){
-						var jan:Janitor = man as Janitor;
-						jan.exists=false;
-						jan.alive=false;
-						jan.die();
-					}
-					man.alive = false;
-					if(!man.isStunned && man.stunAdded){
-						man.stunAdded=false;
-						remove(man.stunAn,true);
-					}
-					for(var j:int=0;j<20;j++){
-						if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
-							this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
-						}
-					}
-					remove(man, true);
-					remove(syr, true);
-					man.exists = false;
-					
-					syr.explode();//might be a problem
-					syr.destory();
-					syr.exists = false;
-				}
 			}
 		}
 		
@@ -1311,85 +1265,38 @@ package
 					if(soundOn){
 						myChannelhdead = soundhdead.play();
 					}
+					//not AB test
 					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-
-					if(isABTesting){
-						if(numberOfZombies < 2){
-							numberOfZombies++;
-							zombieLimited.text = numberOfZombies + "/2"; 
-							infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-							if(man.stunAdded){
-								man.stunAdded=false;
-								remove(man.stunAn,true);
-							}
-							//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
-							//FlxG.collide(infected, collisionMap);
-							if (man is Doctor) {
-								infected.setImage(ImgDoctorDead);
-							} else if (man is Nurse) {
-								infected.setImage(ImgNurseDead);
-							} else if (man is Janitor) {
-								infected.setImage(ImgJanitorDead);
-							} else {
-								infected.setImage(ImgHumanDead);
-							}
-							
-							var pos2:int = humans.indexOf(man);
-							//humans[pos].x=1000000000;
-							humans.splice(pos2,1);
-							remove(player);
-							add(infected);
-							add(player);
-							var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
-							
-							//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
-							//add(t);
-							infected.attackNearestHuman(collisionMap, path2);
-							zombies.push(infected);
-						}
-						else{
-							//zom>2
-							if(man.stunAdded){
-								man.stunAdded=false;
-								remove(man.stunAn,true);
-							}
-							var pos2:int = humans.indexOf(man);
-							humans.splice(pos2,1);
-						}
-
+					if(man.stunAdded){
+						man.stunAdded=false;
+						remove(man.stunAn,true);
 					}
-					else{
-						//not AB test
-						infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-						if(man.stunAdded){
-							man.stunAdded=false;
-							remove(man.stunAn,true);
-						}
-						//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
-						//FlxG.collide(infected, collisionMap);
-						if (man is Doctor) {
-							infected.setImage(ImgDoctorDead);
-						} else if (man is Nurse) {
-							infected.setImage(ImgNurseDead);
-						} else if (man is Janitor) {
-							infected.setImage(ImgJanitorDead);
-						} else {
-							infected.setImage(ImgHumanDead);
-						}
-						
-						var pos2:int = humans.indexOf(man);
-						//humans[pos].x=1000000000;
-						humans.splice(pos2,1);
-						remove(player);
-						add(infected);
-						add(player);
-						var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
-						
-						//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
-						//add(t);
-						infected.attackNearestHuman(collisionMap, path2);
-						zombies.push(infected);
+					//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
+					//FlxG.collide(infected, collisionMap);
+					if (man is Doctor) {
+						infected.setImage(ImgDoctorDead);
+					} else if (man is Nurse) {
+						infected.setImage(ImgNurseDead);
+					} else if (man is Janitor) {
+						infected.setImage(ImgJanitorDead);
+					} else {
+						infected.setImage(ImgHumanDead);
 					}
+					
+					var pos2:int = humans.indexOf(man);
+					//humans[pos].x=1000000000;
+					humans.splice(pos2,1);
+					remove(player);
+					add(infected);
+					add(player);
+					var path2:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+					
+					//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
+					//add(t);
+					infected.attackNearestHuman(collisionMap, path2);
+					zombies.push(infected);
+					
+					
 					
 					if(zom==player){
 						if(man is Janitor){
@@ -1476,10 +1383,6 @@ package
 					man.alive=false;
 					
 				}else{
-					if(isABTesting){
-						if(zom != player) numberOfZombies--;
-						zombieLimited.text = numberOfZombies + "/2";
-					}
 					var pos3:int = zombies.indexOf(zom);
 					if(zom!=player){
 						zombies.splice(pos3,1);
@@ -1545,88 +1448,38 @@ package
 				soundhdead = (new MySoundhdead()) as Sound;
 				myChannelhdead = soundhdead.play();
 				}
-
-				if(isABTesting){
-					if(numberOfZombies < 2){
-						numberOfZombies++;
-						zombieLimited.text = numberOfZombies + "/2"; 
-						infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-						if(man.stunAdded){
-							man.stunAdded=false;
-							remove(man.stunAn,true);
-						}
-						if (man is Doctor) {
-							infected.setImage(ImgDoctorDead);
-						} else if (man is Nurse) {
-							infected.setImage(ImgNurseDead);
-						} else if (man is Janitor) {
-							infected.setImage(ImgJanitorDead);
-						} else {
-							infected.setImage(ImgHumanDead);
-						}
-						//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
-						//FlxG.collide(infected, collisionMap);
-						var pos:int = humans.indexOf(man);
-						//humans[pos].x=1000000000;
-						humans.splice(pos,1);
-						remove(player);
-						add(infected);
-						add(player);
-						var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
-						
-						//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
-						//add(t);
-						infected.attackNearestHuman(collisionMap, path);
-						zombies.push(infected);
-					}
-					else{
-						if(man.stunAdded){
-							man.stunAdded=false;
-							remove(man.stunAn,true);
-						}
-						var pos2:int = humans.indexOf(man);
-						humans.splice(pos2,1);
-					}
-					
+				if(man.stunAdded){
+					man.stunAdded=false;
+					remove(man.stunAn,true);
 				}
-				else{
-					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-					if(man.stunAdded){
-						man.stunAdded=false;
-						remove(man.stunAn,true);
-					}
-					if (man is Doctor) {
-						infected.setImage(ImgDoctorDead);
-					} else if (man is Nurse) {
-						infected.setImage(ImgNurseDead);
-					} else if (man is Janitor) {
-						infected.setImage(ImgJanitorDead);
-					} else {
-						infected.setImage(ImgHumanDead);
-					}
-					//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
-					//FlxG.collide(infected, collisionMap);
-					var pos:int = humans.indexOf(man);
-					for(var j:int=0;j<20;j++){
-						if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
-							this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
-						}
-					}
-					//humans[pos].x=1000000000;
-					humans.splice(pos,1);
-					remove(player);
-					add(infected);
-					add(player);
-					var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
-					
-					//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
-					//add(t);
-					infected.attackNearestHuman(collisionMap, path);
-					zombies.push(infected);
+				if (man is Doctor) {
+					infected.setImage(ImgDoctorDead);
+				} else if (man is Nurse) {
+					infected.setImage(ImgNurseDead);
+				} else if (man is Janitor) {
+					infected.setImage(ImgJanitorDead);
+				} else {
+					infected.setImage(ImgHumanDead);
 				}
 				//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
 				//FlxG.collide(infected, collisionMap);
+				var pos:int = humans.indexOf(man);
+				for(var j:int=0;j<20;j++){
+					if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
+						this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
+					}
+				}
 				//humans[pos].x=1000000000;
+				humans.splice(pos,1);
+				remove(player);
+				add(infected);
+				add(player);
+				var path:FlxPath =infected.findNearestHuman(collisionMap,humans,new FlxPoint(infected.x+infected.width/2,infected.y+infected.height/2));
+				
+				//t = new FlxText(0,20,FlxG.width,"PATH: "+path);
+				//add(t);
+				infected.attackNearestHuman(collisionMap, path);
+				zombies.push(infected);
 				
 				
 				
@@ -2119,6 +1972,7 @@ package
 		}
 		
 		private function constructMap(map:String):void{
+			/*
 			var row:Array = map.split("\n");
 			for(var i:int = 0; i < row.length; i++){
 				var cols:String = String(row[i]);
@@ -2272,11 +2126,12 @@ package
 					}
 					else if(col[j] == "dc"){
 						add(new Floors(j*65, i*65, "dc"));
-					}*/
+					}
 				}
 			}
 			
 			trace(map.length);
+			*/
 		}
 		
 	}
