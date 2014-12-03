@@ -15,7 +15,7 @@ package objects
 		private const TILE_HEIGHT:uint = 65;
 		[Embed(source="walk_human_100.png")] private static var ImgSpaceman:Class;
 		[Embed(source="alert_anim_100.png")] private static var ImgAlert:Class;
-		[Embed(source="janitor_live.png")] private static var ImgJanitor:Class;
+		[Embed(source="janitor_all.png")] private static var ImgJanitor:Class;
 		[Embed(source="stunned_anim.png")] private static var StunnedAnim:Class;
 
 		
