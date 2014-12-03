@@ -37,11 +37,12 @@ package
 	public class PlayState extends FlxState
 	{
 		// Tileset that works with AUTO mode (best for thin walls)
-		[Embed(source = 'wall_complete_file.png')]private static var auto_tiles:Class;
+		[Embed(source = 'wall_complete_file2.png')]private static var auto_tiles:Class;
 		[Embed(source = 'wall_tile_universal_gray_130x65.png')]private static var universal_Wall:Class;
 		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
 		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
 		[Embed(source = 'wall_USE5.png')]private static var coverTiles3:Class;
+
 		// Music
 		[Embed(source = "zbg1.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
@@ -120,10 +121,13 @@ package
 		[Embed(source="zombie_combined.png")] private static var ImgSpaceman:Class;
 		[Embed(source="human_dead.png")] private static var ImgHumanDead:Class;
 		[Embed(source="doctor_dead.png")] private static var ImgDoctorDead:Class;
+
+		[Embed(source="blank2.png")] private static var BlackTile:Class;
+		[Embed(source="floor_tile_type3_gray2.png")] private static var FloorTile:Class;
+
 		[Embed(source="janitor_all_zombies.png")] private static var ImgJanitorDead:Class;
 		[Embed(source="nurse_all_zombies_use_final.png")] private static var ImgNurseDead:Class;
-		[Embed(source="blackScreen_100.png")] private static var BlackTile:Class;
-		[Embed(source="floor_tile_type3_gray.png")] private static var FloorTile:Class;
+
 
 		//logger
 		public static var isPageLoaded:Boolean = false;
@@ -501,7 +505,8 @@ package
 			}
 			revealBoard();			
 
-			instructions = new FlxText(2*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys to move \nPress E to open doors \nPress R to reset");
+			instructions = new FlxText(2*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys or WASD to move \nPress E to open doors");
+
 
 
 			if (level==0) {
@@ -525,7 +530,7 @@ package
 			header.scrollFactor.x=header.scrollFactor.y=0;
 			add(header);
 			
-			quitBtn = new FlxButton(0, 0, "Quit",
+			quitBtn = new FlxButton(0, 0, "",
 				function():void { FlxG.fade(0xff000000, 0.22, function():void { 
 					level = 0;
 					SoundMixer.stopAll();
@@ -535,6 +540,7 @@ package
 					}
 					FlxG.resetGame();
 				} ); } );
+			quitBtn.color = 0xfafafa;
 			quitBtn.loadGraphic(BtnExit);
 			quitBtn.scrollFactor.x=quitBtn.scrollFactor.y=0;
 			add(quitBtn);
@@ -564,8 +570,9 @@ package
 			zombieNum.color=0x7E0000;
 			zombieNum.size=20;
 			add(zombieNum);
-			
-			muteButton = new FlxButton(FlxG.width-70, 0,"Mute",function():void{
+
+
+			muteButton = new FlxButton(FlxG.width-70, 0,"",function():void{
 				soundbtn = (new MySoundbtn()) as Sound;
 				myChannelbtn = soundbtn.play();
 				if (soundOn) {
@@ -578,6 +585,7 @@ package
 					muteButton.loadGraphic(BtnMute);
 				}
 			});
+			muteButton.color = 0xfafafa;
 
 			if(soundOn){
 				//FlxG.mute = false;
@@ -667,38 +675,14 @@ package
 		private function addCam():void {
 			if(cam !=null){
 				FlxG.removeCamera(cam,false);
-				//FlxG.removeCamera(camQuit,false);
-				//FlxG.removeCamera(camNextLevel,false);
-				//FlxG.removeCamera(camLevel,false);
-				//FlxG.removeCamera(camSound,false);
-				//FlxG.removeCamera(camHeader,false);
 			}
 			else{
-				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); // we put the first one in the top left corner
-				//camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-				//camReset = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-				//camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
-				//camLevel = new FlxCamera(2,62,t.width, t.height);
-				//camSound = new FlxCamera(2,92, quitBtn.width, quitBtn.height);
-				//camHeader = new FlxCamera(0,0,800,100);
-
+				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); 
 			}
 			cam.follow(player);
 			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
 			FlxG.addCamera(cam);
-			
 
-			//camQuit.follow(quitBtn);
-			//FlxG.addCamera(camQuit);			
-			//camNextLevel.follow(nextLevelBtn);
-			//FlxG.addCamera(camNextLevel);
-			
-			//camLevel.follow(t);
-			//FlxG.addCamera(camLevel);
-			
-			//camLevel.follow(header);
-			//FlxG.addCamera(camHeader);
-			
 			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
 			this.powerUpMenu.size=12;
 			
