@@ -267,12 +267,12 @@ package
 			
 			// Initializes the map using the generated string, the tile images, and the tile size
 			if(level==0){
-				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT,FlxTilemap.ALT);
+				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT,FlxTilemap.AUTO);
 				add(collisionMap);	
 				//constructMap(new level0());
 			}
 			else if(level==1){
-				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
+				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 				add(collisionMap);	
 				//constructMap(new level1());
 			}
@@ -330,11 +330,11 @@ package
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
 					if(collisionMap.getTile(i,j)==0){
-						
-						if(i>0 && collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
+						if(i>0 && collisionMap.getTile(i-1,j) != 0 && collisionMap.getTile(i,j-1) != 0){
 							add(new Floors(i*65, j*65, "dc"));
+							
 						}
-						else if(j>0 && collisionMap.getTile(i,j-1) == 1){
+						else if(j>0 && collisionMap.getTile(i,j-1) != 0){
 							var myNum:Number = Math.floor(Math.random()*5) + 1;
 							if(myNum == 1){
 								add(new Floors(i*65, j*65, "up1"));
@@ -353,7 +353,7 @@ package
 							}
 							add(new Floors(i*65, j*65, "dup"));
 						}
-						else if(i>0 && collisionMap.getTile(i-1,j) == 1){
+						else if(i>0 && collisionMap.getTile(i-1,j) != 0){
 							var myNum:Number = Math.floor(Math.random()*5) + 1;
 							if(myNum == 1){
 								add(new Floors(i*65, j*65, "left1"));
@@ -371,6 +371,9 @@ package
 								add(new Floors(i*65, j*65, "left5"));
 							}
 							add(new Floors(i*65, j*65, "dleft"));
+						}
+						else if(i>0 && j >0 && collisionMap.getTile(i-1,j-1) != 0){
+							add(new Floors(i*65, j*65, "outCorner"));
 						}
 						else{
 							var myNum:Number = Math.floor(Math.random()*5) + 1;
