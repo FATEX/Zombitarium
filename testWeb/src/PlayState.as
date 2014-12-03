@@ -229,7 +229,7 @@ package
 		private var imgZ: FlxSprite;
 		[Embed(source = "imgSy.png")] private var ImgSy:Class;
 		private var imgSy: FlxSprite;
-		[Embed(source = "imgN.png")] private var ImgN:Class;
+		[Embed(source = "hat_only.png")] private var ImgN:Class;
 		private var imgN: FlxSprite;
 		[Embed(source = "bExit.png")] private var BtnExit:Class;
 		[Embed(source = "bMute.png")] private var BtnMute:Class;
@@ -511,7 +511,7 @@ package
 			} else if (level==6) {
 				add(instructions = new FlxText(11*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
 			} else if (level==8) {
-				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
+				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
 			} else if (level==10) {
 				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
