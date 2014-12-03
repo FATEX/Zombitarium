@@ -37,7 +37,7 @@ package
 	public class PlayState extends FlxState
 	{
 		// Tileset that works with AUTO mode (best for thin walls)
-		[Embed(source = 'wall_tile_universal_gray_130x65.png')]private static var auto_tiles:Class;
+		[Embed(source = 'wall_complete_file.png')]private static var auto_tiles:Class;
 		[Embed(source = 'wall_tile_universal_gray_130x65.png')]private static var universal_Wall:Class;
 		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
 		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
@@ -252,62 +252,62 @@ package
 			
 			// Initializes the map using the generated string, the tile images, and the tile size
 			if(level==0){
-				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level0(), auto_tiles, TILE_WIDTH, TILE_HEIGHT,FlxTilemap.ALT);
 				add(collisionMap);	
-				constructMap(new level0());
+				//constructMap(new level0());
 			}
 			else if(level==1){
-				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level1(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.ALT);
 				add(collisionMap);	
-				constructMap(new level1());
+				//constructMap(new level1());
 			}
 			else if(level==2){
-				collisionMap.loadMap(new default_level2(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level2(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 				add(collisionMap);	
-				constructMap(new level2());
+				//constructMap(new level2());
 			}
 			else if(level==3){
-				collisionMap.loadMap(new default_level2T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level2T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==4){
-				collisionMap.loadMap(new default_level3(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level3(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 				add(collisionMap);	
-				constructMap(new level3());
+				//constructMap(new level3());
 			}
 			else if(level==5){
-				collisionMap.loadMap(new default_level3T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level3T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==6){
-				collisionMap.loadMap(new default_level4(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level4(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 				add(collisionMap);	
-				constructMap(new level4());
+				//constructMap(new level4());
 			}
 			else if(level==7){
-				collisionMap.loadMap(new default_level4T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level4T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==8){
-				collisionMap.loadMap(new default_level5(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level5(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==9){
-				collisionMap.loadMap(new default_level5T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level5T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==10){
-				collisionMap.loadMap(new default_level6(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level6(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==11){
-				collisionMap.loadMap(new default_level6T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_level6T(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==12){
-				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_auto(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==13){
-				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_middle(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==14){
-				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_hard(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			else if(level==15){
-				collisionMap.loadMap(new default_levelAlice(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.OFF);
+				collisionMap.loadMap(new default_levelAlice(), auto_tiles, TILE_WIDTH, TILE_HEIGHT, FlxTilemap.AUTO);
 			}
 			
 			add(collisionMap);
@@ -377,7 +377,7 @@ package
 						}
 					}
 					else{
-						if(j-1>=0 && j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i,j+1)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==0){
+						/*if(j-1>=0 && j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i,j+1)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==0){
 							add(new Wall(i*65, j*65, "D"));
 						}
 						else if(j-1>=0 && j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i,j-1)==0 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==0){
@@ -391,7 +391,7 @@ package
 						}
 						else if(i-1>=0 && j+1<collisionMap.heightInTiles && i+1<collisionMap.widthInTiles && collisionMap.getTile(i-1,j)==1 && collisionMap.getTile(i,j)==1 && collisionMap.getTile(i+1,j)==1 && collisionMap.getTile(i,j+1)==0){
 							add(new Wall(i*65, j*65, "H"));
-						}
+						}*/
 					}
 				}
 			}
@@ -474,7 +474,7 @@ package
 			
 			blankTiles = new Array();
 			if(level==0){
-				add((instructions = new FlxText(9*TILE_WIDTH,1*TILE_HEIGHT,5*TILE_WIDTH,"You can open locked doors with a key")).setFormat(null,30/100*TILE_WIDTH));
+				add((instructions = new FlxText(10*TILE_WIDTH,1*TILE_HEIGHT,5*TILE_WIDTH,"You can open locked doors with a key")).setFormat(null,30/100*TILE_WIDTH));
 			}
 			for(var q:int=0;q<collisionMap.widthInTiles;q++){
 				blankTiles[q]=new Array();
@@ -482,14 +482,14 @@ package
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
 					if(collisionMap.getTile(i,j)==0 && this.darkRooms){
-						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-5,j*TILE_HEIGHT);
-						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+5,TILE_HEIGHT);
+						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-25,j*TILE_HEIGHT-20);
+						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+45,TILE_HEIGHT+40);
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
 					}
 					else{
-						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-5,j*TILE_HEIGHT);
-						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+5,TILE_HEIGHT);
+						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-25,j*TILE_HEIGHT-20);
+						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+45,TILE_HEIGHT+40);
 						//blankScreenTile.visible=false;
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
@@ -499,23 +499,23 @@ package
 			}
 			revealBoard();			
 
-			instructions = new FlxText(1*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys to move \nPress E to open doors \nPress R to reset");
+			instructions = new FlxText(2*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys to move \nPress E to open doors \nPress R to reset");
 
 
 			if (level==0) {
 				add(instructions);
 			} else if (level==1) {
-				add(instructions = new FlxText(5*TILE_WIDTH,4*TILE_HEIGHT,6*TILE_WIDTH,"You can zombify humans by running into them from behind."))
+				add(instructions = new FlxText(6*TILE_WIDTH,4*TILE_HEIGHT,6*TILE_WIDTH,"You can zombify humans by running into them from behind."))
 			} else if (level==2) {
-				add(instructions = new FlxText(6*TILE_WIDTH,4*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE If a human sees you, it will go after you!"))
+				add(instructions = new FlxText(7*TILE_WIDTH,4*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE If a human sees you, it will go after you!"))
 			} else if (level==4) {
-				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"Humans can kill zombies...but not without getting stunned!"))
+				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"Humans can kill zombies...but not without getting stunned!"))
 			} else if (level==6) {
-				add(instructions = new FlxText(10*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
+				add(instructions = new FlxText(11*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
 			} else if (level==8) {
-				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
+				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
 			} else if (level==10) {
-				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
+				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
 			instructions.setFormat(null,30/100*TILE_WIDTH);
 			if(isABTesting){
@@ -726,6 +726,7 @@ package
 				
 				type = lineArray[0];
 				x = int(lineArray[1]);
+				x=x+1;
 				y = int(lineArray[2]);
 				if(type=="H"){
 					h=new Human(x*TILE_WIDTH+h.width/2,y*TILE_HEIGHT+h.height/2,true);
@@ -968,8 +969,9 @@ package
 									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2));
 									add(dSyringe);
 									if (soundOn) {
-									soundsyrg = (new MySoundsyrg()) as Sound;
-									myChannelsyrg = soundsyrg.play(); }
+										soundsyrg = (new MySoundsyrg()) as Sound;
+										myChannelsyrg = soundsyrg.play(); 
+									}
 									dSyringe.updatePos(10000);
 									(Doctor(type[i])).goBack(collisionMap);
 									cd = 0;
@@ -2119,6 +2121,7 @@ package
 		}
 		
 		private function constructMap(map:String):void{
+			/*
 			var row:Array = map.split("\n");
 			for(var i:int = 0; i < row.length; i++){
 				var cols:String = String(row[i]);
@@ -2272,11 +2275,12 @@ package
 					}
 					else if(col[j] == "dc"){
 						add(new Floors(j*65, i*65, "dc"));
-					}*/
+					}
 				}
 			}
 			
 			trace(map.length);
+			*/
 		}
 		
 	}
