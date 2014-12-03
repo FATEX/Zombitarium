@@ -124,7 +124,7 @@ package
 		[Embed(source="human_dead.png")] private static var ImgJanitorDead:Class;
 		[Embed(source="nurse_dead.png")] private static var ImgNurseDead:Class;
 		[Embed(source="blank2.png")] private static var BlackTile:Class;
-		[Embed(source="floor_tile_type3_gray.png")] private static var FloorTile:Class;
+		[Embed(source="floor_tile_type3_gray2.png")] private static var FloorTile:Class;
 
 		//logger
 		public static var isPageLoaded:Boolean = false;
@@ -230,7 +230,7 @@ package
 		private var imgZ: FlxSprite;
 		[Embed(source = "imgSy.png")] private var ImgSy:Class;
 		private var imgSy: FlxSprite;
-		[Embed(source = "imgN.png")] private var ImgN:Class;
+		[Embed(source = "hat_only.png")] private var ImgN:Class;
 		private var imgN: FlxSprite;
 		[Embed(source = "bExit.png")] private var BtnExit:Class;
 		[Embed(source = "bMute.png")] private var BtnMute:Class;
@@ -331,11 +331,11 @@ package
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
 					if(collisionMap.getTile(i,j)==0){
-						
-						if(i>0 && collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
+						if(collisionMap.getTile(i-1,j) != 0 && collisionMap.getTile(i,j-1) != 0){
 							add(new Floors(i*65, j*65, "dc"));
+							
 						}
-						else if(j>0 && collisionMap.getTile(i,j-1) == 1){
+						else if(collisionMap.getTile(i,j-1) != 0){
 							var myNum:Number = Math.floor(Math.random()*5) + 1;
 							if(myNum == 1){
 								add(new Floors(i*65, j*65, "up1"));
@@ -354,7 +354,7 @@ package
 							}
 							add(new Floors(i*65, j*65, "dup"));
 						}
-						else if(i>0 && collisionMap.getTile(i-1,j) == 1){
+						else if(collisionMap.getTile(i-1,j) != 0){
 							var myNum:Number = Math.floor(Math.random()*5) + 1;
 							if(myNum == 1){
 								add(new Floors(i*65, j*65, "left1"));
@@ -372,6 +372,9 @@ package
 								add(new Floors(i*65, j*65, "left5"));
 							}
 							add(new Floors(i*65, j*65, "dleft"));
+						}
+						else if(i>0 && j >0 && collisionMap.getTile(i-1,j-1) != 0){
+							add(new Floors(i*65, j*65, "outCorner"));
 						}
 						else{
 							var myNum:Number = Math.floor(Math.random()*5) + 1;
@@ -499,7 +502,7 @@ package
 			}
 			revealBoard();			
 
-			instructions = new FlxText(1*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys or WASD to move \nPress E to open doors");
+			instructions = new FlxText(2*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys or WASD to move \nPress E to open doors");
 
 
 
@@ -514,7 +517,7 @@ package
 			} else if (level==6) {
 				add(instructions = new FlxText(11*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
 			} else if (level==8) {
-				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
+				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
 			} else if (level==10) {
 				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
@@ -551,23 +554,20 @@ package
 			disguiseTimerText.size=20;
 			add(disguiseTimerText);
 			
-			zombieHead = new FlxSprite(300,0, ImgZ);
+			zombieHead = new FlxSprite(280,0, ImgZ);
 			zombieHead.scrollFactor.x=zombieHead.scrollFactor.y=0;
 			add(zombieHead);
 			nurseHead = new FlxSprite(400,0, ImgN);
 			nurseHead.scrollFactor.x=nurseHead.scrollFactor.y=0;
 			add(nurseHead);
 			
-			if(isABTesting){
-				zombieNum = new FlxText(250, 5, 100, "Zombies:"+(zombies.length-1)+"/2");
-			}
-			else{
-				zombieNum = new FlxText(250, 5, 100, "Zombies:"+(zombies.length-1));
-			}
+			
+			zombieNum = new FlxText(250, 5, 100, "Zombies:"+(zombies.length-1));
 			zombieNum.scrollFactor.x=zombieNum.scrollFactor.y=0;
 			zombieNum.color=0x7E0000;
 			zombieNum.size=20;
 			add(zombieNum);
+
 
 			muteButton = new FlxButton(FlxG.width-70, 0,"",function():void{
 				soundbtn = (new MySoundbtn()) as Sound;
@@ -597,15 +597,11 @@ package
 			
 			
 			
-			syringeUI = new FlxSprite(350, 0,ImgSy);
+			syringeUI = new FlxSprite(330, 0,ImgSy);
 			syringeUI.scrollFactor.x=syringeUI.scrollFactor.y=0;
 			add(syringeUI);
-			if(isABTesting){
-				logger.recordLevelStart(level+1,"A: start level "+(level+1));
-			}
-			else{
-				logger.recordLevelStart(level+1,"B: start level "+(level+1));
-			}
+			
+			logger.recordLevelStart(level+1,"start level "+(level+1));
 			//logger.recordEvent(level+1,100,"level starts");
 			this.drawingCamera = new FlxSprite(0,0);
 			this.drawingCamera.makeGraphic(1000,2000,0xffffff);
@@ -688,14 +684,14 @@ package
 			this.powerUpMenu.size=12;
 			
 			
-			if(isABTesting){
-				this.zombieLimited = new FlxText(-100000,-100000,820,"0/2");
-				this.zombieLimited.size=39;
-				add(this.zombieLimited);
-				var camRe:FlxCamera = new FlxCamera(810, 0, this.zombieLimited.width, this.zombieLimited.height);
-				camRe.follow(this.zombieLimited);
-				FlxG.addCamera(camRe);
-			}
+//			if(isABTesting){
+//				this.zombieLimited = new FlxText(-100000,-100000,820,"0/2");
+//				this.zombieLimited.size=39;
+//				add(this.zombieLimited);
+//				var camRe:FlxCamera = new FlxCamera(810, 0, this.zombieLimited.width, this.zombieLimited.height);
+//				camRe.follow(this.zombieLimited);
+//				FlxG.addCamera(camRe);
+//			}
 			
 		}
 		
@@ -955,25 +951,31 @@ package
 				}
 			}
 
-			if(isABTesting){
-				zombieNum.text = ""+(zombies.length-1)+"/2";
+			zombieNum.text = ""+(zombies.length-1);
+			if(zombies.length-1==0){
+				zombieHead.color=0x000000;
+			}else{
+				zombieHead.color=0xFFFFFF;
 			}
-			else{
-				zombieNum.text = ""+(zombies.length-1);
-			}
+			
 			if(throwable){
 				syringeUI.visible=true;
+				syringeUI.color=0xFFFFFF;
 			}
 			else{
-				syringeUI.visible=false;
+				syringeUI.visible=true;
+				syringeUI.color=0x000000;
 			}
 			if(player.isDisguised){
 				nurseHead.visible=true;
+				nurseHead.color=0xFFFFFF;
 				disguiseTimerText.visible=true;
 				disguiseTimerText.text = "0:0"+(int)(4-player.disguiseTimer/50);
 			}else{
-				nurseHead.visible=false;
-				disguiseTimerText.visible=false;
+				nurseHead.visible=true;
+				nurseHead.color=0x000000;
+				disguiseTimerText.visible=true;
+				disguiseTimerText.text = "0:00";
 			}
 			
 			super.update();
