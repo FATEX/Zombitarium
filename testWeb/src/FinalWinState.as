@@ -10,9 +10,9 @@ package
 	import flash.media.SoundMixer;
 	import org.flixel.FlxButton;
 	
-	public class WinState extends FlxState
+	public class FinalWinState extends FlxState
 	{
-		[Embed(source = "win_screen.png")] private var ImgBG:Class;
+		[Embed(source = "finalWin_screen.png")] private var ImgBG:Class;
 		[Embed(source = "bLevels.png")] private var BtnLevels:Class;
 		[Embed(source = "bReplay.png")] private var BtnReplay:Class;
 

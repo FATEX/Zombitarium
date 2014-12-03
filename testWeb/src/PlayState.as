@@ -42,21 +42,8 @@ package
 		[Embed(source = 'wall_USE3.png')]private static var coverTiles:Class;
 		[Embed(source = 'wall_USE4.png')]private static var coverTiles2:Class;
 		[Embed(source = 'wall_USE5.png')]private static var coverTiles3:Class;
-		
-		
-		// menu bar 
-		[Embed(source = "menuBar1.png")] private var ImgHeader:Class;
+		[Embed(source = "header2.png")] private var ImgHeader:Class;
 		private var header: FlxSprite;
-		[Embed(source = "imgZ.png")] private var ImgZ:Class;
-		private var imgZ: FlxSprite;
-		[Embed(source = "imgSy.png")] private var ImgSy:Class;
-		private var imgSy: FlxSprite;
-		[Embed(source = "imgN.png")] private var ImgN:Class;
-		private var imgN: FlxSprite;
-		[Embed(source = "bExit.png")] private var BtnExit:Class;
-		[Embed(source = "bMute.png")] private var BtnMute:Class;
-		[Embed(source = "bUnmute.png")] private var BtnUnmute:Class;
-		
 		// Music
 		[Embed(source = "zbg1.mp3")]private var MySound : Class; 		 
 		private var sound : Sound; // not MySound! 
@@ -145,7 +132,6 @@ package
 		private var playertime:Number = new Date().time;
 		private static var versionID:Number = 3;
 		public static var logger:Logging = new Logging(200,versionID,false);		
-		private static var isMuted = false; 
 		
 		// Some static constants for the size of the tilemap tiles
 		public const TILE_WIDTH:uint = 65;
@@ -224,7 +210,6 @@ package
 		private var youLoseScreen:FlxText;
 		private var zombieLimited:FlxText;
 		private var t;
-		private var youWinScreen:FlxText;
 		private var powerUpMenu:FlxText;
 		private var nkeys;
 		private var nkeysC = 0;
@@ -234,7 +219,6 @@ package
 		public static var isABTesting:Boolean = true;
 		private var numberOfZombies = 0;
 		private var pressed = true;
-		public static var isNotPlaying:Boolean;
 		
 		override public function create():void
 		{
@@ -453,20 +437,20 @@ package
 				myChannel = sound.play(0,10);
 			}
 			
-//			nextLevelBtn = new FlxButton(-100, 70, "Next Level", function():void
-//			{
-//				if (soundOn) {
-//				soundbtn = (new MySoundbtn()) as Sound;
-//				myChannelbtn = soundbtn.play();
-//				}
-//			
-//				level++;
-//				level = level%16;
-//				resetGame();
-//			});
-//			add(nextLevelBtn);
+			nextLevelBtn = new FlxButton(-100, 70, "Next Level", function():void
+			{
+				if (soundOn) {
+				soundbtn = (new MySoundbtn()) as Sound;
+				myChannelbtn = soundbtn.play();
+				}
+			
+				level++;
+				level = level%16;
+				resetGame();
+			});
+			add(nextLevelBtn);
 
-			quitBtn = new FlxButton(0, 0, "Quit",
+			quitBtn = new FlxButton(-1000, 30, "Quit",
 				function():void { FlxG.fade(0xff000000, 0.22, function():void { 
 					level = 0;
 					SoundMixer.stopAll();
@@ -476,11 +460,10 @@ package
 					}
 					FlxG.resetGame();
 				} ); } );
-			quitBtn.loadGraphic(BtnExit);
-			quitBtn.scrollFactor.x=quitBtn.scrollFactor.y=0;
 			add(quitBtn);
 			
-			
+			header = new FlxSprite(0, 0, ImgHeader);
+			add(header);
 			
 			
 			t = new FlxButton(-10000, 30, "LEVEL " + (level+1));
@@ -516,7 +499,7 @@ package
 			}
 			revealBoard();			
 
-			instructions = new FlxText(1*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys to move \nPress E to open doors");
+			instructions = new FlxText(1*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys to move \nPress E to open doors \nPress R to reset");
 
 
 			if (level==0) {
@@ -549,29 +532,19 @@ package
 				myChannelbtn = soundbtn.play();
 				if (soundOn) {
 					soundOn = false;
-					//SoundMixer.stopAll();
-					//myChannel.soundTransform = new SoundTransform(0);
 					myChannel.stop();
 					muteButton.label.text = "Mute";
 				} else {
-					//myChannel.soundTransform = new SoundTransform(1);
 					myChannel = sound.play(0,10);
 					soundOn = true;
 					muteButton.label.text = "UnMute";
 				}
 			});
-			if(soundOn){
-				//FlxG.mute = false;
-			}else{
-				//FlxG.mute = true;
+			if(!soundOn){
 				muteButton.label.text = "UnMute";
 			}
 			muteButton.scrollFactor.x=muteButton.scrollFactor.y=0;
 			add(muteButton);
-			
-			header = new FlxSprite(0, 0, ImgHeader);
-			header.scrollFactor.x=header.scrollFactor.y=0;
-			add(header);
 			
 			syringeUI = new FlxButton(FlxG.width-100, 80,"syringe:"+"0");
 			syringeUI.scrollFactor.x=syringeUI.scrollFactor.y=0;
@@ -603,12 +576,7 @@ package
 			if(this.darkRooms){
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
-					//if(collisionMap.getTile(i,j)==0){
 						(FlxSprite(blankTiles[i][j])).visible=true;
-					//}
-					//else{
-						//(FlxSprite(blankTiles[i][j])).visible=false;
-					//}
 				}
 			}
 			var toVisit:Array = new Array(); 
@@ -651,34 +619,24 @@ package
 			myChannel.stop();
 			FlxG.resetState();
 			win = false;
-			isNotPlaying = false;
 			
 		}
 		
 		private function addCam():void {
-			//add(player);
 			if(cam !=null){
 				FlxG.removeCamera(cam,false);
-				//FlxG.removeCamera(camQuit,false);
-				//FlxG.removeCamera(camNextLevel,false);
-				//FlxG.removeCamera(camLevel,false);
-				//FlxG.removeCamera(camSound,false);
-				//FlxG.removeCamera(camHeader,false);
+				FlxG.removeCamera(camQuit,false);
+				FlxG.removeCamera(camNextLevel,false);
+				FlxG.removeCamera(camLevel,false);
 			}
 			else{
 				cam = new FlxCamera(0,0, FlxG.width, FlxG.height,1); // we put the first one in the top left corner
-				//camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
-				//camReset = new FlxCamera(2, 42, resetBtn.width, resetBtn.height);
-				//camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
-				//camLevel = new FlxCamera(2,62,t.width, t.height);
-				//camSound = new FlxCamera(2,92, quitBtn.width, quitBtn.height);
-				//camHeader = new FlxCamera(0,0,800,100);
-
+				camQuit = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+				camNextLevel = new FlxCamera(2, 32, nextLevelBtn.width, nextLevelBtn.height);
+				camLevel = new FlxCamera(2,62,t.width, t.height);
 			}
 			cam.follow(player);
-			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
 			cam.setBounds(0,0,collisionMap.width, collisionMap.height);
-			//cam.color = 0xFFFFFF; 
 			FlxG.addCamera(cam);
 			
 			/*camQuit.follow(quitBtn);
@@ -689,9 +647,6 @@ package
 			
 			camLevel.follow(t);
 			FlxG.addCamera(camLevel);*/
-			
-			//camLevel.follow(header);
-			//FlxG.addCamera(camHeader);
 			
 			this.powerUpMenu = new FlxText(-6000,0,100,"Powerup: " + powerUp.toString() + "\nKeys: " + nkeysC + "/" + nkeys);
 			this.powerUpMenu.size=12;
@@ -706,10 +661,6 @@ package
 				FlxG.addCamera(camRe);
 			}
 			
-//			add(this.powerUpMenu);
-//			var camRe:FlxCamera = new FlxCamera(0, 100, this.powerUpMenu.width, this.powerUpMenu.height);
-//			camRe.follow(this.powerUpMenu);
-//			FlxG.addCamera(camRe);
 		}
 		
 		
@@ -761,7 +712,6 @@ package
 			var type:String;
 			var lineArray:Array;
 			var h:Human=new Human(0,0,true);
-			//var d:Door = new Door(10, 10);
 			var j:Janitor=new Janitor(0,0);
 			var door:Door = new Door(0,0);
 			var key:Key = new Key(collisionMap, door, player,0,0);
@@ -887,8 +837,6 @@ package
 		
 		override public function update():void
 		{
-			// Tilemaps can be collided just like any other FlxObject, and flixel
-			// automatically collides each individual tile with the object.
 			FlxG.collide(player, collisionMap);
 			FlxG.collide(collisionMap, pSyringe,touchedH);
 			this.drawingCamera.fill(0x00000000);
@@ -969,10 +917,7 @@ package
 					zombies[w].playerUpdate();
 				}
 			}
-			
-//			for(var t:int=0; t<janitors.length;t++){
-//				janitors[t].die();
-//			}
+
 			if(isABTesting){
 				zombieNum.label.text = "Zombies:"+(zombies.length-1)+"/2";
 			}
@@ -1018,7 +963,7 @@ package
 									t = new FlxText(20,0,40, a.toString());
 									t.size = 15;
 									add(t);*/
-									//(Doctor(type[i])).stopFollowingPath();
+									(Doctor(type[i])).stopFollowingPath();
 									dSyringe = new Syringe(FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2)), type[i].x+type[i].width/2, type[i].y+type[i].height/2,zombies[j].x-type[i].x,zombies[j].y-type[i].y, 1);
 									dSyringe.angle = -90 + FlxU.getAngle(new FlxPoint(type[i].x + type[i].width/2, type[i].y+ type[i].height/2), new FlxPoint(zombies[j].x + zombies[j].width/2, zombies[j].y+ zombies[j].height/2));
 									add(dSyringe);
@@ -1026,7 +971,7 @@ package
 									soundsyrg = (new MySoundsyrg()) as Sound;
 									myChannelsyrg = soundsyrg.play(); }
 									dSyringe.updatePos(10000);
-									//(Doctor(type[i])).goBack(collisionMap);
+									(Doctor(type[i])).goBack(collisionMap);
 									cd = 0;
 								}
 								(Human(type[i])).alerted.x=(Human(type[i])).x;
@@ -1125,13 +1070,7 @@ package
 					syr.exists = false;
 					syr.destory();
 				}
-				/*zombies.splice(pos,1);
-				remove(zom, true);
-				remove(syr, true);
-				zom.exists = false;
-				zom.alive = false;
-				syr.exists = false;
-				syr.destory();*/
+
 			}
 		}
 		
@@ -1275,10 +1214,7 @@ package
 				else{
 					//not AB testing
 					infected = new Zombie(man.x,man.y,man.width,man.height, man.drag.x,man.drag.y,man.maxVelocity.x,man.maxVelocity.y);
-					/*if(man.stunAdded){
-						man.stunAdded=false;
-						remove(man.stunAn,true);
-					}*/
+
 					if (man is Doctor) {
 						infected.setImage(ImgDoctorDead);
 					} else if (man is Nurse) {
@@ -1798,8 +1734,6 @@ package
 			player = new Zombie(20, 20,TILE_WIDTH*7/8,TILE_HEIGHT*7/8,640/16*TILE_WIDTH,640/16*TILE_WIDTH,80/16*TILE_WIDTH,80/16*TILE_WIDTH);
 			player.loadGraphic(ImgSpaceman, true, true, TILE_WIDTH,TILE_HEIGHT);
 			//bounding box tweaks
-			//player.offset.x = TILE_WIDTH/4;
-			//player.offset.y = TILE_HEIGHT/4;
 			player.width = TILE_WIDTH*2/8;
 			player.height = TILE_HEIGHT*6/8;
 			player.centerOffsets();
@@ -1828,7 +1762,6 @@ package
 
 		private function updatePlayer():void
 		{
-			//wrap(player);
 			if (player.alive == false) {
 				logger.recordEvent(level+1,101,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" ends");
 				logger.recordLevelEnd();
@@ -1836,19 +1769,6 @@ package
 				player.angle=player.angle+10;
 				FlxG.fade(0xff000000, 0.3, on_fade_completed2);
 
-//				if(this.youLoseScreen ==null){
-//					logger.recordEvent(level+1,101,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" ends");
-//					logger.recordLevelEnd();
-//					this.youLoseScreen = new FlxText(50,300,800,"YOU LOSE TRY NOT TO GET CURED  \nPress R to restart");
-//					this.youLoseScreen.color=0x730606;
-//					this.youLoseScreen.size=35;
-//					this.youLoseScreen.scrollFactor = new FlxPoint(0,0);
-//					add(this.youLoseScreen);
-//					/*var camRe:FlxCamera = new FlxCamera(50, 300, this.youLoseScreen.width, this.youLoseScreen.height);
-//					camRe.follow(this.youLoseScreen);
-//					FlxG.addCamera(camRe);*/
-//					remove(player);
-//				}
 			}
 						
 			for (var i:Number=0;i<doors.length;i++){
@@ -1880,10 +1800,6 @@ package
 					
 				}
 			}
-
-//			for (var t:Number=0;t<janitors.length;t++) {
-//				janitors[t].die();
-//			}
 
 			
 			//MOVEMENT
@@ -2001,12 +1917,18 @@ package
 				}
 			}
 			if(FlxG.keys.justPressed("R")){
-				if(beatLevel){
+				if(beatLevel && level==15){
+					
+				}
+				else if(beatLevel){
 					level++;
 					level=level%16;
+					resetGame();
+
 				}
-				resetGame();
-				
+				else{
+					resetGame();
+				}
 				
 			}
 			
@@ -2091,36 +2013,7 @@ package
 				this.beatLevel=true;
 				FlxG.fade(0xff000000, 0.3, on_fade_completed);
 				
-				
-//				if(this.youWinScreen ==null){
-//					logger.recordEvent(level+1,102,"pos=("+(int)(player.x/TILE_WIDTH)+","+(int)(player.y/TILE_HEIGHT)+")|level "+(level+1)+" complete");
-//					logger.recordLevelEnd();
-//
-//					if (level==15) {
-//						this.youWinScreen = new FlxText(50,300,800,"YOU HAVE ZOMBIFIED THE ENTIRE HOSPITAL! \nUse the Quit Button to return to menu.");
-//
-//					} else {
-//					this.youWinScreen = new FlxText(50,300,800,"YAY YOU ZOMBIFIED THIS FLOOR!! \nPress R to continue to next floor"); 
-//					level++; 
-//					level = level%16;
-//					}
-//					this.youWinScreen.color=0x6cba31;
-//					this.youWinScreen.scrollFactor = new FlxPoint(0,0);
-//					this.youWinScreen.size=20;
-//					//this.youWinScreen = new FlxText(-200000,0,820,"YAY YOU ZOMBIFIED THIS FLOOR!! Press R to continue to next floor");
-//					this.youWinScreen.size=35;
-//					add(this.youWinScreen);
-//					/*var camRev:FlxCamera = new FlxCamera(50, 300, this.youWinScreen.width, this.youWinScreen.height);
-//					camRev.follow(this.youWinScreen);
-//					FlxG.addCamera(camRev);*/
-//					remove(player);
-//					//level++;
-//					//level = level%10;
-//					//resetGame();
-//					
-//					
-//				}
-			}
+				}
 		
 		}
 
@@ -2211,7 +2104,12 @@ package
 		public function on_fade_completed():void
 		{
 			// playing the game itself
-			FlxG.switchState(new WinState());
+			if(level==15){
+				FlxG.switchState(new FinalWinState());
+			}
+			else{
+				FlxG.switchState(new WinState());
+			}
 		}
 		public function on_fade_completed2():void
 		{
@@ -2272,6 +2170,9 @@ package
 					}
 					else if(col[j] == "7"){
 						add(new Wall(j*65, i*65, "7"));
+					}
+					else if(col[j] == "8"){
+						add(new Wall(j*65, i*65, "8"));
 					}
 					/*else if(col[j] == "A"){
 						add(new Floors(j*65, i*65, "A"));
