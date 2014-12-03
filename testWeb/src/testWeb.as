@@ -21,14 +21,8 @@ package
 				var myNum:Number = Math.floor(Math.random()*2) + 1;
 				var value:Number = PlayState.logger.recordABTestValue(myNum);
 				//trace(value);
-				if(value == 1){
-					PlayState.isABTesting = true;
-					setTimeout(logTestA, 2000);
-				}
-				else{
-					PlayState.isABTesting = false;
-					setTimeout(logTestB,2000);
-				}
+				PlayState.isABTesting = true;
+
 				
 			}
 

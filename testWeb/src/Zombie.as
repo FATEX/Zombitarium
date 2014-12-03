@@ -19,7 +19,7 @@ package
 		
 		[Embed(source="nurse_dead.png")] private static var ImgSpaceman:Class;
 		[Embed(source="zombie_combined.png")] private static var ImgPlayer:Class;
-		[Embed(source="walk_nurse_front_100.png")] private static var ImgNurse:Class;
+		[Embed(source="zombie_disguise_all.png")] private static var ImgNurse:Class;
 		
 		public var xPos:int = 0;
 		public var yPos:int = 0;

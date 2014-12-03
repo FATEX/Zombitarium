@@ -330,11 +330,10 @@ package
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
 					if(collisionMap.getTile(i,j)==0){
-						
-						if(i>0 && collisionMap.getTile(i-1,j) == 1 && collisionMap.getTile(i,j-1) == 1){
+						if(collisionMap.getTile(i-1,j) != 0 && collisionMap.getTile(i,j-1) != 0){
 							add(new Floors(i*65, j*65, "dc"));
 						}
-						else if(j>0 && collisionMap.getTile(i,j-1) == 1){
+						else if(collisionMap.getTile(i,j-1) != 0){
 							var myNum:Number = Math.floor(Math.random()*5) + 1;
 							if(myNum == 1){
 								add(new Floors(i*65, j*65, "up1"));
@@ -353,7 +352,7 @@ package
 							}
 							add(new Floors(i*65, j*65, "dup"));
 						}
-						else if(i>0 && collisionMap.getTile(i-1,j) == 1){
+						else if(collisionMap.getTile(i-1,j) != 0){
 							var myNum:Number = Math.floor(Math.random()*5) + 1;
 							if(myNum == 1){
 								add(new Floors(i*65, j*65, "left1"));
