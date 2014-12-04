@@ -507,8 +507,6 @@ package
 
 			instructions = new FlxText(3*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys or WASD to move \nPress E to open doors");
 
-
-
 			if (level==0) {
 				add(instructions);
 			} else if (level==1) {
