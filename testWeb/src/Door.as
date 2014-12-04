@@ -22,7 +22,7 @@ package
 		[Embed(source="doorWinL_100.png")] private static var ImgDoorCloseWin:Class;
 		[Embed(source="doorWin_100.png")] private static var ImgDoorCloseWinU:Class;
 
-		[Embed(source="doorOpenL_100.png")] private static var ImgDoorOpenWin:Class;
+		[Embed(source="door_final_open_win.png")] private static var ImgDoorOpenWin:Class;
 		[Embed(source="door_100.png")] private static var ImgDoorCloseU:Class;
 		[Embed(source = "doorIO.mp3")]private var MySound : Class; 
 		[Embed(source = "locked-door.mp3")]private var MySoundLockedDoor : Class; 		 
