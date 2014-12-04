@@ -488,14 +488,14 @@ package
 			for(var i:int =0;i<collisionMap.widthInTiles;i++){
 				for(var j:int=0;j<collisionMap.heightInTiles;j++){
 					if(collisionMap.getTile(i,j)==0 && this.darkRooms){
-						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-25,j*TILE_HEIGHT-20);
-						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+45,TILE_HEIGHT+40);
+						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-25,j*TILE_HEIGHT-25);
+						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+45,TILE_HEIGHT+45);
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
 					}
 					else{
-						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-25,j*TILE_HEIGHT-20);
-						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+45,TILE_HEIGHT+40);
+						var blankScreenTile:FlxSprite = new FlxSprite(i*TILE_WIDTH-25,j*TILE_HEIGHT-25);
+						blankScreenTile.loadGraphic(BlackTile,false,false,TILE_WIDTH+45,TILE_HEIGHT+45);
 						//blankScreenTile.visible=false;
 						add(blankScreenTile);
 						blankTiles[i][j]=blankScreenTile;
