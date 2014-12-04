@@ -1611,7 +1611,7 @@ package
 				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/4)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/4)/TILE_HEIGHT),zombies,this);
 				doors[i].updateDoor();
 				if (soundOn && FlxG.overlap(player, doors[i])) {
-				doors[i].soundDoor(player,this);
+					doors[i].soundDoor(player,this);
 				}
 				
 			}

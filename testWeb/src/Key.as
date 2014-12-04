@@ -39,9 +39,10 @@ package
 				if(FlxG.collide(p, this)){ // and if the player collides with the key
 					this.visible = false; // hide the key from view
 					keyCollected = true; // set our Boolean to true
+					(Door(d)).unlock();
 					if (PlayState.soundOn) {
-					soundk = (new MySoundk()) as Sound;
-					soundk.play(); }
+						soundk = (new MySoundk()) as Sound;
+						soundk.play(); }
 				}
 			}
 			

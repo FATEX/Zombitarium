@@ -15,7 +15,7 @@ package
 		[Embed(source="door_100.png")] static var ImgDoorClose:Class;
 		[Embed(source="doorOpen_100.png")] static var ImgDoorOpen:Class;
 		[Embed(source="doorWin_100.png")] private static var ImgDoorCloseWin:Class;
-		[Embed(source="doorOpenWin_100.png")] private static var ImgDoorOpenWin:Class;
+		[Embed(source="doorOpenL_100.png")] private static var ImgDoorOpenWin:Class;
 		
 		public function UnlockedDoor(tx,ty)
 		{
