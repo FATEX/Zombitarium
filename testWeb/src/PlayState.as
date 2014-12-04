@@ -1238,6 +1238,7 @@ package
 				remove(man.stunAn,true);
 			}
 			trace("can kill: " + this.canKill(man,zom).toString());
+			trace("Man: "+man.ID);
 			if(this.canKill(man,zom)){
 				if(man.isStunned || man is Patient){
 					zom.disguiseOFF();
@@ -1420,6 +1421,8 @@ package
 				}
 			}
 			else{
+				var pos:int = humans.indexOf(man);
+				if(pos!=-1){
 				zom.disguiseOFF();
 				var t:FlxText;
 			
@@ -1444,7 +1447,6 @@ package
 				}
 				//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
 				//FlxG.collide(infected, collisionMap);
-				var pos:int = humans.indexOf(man);
 				for(var j:int=0;j<20;j++){
 					if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
 						this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
@@ -1551,7 +1553,7 @@ package
 				}
 				remove(man,true);
 				man.alive=false;
-				
+			}		
 		}
 			
 		}
