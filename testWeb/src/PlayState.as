@@ -132,7 +132,7 @@ package
 		//logger
 		public static var isPageLoaded:Boolean = false;
 		private var playertime:Number = new Date().time;
-		private static var versionID:Number = 3;
+		private static var versionID:Number = 4;
 		public static var logger:Logging = new Logging(200,versionID,false);		
 		
 		// Some static constants for the size of the tilemap tiles
@@ -505,7 +505,7 @@ package
 			}
 			revealBoard();			
 
-			instructions = new FlxText(2*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys or WASD to move \nPress E to open doors");
+			instructions = new FlxText(3*TILE_WIDTH,1*TILE_HEIGHT,10*TILE_WIDTH,"Arrow keys or WASD to move \nPress E to open doors");
 
 
 
@@ -520,7 +520,7 @@ package
 			} else if (level==6) {
 				add(instructions = new FlxText(11*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
 			} else if (level==8) {
-				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
+				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 3 seconds!"))
 			} else if (level==10) {
 				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
