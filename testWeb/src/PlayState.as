@@ -518,7 +518,7 @@ package
 			} else if (level==6) {
 				add(instructions = new FlxText(11*TILE_WIDTH,3*TILE_HEIGHT,6*TILE_WIDTH,"BEWARE Janitors see everything...And they also have keys"))
 			} else if (level==8) {
-				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 5 seconds!"))
+				add(instructions = new FlxText(0*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a nurse you get disguised for 3 seconds!"))
 			} else if (level==10) {
 				add(instructions = new FlxText(1*TILE_WIDTH,3*TILE_HEIGHT,3*TILE_WIDTH,"If you zombify a doctor you get a syringe! Press SPACE to throw"))
 			}
@@ -1236,6 +1236,7 @@ package
 				remove(man.stunAn,true);
 			}
 			trace("can kill: " + this.canKill(man,zom).toString());
+			trace("Man: "+man.ID);
 			if(this.canKill(man,zom)){
 				if(man.isStunned || man is Patient){
 					zom.disguiseOFF();
@@ -1418,6 +1419,8 @@ package
 				}
 			}
 			else{
+				var pos:int = humans.indexOf(man);
+				if(pos!=-1){
 				zom.disguiseOFF();
 				var t:FlxText;
 			
@@ -1442,7 +1445,6 @@ package
 				}
 				//t = new FlxText(0,20,FlxG.width,"positionx" + infected.x + "positiony"+infected.y);
 				//FlxG.collide(infected, collisionMap);
-				var pos:int = humans.indexOf(man);
 				for(var j:int=0;j<20;j++){
 					if(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID)!=null){
 						this.cam.getContainerSprite().removeChild(this.cam.getContainerSprite().getChildByName("tri"+j+man.ID));
@@ -1549,7 +1551,7 @@ package
 				}
 				remove(man,true);
 				man.alive=false;
-				
+			}		
 		}
 			
 		}
@@ -1607,7 +1609,7 @@ package
 				keys[i].checkCollision(collisionMap, doors[i], player, Math.round((doors[i].x+doors[i].width/4)/TILE_WIDTH), Math.round((doors[i].y+doors[i].height/4)/TILE_HEIGHT),zombies,this);
 				doors[i].updateDoor();
 				if (soundOn && FlxG.overlap(player, doors[i])) {
-				doors[i].soundDoor(player,this);
+					doors[i].soundDoor(player,this);
 				}
 				
 			}

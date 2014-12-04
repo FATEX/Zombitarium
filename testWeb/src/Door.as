@@ -19,13 +19,15 @@ package
 		
 		[Embed(source="doorL_100.png")] public static var ImgDoorClose:Class;
 		[Embed(source="doorOpenL_100.png")] public static var ImgDoorOpen:Class;
-		[Embed(source="doorWin_100.png")] private static var ImgDoorCloseWin:Class;
-		[Embed(source="doorOpenWin_100.png")] private static var ImgDoorOpenWin:Class;
+		[Embed(source="doorWinL_100.png")] private static var ImgDoorCloseWin:Class;
+		[Embed(source="doorWin_100.png")] private static var ImgDoorCloseWinU:Class;
+
+		[Embed(source="doorOpenL_100.png")] private static var ImgDoorOpenWin:Class;
+		[Embed(source="door_100.png")] private static var ImgDoorCloseU:Class;
 		[Embed(source = "doorIO.mp3")]private var MySound : Class; 
 		[Embed(source = "locked-door.mp3")]private var MySoundLockedDoor : Class; 		 
 		private var sound : Sound; // not MySound! 
 		private var doorUnlocked:Boolean=false;
-		
 		public function Door(tx,ty)
 		{
 			super(tx,ty);
@@ -33,17 +35,29 @@ package
 			this.width=TILE_WIDTH;
 		
 		}
+		
+		public function unlock():void{
+			this.doorUnlocked=true;
+		}
+		
 		public function updateDoor():void 
 		{
 			
 			
 			if (doorOpen == false) {
-				if(isWin){
+				if(this.doorUnlocked){
+					if(isWin){
+						this.loadGraphic(ImgDoorCloseWinU, false, false, TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
+					}
+					else{
+						this.loadGraphic(ImgDoorCloseU, false, false, TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
+					}
+				}
+				else if(isWin){
 					this.loadGraphic(ImgDoorCloseWin, false, false, TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
-
-				}else{
+				}
+				else{
 					this.loadGraphic(ImgDoorClose, false, false, TILE_WIDTH*1.5, TILE_HEIGHT*1.5);
-
 				}
 				this.immovable = true;
 			} else
